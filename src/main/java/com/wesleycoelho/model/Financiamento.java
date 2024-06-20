@@ -24,6 +24,8 @@ public class Financiamento {
     Integer     dia_vencimento;
     Integer     id_cliente;
     String      oberservacao;
+    Cliente     cliente;
+    EntradaVeiculo veiculo;
     public static boolean janelaNovoFinanciamento = false;
     public static boolean janelaEditarFinanciamento = false;
     public static boolean janelaListaTodosFinanciamento = false;
@@ -53,6 +55,21 @@ public class Financiamento {
         this.dia_vencimento = dia_vencimento;
         this.id_cliente = id_cliente;
         this.oberservacao = oberservacao;
+    }
+    
+    public Financiamento(Integer id, Date data_registro, Integer ficha, Double valor_parcela, Double valor_pago_entrada, Double valor_veiculo, Integer num_parcelas, Integer dia_vencimento, Integer id_cliente, String oberservacao, Cliente cliente, EntradaVeiculo veiculo) {
+        this.id = id;
+        this.data_registro = data_registro;
+        this.ficha = ficha;
+        this.valor_parcela = valor_parcela;
+        this.valor_pago_entrada = valor_pago_entrada;
+        this.valor_veiculo = valor_veiculo;
+        this.num_parcelas = num_parcelas;
+        this.dia_vencimento = dia_vencimento;
+        this.id_cliente = id_cliente;
+        this.oberservacao = oberservacao;
+        this.cliente = cliente;
+        this.veiculo = veiculo;
     }
     public Financiamento(Integer id, Integer ficha,Date data_registro, String nome_cliente, String placa, Double valor_veiculo,  Double valor_pago_entrada, Double valor_parcela, Integer num_parcelas,  Integer dia_vencimento, String oberservacao) {
         this.id = id;
@@ -164,6 +181,22 @@ public class Financiamento {
 
     public void setPlaca(String placa) {
         this.placa = placa;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    public EntradaVeiculo getVeiculo() {
+        return veiculo;
+    }
+
+    public void setVeiculo(EntradaVeiculo veiculo) {
+        this.veiculo = veiculo;
     }
     
     

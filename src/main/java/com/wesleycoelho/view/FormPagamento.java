@@ -19,9 +19,6 @@ import java.awt.Cursor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import javax.swing.DefaultCellEditor;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -207,7 +204,6 @@ public class FormPagamento extends javax.swing.JInternalFrame {
         });
         jToolBar1.add(btnPesquisarFinanciamento);
 
-        txtPesquisarFinanciamento.setForeground(new java.awt.Color(153, 153, 153));
         txtPesquisarFinanciamento.setMaximumSize(new java.awt.Dimension(300, 22));
         txtPesquisarFinanciamento.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -288,14 +284,10 @@ public class FormPagamento extends javax.swing.JInternalFrame {
 
         jLabel11.setText("COR:");
 
-        txtModeloEntrada.setEnabled(false);
         txtModeloEntrada.setMaximumSize(new java.awt.Dimension(400, 2147483647));
 
-        txtMarcaEntrada.setEnabled(false);
         txtMarcaEntrada.setMaximumSize(new java.awt.Dimension(400, 2147483647));
 
-        cbAnoCarro.setEditable(true);
-        cbAnoCarro.setEnabled(false);
         cbAnoCarro.setMaximumSize(new java.awt.Dimension(200, 32767));
         cbAnoCarro.setPreferredSize(new java.awt.Dimension(200, 22));
         cbAnoCarro.addAncestorListener(new javax.swing.event.AncestorListener() {
@@ -309,9 +301,7 @@ public class FormPagamento extends javax.swing.JInternalFrame {
             }
         });
 
-        cbCorEntrada.setEditable(true);
         cbCorEntrada.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "VERDE", "AMARELO", "PRETO", "CINZA", "AZUL", "BRANCO", "CHUMBO", "PRATA", "VINHO", "BEGE", "VERMELHO", " " }));
-        cbCorEntrada.setEnabled(false);
         cbCorEntrada.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 cbCorEntradaKeyTyped(evt);
@@ -368,7 +358,6 @@ public class FormPagamento extends javax.swing.JInternalFrame {
         jLabel1.setText("NOME:");
 
         txtNomeFinanciamento.setActionCommand("null");
-        txtNomeFinanciamento.setEnabled(false);
         txtNomeFinanciamento.setVerifyInputWhenFocusTarget(false);
         txtNomeFinanciamento.addCaretListener(new javax.swing.event.CaretListener() {
             public void caretUpdate(javax.swing.event.CaretEvent evt) {
@@ -413,7 +402,6 @@ public class FormPagamento extends javax.swing.JInternalFrame {
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
-        txtRgFinanciamento.setEnabled(false);
         txtRgFinanciamento.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtRgFinanciamentoKeyPressed(evt);
@@ -427,7 +415,6 @@ public class FormPagamento extends javax.swing.JInternalFrame {
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
-        txtWhatsappFinanciamento.setEnabled(false);
         txtWhatsappFinanciamento.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtWhatsappFinanciamentoKeyPressed(evt);
@@ -441,14 +428,12 @@ public class FormPagamento extends javax.swing.JInternalFrame {
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
-        txtTelefoneFinanciamento.setEnabled(false);
         txtTelefoneFinanciamento.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtTelefoneFinanciamentoKeyPressed(evt);
             }
         });
 
-        txtCPFFinanciamento.setEnabled(false);
         txtCPFFinanciamento.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtCPFFinanciamentoFocusLost(evt);
@@ -519,7 +504,6 @@ public class FormPagamento extends javax.swing.JInternalFrame {
 
         txtValParcelaFinanciamento.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
         txtValParcelaFinanciamento.setText("0,00");
-        txtValParcelaFinanciamento.setEnabled(false);
         txtValParcelaFinanciamento.setMaximumSize(new java.awt.Dimension(64, 22));
         txtValParcelaFinanciamento.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -529,14 +513,11 @@ public class FormPagamento extends javax.swing.JInternalFrame {
 
         jLabel13.setText("QTD. PARCELAS:");
 
-        cbQtdParcelasFinanciamento.setEditable(true);
         cbQtdParcelasFinanciamento.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "2", "6", "10", "12", "18", "24", "30", "36", "42", "48", "50", "60", "72", " " }));
-        cbQtdParcelasFinanciamento.setEnabled(false);
 
         txtValEntradafinanciamento.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
         txtValEntradafinanciamento.setText("0,00");
         txtValEntradafinanciamento.setToolTipText("");
-        txtValEntradafinanciamento.setEnabled(false);
         txtValEntradafinanciamento.setMaximumSize(new java.awt.Dimension(64, 22));
         txtValEntradafinanciamento.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -549,16 +530,13 @@ public class FormPagamento extends javax.swing.JInternalFrame {
             }
         });
 
-        cbDiaVencimentoFinanciamento.setEditable(true);
         cbDiaVencimentoFinanciamento.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "5", "10", "15", "20", "25" }));
-        cbDiaVencimentoFinanciamento.setEnabled(false);
 
         jLabel15.setText("DIA DE VENCIMENTO: ");
 
         txtValVeiculoFinanciamento.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
         txtValVeiculoFinanciamento.setText("0,00");
         txtValVeiculoFinanciamento.setToolTipText("");
-        txtValVeiculoFinanciamento.setEnabled(false);
         txtValVeiculoFinanciamento.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtValVeiculoFinanciamentoKeyPressed(evt);
@@ -567,7 +545,6 @@ public class FormPagamento extends javax.swing.JInternalFrame {
 
         jLabel14.setText("VALOR VEÍCULO:");
 
-        txtObsFinanciamento.setEnabled(false);
         txtObsFinanciamento.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtObsFinanciamentoKeyPressed(evt);
@@ -582,7 +559,6 @@ public class FormPagamento extends javax.swing.JInternalFrame {
 
         txtNFicha.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         txtNFicha.setToolTipText("");
-        txtNFicha.setEnabled(false);
         txtNFicha.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtNFichaKeyPressed(evt);
@@ -683,6 +659,11 @@ public class FormPagamento extends javax.swing.JInternalFrame {
                 tbParcelasFinanciamentoMouseReleased(evt);
             }
         });
+        tbParcelasFinanciamento.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tbParcelasFinanciamentoKeyReleased(evt);
+            }
+        });
         jScrollPane2.setViewportView(tbParcelasFinanciamento);
         tbParcelasFinanciamento.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 
@@ -758,7 +739,8 @@ public class FormPagamento extends javax.swing.JInternalFrame {
 
     private void btnPesquisarFinanciamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarFinanciamentoActionPerformed
         // TODO add your handling code here:
-          this.btnPesquisarFinanciamento.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+          this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+          this.clientesComFinanciamento.clear();
        if( !this.txtPesquisarFinanciamento.getText().isBlank()){
            if( "NOME".equals(this.cbFiltroPesquisa.getSelectedItem().toString())  ){
                //PESQUISAR FINANCIAMENTO POR NOME
@@ -778,16 +760,19 @@ public class FormPagamento extends javax.swing.JInternalFrame {
                             colunas[2] = cliente.getCpf();//cpf
                             colunas[3] = EntradaVeiculoDB.buscaEntradaPorId(id_entrada).getPlaca();  //placa                                      
                             tableModel.addRow(colunas);
+                            this.tbClientesFinanciamento.repaint();
                         }
                         
                     }
-                      this.btnPesquisarFinanciamento.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));  
+                      
                 }else{
                    JOptionPane.showMessageDialog(this, "Nenhum resultado encontrado");
-                    this.btnPesquisarFinanciamento.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)); 
+                    this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)); 
                }
            }
        }
+       
+       this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));  
 
     }//GEN-LAST:event_btnPesquisarFinanciamentoActionPerformed
 
@@ -941,6 +926,8 @@ public class FormPagamento extends javax.swing.JInternalFrame {
 
     private void tbClientesFinanciamentoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbClientesFinanciamentoMouseClicked
         // TODO add your handling code here:
+        if(this.clientesComFinanciamento.isEmpty() ) return;
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         int selectedIndexTableClientes = this.tbClientesFinanciamento.getSelectedRow();
         this.txtNomeFinanciamento.setText(this.clientes.get(selectedIndexTableClientes).getNome());
         this.txtCPFFinanciamento.setText(this.clientes.get(selectedIndexTableClientes).getCpf());
@@ -976,6 +963,7 @@ public class FormPagamento extends javax.swing.JInternalFrame {
         if(!parcelas.isEmpty() ){    
             this.tbParcelasFinanciamento.setModel(new PagamentoTableModel(parcelas, financiamento));
         }
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_tbClientesFinanciamentoMouseClicked
 
     private void txtNFichaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNFichaKeyPressed
@@ -1003,6 +991,12 @@ public class FormPagamento extends javax.swing.JInternalFrame {
         
     }//GEN-LAST:event_tbParcelasFinanciamentoAncestorAdded
 
+    private void tbParcelasFinanciamentoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbParcelasFinanciamentoKeyReleased
+     
+    }//GEN-LAST:event_tbParcelasFinanciamentoKeyReleased
+
+    
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnExcluirEntrada;

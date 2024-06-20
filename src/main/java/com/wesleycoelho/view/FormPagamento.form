@@ -164,9 +164,6 @@
         </Component>
         <Component class="javax.swing.JTextField" name="txtPesquisarFinanciamento">
           <Properties>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="99" green="99" red="99" type="rgb"/>
-            </Property>
             <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[300, 22]"/>
             </Property>
@@ -352,7 +349,6 @@
         </Component>
         <Component class="javax.swing.JTextField" name="txtModeloEntrada">
           <Properties>
-            <Property name="enabled" type="boolean" value="false"/>
             <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[400, 2147483647]"/>
             </Property>
@@ -360,7 +356,6 @@
         </Component>
         <Component class="javax.swing.JTextField" name="txtMarcaEntrada">
           <Properties>
-            <Property name="enabled" type="boolean" value="false"/>
             <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[400, 2147483647]"/>
             </Property>
@@ -368,8 +363,6 @@
         </Component>
         <Component class="javax.swing.JComboBox" name="cbAnoCarro">
           <Properties>
-            <Property name="editable" type="boolean" value="true"/>
-            <Property name="enabled" type="boolean" value="false"/>
             <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[200, 32767]"/>
             </Property>
@@ -387,7 +380,6 @@
         </Component>
         <Component class="javax.swing.JComboBox" name="cbCorEntrada">
           <Properties>
-            <Property name="editable" type="boolean" value="true"/>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="12">
                 <StringItem index="0" value="VERDE"/>
@@ -404,7 +396,6 @@
                 <StringItem index="11" value=" "/>
               </StringArray>
             </Property>
-            <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <Events>
             <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="cbCorEntradaKeyTyped"/>
@@ -499,7 +490,6 @@
         <Component class="javax.swing.JTextField" name="txtNomeFinanciamento">
           <Properties>
             <Property name="actionCommand" type="java.lang.String" value="null"/>
-            <Property name="enabled" type="boolean" value="false"/>
             <Property name="verifyInputWhenFocusTarget" type="boolean" value="false"/>
           </Properties>
           <Events>
@@ -527,7 +517,6 @@
             <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor" preCode="try {" postCode="} catch (java.text.ParseException ex) {&#xa;ex.printStackTrace();&#xa;}">
               <Format format="##.###.###-#" subtype="-1" type="5"/>
             </Property>
-            <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <Events>
             <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtRgFinanciamentoKeyPressed"/>
@@ -543,7 +532,6 @@
             <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor" preCode="try {" postCode="} catch (java.text.ParseException ex) {&#xa;ex.printStackTrace();&#xa;}">
               <Format format="(##) ##### ####" subtype="-1" type="5"/>
             </Property>
-            <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <Events>
             <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtWhatsappFinanciamentoKeyPressed"/>
@@ -559,16 +547,12 @@
             <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor" preCode="try {" postCode="} catch (java.text.ParseException ex) {&#xa;ex.printStackTrace();&#xa;}">
               <Format format="(##) ##### ####" subtype="-1" type="5"/>
             </Property>
-            <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <Events>
             <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtTelefoneFinanciamentoKeyPressed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="txtCPFFinanciamento">
-          <Properties>
-            <Property name="enabled" type="boolean" value="false"/>
-          </Properties>
           <Events>
             <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtCPFFinanciamentoFocusLost"/>
             <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtCPFFinanciamentoKeyPressed"/>
@@ -682,7 +666,6 @@
               <Format format="#0.00" subtype="-1" type="0"/>
             </Property>
             <Property name="text" type="java.lang.String" value="0,00"/>
-            <Property name="enabled" type="boolean" value="false"/>
             <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[64, 22]"/>
             </Property>
@@ -698,7 +681,6 @@
         </Component>
         <Component class="javax.swing.JComboBox" name="cbQtdParcelasFinanciamento">
           <Properties>
-            <Property name="editable" type="boolean" value="true"/>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="14">
                 <StringItem index="0" value="2"/>
@@ -717,7 +699,6 @@
                 <StringItem index="13" value=" "/>
               </StringArray>
             </Property>
-            <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
@@ -730,7 +711,6 @@
             </Property>
             <Property name="text" type="java.lang.String" value="0,00"/>
             <Property name="toolTipText" type="java.lang.String" value=""/>
-            <Property name="enabled" type="boolean" value="false"/>
             <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[64, 22]"/>
             </Property>
@@ -742,7 +722,6 @@
         </Component>
         <Component class="javax.swing.JComboBox" name="cbDiaVencimentoFinanciamento">
           <Properties>
-            <Property name="editable" type="boolean" value="true"/>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="5">
                 <StringItem index="0" value="5"/>
@@ -752,7 +731,6 @@
                 <StringItem index="4" value="25"/>
               </StringArray>
             </Property>
-            <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
@@ -770,7 +748,6 @@
             </Property>
             <Property name="text" type="java.lang.String" value="0,00"/>
             <Property name="toolTipText" type="java.lang.String" value=""/>
-            <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <Events>
             <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtValVeiculoFinanciamentoKeyPressed"/>
@@ -782,9 +759,6 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtObsFinanciamento">
-          <Properties>
-            <Property name="enabled" type="boolean" value="false"/>
-          </Properties>
           <Events>
             <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtObsFinanciamentoKeyPressed"/>
           </Events>
@@ -810,7 +784,6 @@
               <Format format="#0" subtype="-1" type="0"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value=""/>
-            <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <Events>
             <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtNFichaKeyPressed"/>
@@ -844,6 +817,7 @@
           <Events>
             <EventHandler event="ancestorAdded" listener="javax.swing.event.AncestorListener" parameters="javax.swing.event.AncestorEvent" handler="tbParcelasFinanciamentoAncestorAdded"/>
             <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tbParcelasFinanciamentoMouseReleased"/>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="tbParcelasFinanciamentoKeyReleased"/>
           </Events>
         </Component>
       </SubComponents>

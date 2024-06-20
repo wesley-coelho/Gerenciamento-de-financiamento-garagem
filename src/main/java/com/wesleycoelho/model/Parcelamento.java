@@ -5,6 +5,8 @@
 package com.wesleycoelho.model;
 
 import java.sql.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 /**
  *
@@ -64,7 +66,9 @@ public class Parcelamento {
 
     public void setData_pagamento(String data_pagamento) {
         if( data_pagamento != null ){
-            this.data_pagamento = java.sql.Date.valueOf(data_pagamento);
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDate data = LocalDate.parse(data_pagamento, dtf);
+            this.data_pagamento = java.sql.Date.valueOf(data);
         }else{
             this.data_pagamento = null;
         }

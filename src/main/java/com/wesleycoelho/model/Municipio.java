@@ -28,7 +28,7 @@ public class Municipio {
     }
 
     public String getNome() {
-        return cidade;
+        return this.cidade;
     }
 
     public void setNome(String nome) {

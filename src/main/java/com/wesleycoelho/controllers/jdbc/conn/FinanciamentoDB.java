@@ -5,6 +5,7 @@
 package com.wesleycoelho.controllers.jdbc.conn;
 
 import com.wesleycoelho.model.Cliente;
+import com.wesleycoelho.model.EntradaVeiculo;
 import com.wesleycoelho.model.Financiamento;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -63,6 +64,78 @@ public class FinanciamentoDB {
                            resultSet.getInt("id_cliente"),
                            resultSet.getString("observacao")
                 );
+            }
+            ConnectionFactory.close(conn, stmt, resultSet);
+            return financiamento;
+                    } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null,ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE );
+        }
+        return null;
+    }
+     
+     public static Financiamento buscaFinanciamentoPorNFicha(int nficha){
+        String sql = """
+                        select financiamento.* , entrada_veiculo.*, cliente.*, 
+                        cliente.id_municipio as id_cidade from saida_veiculo
+                        inner join financiamento on saida_veiculo.id_financiamento = financiamento.id
+                        inner join entrada_veiculo on saida_veiculo.id_entrada = entrada_veiculo.id
+                        inner join cliente on saida_veiculo.id_cliente = cliente.id
+                        where nficha = """ +nficha;
+                      
+         Connection conn = ConnectionFactory.getConexao();
+         
+        try {            
+            Statement stmt = conn.createStatement();
+            ResultSet resultSet = stmt.executeQuery(sql);
+            Financiamento financiamento = null; 
+            EntradaVeiculo veiculo;
+            Cliente    cliente;
+            if(resultSet.next()){ 
+                veiculo = new EntradaVeiculo(
+                            resultSet.getString("nome_proprietario"),
+                            resultSet.getDate("data_entrada"),
+                            resultSet.getString("marca"),
+                            resultSet.getString("modelo"),
+                            resultSet.getString("cor"),
+                            resultSet.getString("placa"),
+                            resultSet.getString("renavam"),
+                            resultSet.getString("chassi"),
+                            resultSet.getString("ano_veiculo"),
+                            resultSet.getString("telefone"),
+                            resultSet.getString("whatsapp")
+
+                );  
+                
+                cliente = new Cliente(
+                            resultSet.getString("nome"),
+                            resultSet.getString("cpf"),
+                            resultSet.getString("rg"),
+                            resultSet.getString("cep"),
+                            resultSet.getString("endereco"),
+                            resultSet.getInt("numero"),
+                            resultSet.getString("bairro"),
+                            resultSet.getInt("id_cidade"),
+                            resultSet.getString("usuario"),
+                            resultSet.getString("whatsapp"),
+                            resultSet.getString("telefone"),
+                            resultSet.getString("complemento")
+                );
+                financiamento = new Financiamento(                
+                           resultSet.getInt("id"),
+                           resultSet.getDate("data_do_registro"),
+                           resultSet.getInt("nficha"),
+                           resultSet.getDouble("valor_parcela"),
+                           resultSet.getDouble("valor_pago_entrada"),
+                           resultSet.getDouble("valor_veiculo"),
+                           resultSet.getInt("num_parcelas"), 
+                           resultSet.getInt("dia_vencimento"),
+                           resultSet.getInt("id_cliente"),
+                           resultSet.getString("observacao"),
+                           cliente,
+                           veiculo
+                );
+                
+                
             }
             ConnectionFactory.close(conn, stmt, resultSet);
             return financiamento;

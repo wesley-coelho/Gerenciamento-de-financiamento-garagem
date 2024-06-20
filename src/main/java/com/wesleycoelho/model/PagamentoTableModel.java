@@ -9,6 +9,9 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
@@ -58,9 +61,9 @@ public class PagamentoTableModel extends AbstractTableModel implements TableMode
             case 0 -> rowIndex + 1;
             case 1 -> valueRow.mes_ref.toLocalDate().format(dtf);
             case 2 -> financiamento.getValor_parcela();
-            case 3 -> valueRow.getValor_pagamento();
+            case 3 -> valueRow.getValor_pagamento() == 0.0?null:valueRow.getValor_pagamento();
             case 4 -> valueRow.getIsPago();
-            case 5 -> valueRow.data_pagamento;
+            case 5 -> valueRow.getData_pagamento() != null?valueRow.getData_pagamento().toLocalDate().format(dtf):valueRow.getData_pagamento();
             default -> "Erro";
         };
         
@@ -87,7 +90,7 @@ public class PagamentoTableModel extends AbstractTableModel implements TableMode
             case 2 -> Double.class;
             case 3 -> Double.class;
             case 4 -> Boolean.class;
-            case 5 -> Date.class;
+            case 5 -> String.class;
             default -> null;
         };
     }
@@ -98,34 +101,35 @@ public class PagamentoTableModel extends AbstractTableModel implements TableMode
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex){  
         switch(columnIndex){
-            case 3 -> {
-                       String novoValor = aValue.toString().replace(',','.');
-                        parcelas.get(rowIndex).setValor_pagamento(Double.valueOf(novoValor));
-                        if( Double.parseDouble(novoValor) > 0.0 ) {
-                            parcelas.get(rowIndex).setData_pagamento(LocalDate.now().format(dtf));
-                            parcelas.get(rowIndex).setIsPago(true);
-                            ParcelamentoDB.Pagamento(parcelas.get(rowIndex));
-                            fireTableDataChanged();
-                        }else if( Double.parseDouble(novoValor) <= 0.0 || novoValor.isBlank()){
-                            parcelas.get(rowIndex).setData_pagamento(null);
-                            parcelas.get(rowIndex).setIsPago(false);
-                            fireTableDataChanged();
-                            ParcelamentoDB.Pagamento(parcelas.get(rowIndex));
-
-                        } 
-                   }
+            case 3 -> {      
+                          parcelas.get(rowIndex).setValor_pagamento(Double.parseDouble(aValue.toString()));
+                          ParcelamentoDB.Pagamento(parcelas.get(rowIndex));
+                          fireTableDataChanged();   
+                      }
             case 4 -> {
                         parcelas.get(rowIndex).setIsPago((Boolean)aValue);
+                        if( (Boolean)aValue) {
+                            parcelas.get(rowIndex).setData_pagamento(LocalDate.now().format(dtf));
+                        }else{
+                             parcelas.get(rowIndex).setData_pagamento(null);
+                        }
                         ParcelamentoDB.Pagamento(parcelas.get(rowIndex));
-                    }
+                        fireTableDataChanged();
+                      }
         }
+        
     }
+
+   
        
     
     
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex){
-        return columnIndex == 3 || columnIndex == 4 || columnIndex == 5;
+        return columnIndex == 3 || columnIndex == 4;
     }
+    
+    
+   
 }
 

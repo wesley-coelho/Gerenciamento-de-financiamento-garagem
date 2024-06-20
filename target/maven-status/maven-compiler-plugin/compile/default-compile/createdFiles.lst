@@ -186,6 +186,7 @@ com\wesleycoelho\view\FormNovoFinanciamento$20.class
 com\wesleycoelho\view\FormNovaEntrada$12.class
 com\wesleycoelho\model\SaidaVeiculo.class
 com\wesleycoelho\view\FormNovaSaida$18.class
+com\wesleycoelho\view\FormPagamento$36.class
 com\wesleycoelho\view\FormEditarEntrada$13.class
 com\wesleycoelho\view\FormListarTodosFinanciamento$6.class
 com\wesleycoelho\view\FormNovoFinanciamento$17.class
