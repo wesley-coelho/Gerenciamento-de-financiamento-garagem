@@ -18,8 +18,6 @@ public class Financiamento {
     String      nome_cliente;
     String      placa;
     Double      valor_parcela;
-    Double      valor_pago_entrada;
-    Double      valor_veiculo;
     Integer     num_parcelas;
     Integer     dia_vencimento;
     Integer     id_cliente;
@@ -32,38 +30,32 @@ public class Financiamento {
     public static boolean janelaPesquisaFinanciamento = false;
     
     //constructor
-    public Financiamento(Date data_registro, Integer ficha, Double valor_parcela, Double valor_pago_entrada, Double valor_veiculo, Integer num_parcelas, Integer dia_vencimento, Integer id_cliente, String oberservacao) {
+    public Financiamento(Date data_registro, Integer ficha, Double valor_parcela,  Integer num_parcelas, Integer dia_vencimento, Integer id_cliente, String oberservacao) {
         this.data_registro = data_registro;
         this.ficha = ficha;
-        this.valor_parcela = valor_parcela;
-        this.valor_pago_entrada = valor_pago_entrada;
-        this.valor_veiculo = valor_veiculo;
+        this.valor_parcela = valor_parcela;        
         this.num_parcelas = num_parcelas;
         this.dia_vencimento = dia_vencimento;
         this.id_cliente = id_cliente;
         this.oberservacao = oberservacao;
     }
     //constructor
-    public Financiamento(Integer id, Date data_registro, Integer ficha, Double valor_parcela, Double valor_pago_entrada, Double valor_veiculo, Integer num_parcelas, Integer dia_vencimento, Integer id_cliente, String oberservacao) {
+    public Financiamento(Integer id, Date data_registro, Integer ficha, Double valor_parcela, Integer num_parcelas, Integer dia_vencimento, Integer id_cliente, String oberservacao) {
         this.id = id;
         this.data_registro = data_registro;
         this.ficha = ficha;
         this.valor_parcela = valor_parcela;
-        this.valor_pago_entrada = valor_pago_entrada;
-        this.valor_veiculo = valor_veiculo;
         this.num_parcelas = num_parcelas;
         this.dia_vencimento = dia_vencimento;
         this.id_cliente = id_cliente;
         this.oberservacao = oberservacao;
     }
     
-    public Financiamento(Integer id, Date data_registro, Integer ficha, Double valor_parcela, Double valor_pago_entrada, Double valor_veiculo, Integer num_parcelas, Integer dia_vencimento, Integer id_cliente, String oberservacao, Cliente cliente, EntradaVeiculo veiculo) {
+    public Financiamento(Integer id, Date data_registro, Integer ficha, Double valor_parcela, Integer num_parcelas, Integer dia_vencimento, Integer id_cliente, String oberservacao, Cliente cliente, EntradaVeiculo veiculo) {
         this.id = id;
         this.data_registro = data_registro;
         this.ficha = ficha;
         this.valor_parcela = valor_parcela;
-        this.valor_pago_entrada = valor_pago_entrada;
-        this.valor_veiculo = valor_veiculo;
         this.num_parcelas = num_parcelas;
         this.dia_vencimento = dia_vencimento;
         this.id_cliente = id_cliente;
@@ -71,14 +63,12 @@ public class Financiamento {
         this.cliente = cliente;
         this.veiculo = veiculo;
     }
-    public Financiamento(Integer id, Integer ficha,Date data_registro, String nome_cliente, String placa, Double valor_veiculo,  Double valor_pago_entrada, Double valor_parcela, Integer num_parcelas,  Integer dia_vencimento, String oberservacao) {
+    public Financiamento(Integer id, Integer ficha,Date data_registro, String nome_cliente, String placa, Double valor_parcela, Integer num_parcelas,  Integer dia_vencimento, String oberservacao) {
         this.id = id;
         this.ficha = ficha;
         this.data_registro = data_registro;
         this.nome_cliente = nome_cliente;
         this.placa = placa;
-        this.valor_veiculo = valor_veiculo;
-        this.valor_pago_entrada = valor_pago_entrada;
         this.valor_parcela = valor_parcela;        
         this.num_parcelas = num_parcelas;
         this.dia_vencimento = dia_vencimento;
@@ -118,23 +108,7 @@ public class Financiamento {
     public void setValor_parcela(Double valor_parcela) {
         this.valor_parcela = valor_parcela;
     }
-
-    public Double getValor_pago_entrada() {
-        return valor_pago_entrada;
-    }
-
-    public void setValor_pago_entrada(Double valor_pago_entrada) {
-        this.valor_pago_entrada = valor_pago_entrada;
-    }
-
-    public Double getValor_veiculo() {
-        return valor_veiculo;
-    }
-
-    public void setValor_veiculo(Double valor_veiculo) {
-        this.valor_veiculo = valor_veiculo;
-    }
-
+    
     public Integer getNum_parcelas() {
         return num_parcelas;
     }
@@ -197,6 +171,11 @@ public class Financiamento {
 
     public void setVeiculo(EntradaVeiculo veiculo) {
         this.veiculo = veiculo;
+    }
+
+    @Override
+    public String toString() {
+        return "Financiamento{" + "id=" + id + ", ficha=" + ficha + ", data_registro=" + data_registro + ", nome_cliente=" + nome_cliente + ", placa=" + placa + ", valor_parcela=" + valor_parcela + ", num_parcelas=" + num_parcelas + ", dia_vencimento=" + dia_vencimento + ", id_cliente=" + id_cliente + ", oberservacao=" + oberservacao + ", cliente=" + cliente + ", veiculo=" + veiculo + '}';
     }
     
     

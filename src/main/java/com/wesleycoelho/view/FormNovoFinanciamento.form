@@ -370,7 +370,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel5">
           <Properties>
-            <Property name="text" type="java.lang.String" value="*ENDERE&#xc7;O:"/>
+            <Property name="text" type="java.lang.String" value="ENDERE&#xc7;O:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtEnderecoFinanciamento">
@@ -381,7 +381,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel6">
           <Properties>
-            <Property name="text" type="java.lang.String" value="*BAIRRO:"/>
+            <Property name="text" type="java.lang.String" value="BAIRRO:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtBairroFinanciamento">
@@ -392,7 +392,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel7">
           <Properties>
-            <Property name="text" type="java.lang.String" value="*N&#xda;MERO:"/>
+            <Property name="text" type="java.lang.String" value="N&#xda;MERO:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtNumeroFinanciamento">
@@ -459,7 +459,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel25">
           <Properties>
-            <Property name="text" type="java.lang.String" value="*Telefone:"/>
+            <Property name="text" type="java.lang.String" value="Telefone:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JFormattedTextField" name="txtWhatsappFinanciamento">
@@ -549,33 +549,16 @@
                                   <Component id="jLabel12" min="-2" pref="119" max="-2" attributes="0"/>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
                                   <Component id="txtValParcelaFinanciamento" min="-2" pref="86" max="-2" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Group type="102" alignment="1" attributes="0">
-                                          <Component id="jLabel11" min="-2" pref="116" max="-2" attributes="0"/>
-                                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                                          <Component id="cbQtdParcelasFinanciamento" min="-2" pref="94" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" alignment="0" attributes="0">
-                                          <Component id="jLabel13" min="-2" pref="105" max="-2" attributes="0"/>
-                                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                                          <Component id="txtValVeiculoFinanciamento" max="32767" attributes="0"/>
-                                      </Group>
-                                  </Group>
-                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Group type="102" attributes="0">
-                                          <Component id="jLabel14" min="-2" pref="117" max="-2" attributes="0"/>
-                                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                                          <Component id="txtValEntradafinanciamento" min="-2" pref="105" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" attributes="0">
-                                          <Component id="jLabel15" min="-2" pref="142" max="-2" attributes="0"/>
-                                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                                          <Component id="cbDiaVencimentoFinanciamento" max="32767" attributes="0"/>
-                                      </Group>
-                                  </Group>
+                                  <Component id="jLabel11" min="-2" pref="116" max="-2" attributes="0"/>
+                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <Component id="cbQtdParcelasFinanciamento" min="-2" pref="94" max="-2" attributes="0"/>
+                                  <EmptySpace max="32767" attributes="0"/>
+                                  <Component id="jLabel15" min="-2" pref="142" max="-2" attributes="0"/>
+                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <Component id="cbDiaVencimentoFinanciamento" min="-2" pref="80" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <EmptySpace max="32767" attributes="0"/>
@@ -601,25 +584,22 @@
                       </Group>
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="jLabel11" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="cbQtdParcelasFinanciamento" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabel14" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtValEntradafinanciamento" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jLabel11" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbQtdParcelasFinanciamento" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                          <Component id="jLabel15" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbDiaVencimentoFinanciamento" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                   </Group>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="jLabel13" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtValVeiculoFinanciamento" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabel15" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="cbDiaVencimentoFinanciamento" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace pref="12" max="32767" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="txtObsFinanciamento" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel24" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace pref="16" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -627,7 +607,7 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="jLabel10">
           <Properties>
-            <Property name="text" type="java.lang.String" value="*DATA:"/>
+            <Property name="text" type="java.lang.String" value="DATA:"/>
           </Properties>
         </Component>
         <Component class="com.toedter.calendar.JDateChooser" name="dtFinanciamento">
@@ -674,16 +654,6 @@
             <Property name="text" type="java.lang.String" value="*VALOR PARCELA:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="jLabel13">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="*VALOR VE&#xcd;CULO:"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="jLabel14">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="VALOR ENTRADA:"/>
-          </Properties>
-        </Component>
         <Component class="javax.swing.JLabel" name="jLabel15">
           <Properties>
             <Property name="text" type="java.lang.String" value="*DIA DE VENCIMENTO: "/>
@@ -706,18 +676,6 @@
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
           </AuxValues>
         </Component>
-        <Component class="javax.swing.JFormattedTextField" name="txtValVeiculoFinanciamento">
-          <Properties>
-            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
-              <Format format="#0.00" subtype="-1" type="0"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="0,00"/>
-            <Property name="toolTipText" type="java.lang.String" value=""/>
-          </Properties>
-          <Events>
-            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtValVeiculoFinanciamentoKeyPressed"/>
-          </Events>
-        </Component>
         <Component class="javax.swing.JFormattedTextField" name="txtValParcelaFinanciamento">
           <Properties>
             <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
@@ -730,22 +688,6 @@
           </Properties>
           <Events>
             <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtValParcelaFinanciamentoKeyPressed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JFormattedTextField" name="txtValEntradafinanciamento">
-          <Properties>
-            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
-              <Format format="#0.00" subtype="-1" type="0"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="0,00"/>
-            <Property name="toolTipText" type="java.lang.String" value=""/>
-            <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[64, 22]"/>
-            </Property>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtValEntradafinanciamentoActionPerformed"/>
-            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtValEntradafinanciamentoKeyPressed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="txtObsFinanciamento">

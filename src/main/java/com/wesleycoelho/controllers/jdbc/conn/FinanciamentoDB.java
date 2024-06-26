@@ -23,7 +23,7 @@ import javax.swing.JOptionPane;
 public class FinanciamentoDB {
     
      public static int save(Financiamento financiamento){
-         String sql = "INSERT INTO financiamento (data_do_registro,valor_parcela,valor_pago_entrada, valor_veiculo, num_parcelas, observacao, id_cliente, dia_vencimento, nFicha) VALUES('"+financiamento.getData_registro()+"', "+financiamento.getValor_parcela()+","+financiamento.getValor_pago_entrada()+", "+financiamento.getValor_veiculo()+","+financiamento.getNum_parcelas()+",'"+financiamento.getOberservacao()+"',"+financiamento.getId_cliente()+","+financiamento.getDia_vencimento()+", "+financiamento.getFicha()+");";
+         String sql = "INSERT INTO financiamento (data_do_registro,valor_parcela, num_parcelas, observacao, id_cliente, dia_vencimento, nFicha) VALUES('"+financiamento.getData_registro()+"', "+financiamento.getValor_parcela()+","+financiamento.getNum_parcelas()+",'"+financiamento.getOberservacao()+"',"+financiamento.getId_cliente()+","+financiamento.getDia_vencimento()+", "+financiamento.getFicha()+");";
          Connection conn = ConnectionFactory.getConexao();           
          
         try {
@@ -56,9 +56,7 @@ public class FinanciamentoDB {
                            resultSet.getInt("id"),
                            resultSet.getDate("data_do_registro"),
                            resultSet.getInt("nficha"),
-                           resultSet.getDouble("valor_parcela"),
-                           resultSet.getDouble("valor_pago_entrada"),
-                           resultSet.getDouble("valor_veiculo"),
+                           resultSet.getDouble("valor_parcela"), 
                            resultSet.getInt("num_parcelas"), 
                            resultSet.getInt("dia_vencimento"),
                            resultSet.getInt("id_cliente"),
@@ -75,7 +73,8 @@ public class FinanciamentoDB {
      
      public static Financiamento buscaFinanciamentoPorNFicha(int nficha){
         String sql = """
-                        select financiamento.* , entrada_veiculo.*, cliente.*, 
+                        select financiamento.* , entrada_veiculo.*, cliente.*,
+                        cliente.telefone as telefone_cliente, cliente.whatsapp as whatsapp_cliente,
                         cliente.id_municipio as id_cidade from saida_veiculo
                         inner join financiamento on saida_veiculo.id_financiamento = financiamento.id
                         inner join entrada_veiculo on saida_veiculo.id_entrada = entrada_veiculo.id
@@ -116,17 +115,15 @@ public class FinanciamentoDB {
                             resultSet.getString("bairro"),
                             resultSet.getInt("id_cidade"),
                             resultSet.getString("usuario"),
-                            resultSet.getString("whatsapp"),
-                            resultSet.getString("telefone"),
+                            resultSet.getString("whatsapp_cliente"),
+                            resultSet.getString("telefone_cliente"),
                             resultSet.getString("complemento")
                 );
                 financiamento = new Financiamento(                
                            resultSet.getInt("id"),
                            resultSet.getDate("data_do_registro"),
                            resultSet.getInt("nficha"),
-                           resultSet.getDouble("valor_parcela"),
-                           resultSet.getDouble("valor_pago_entrada"),
-                           resultSet.getDouble("valor_veiculo"),
+                           resultSet.getDouble("valor_parcela"),                           
                            resultSet.getInt("num_parcelas"), 
                            resultSet.getInt("dia_vencimento"),
                            resultSet.getInt("id_cliente"),
@@ -148,7 +145,7 @@ public class FinanciamentoDB {
      public static List<Financiamento> selectAll(){
          String sql = """
                         select f.id, f.nficha, f.data_do_registro,
-                        cl.nome, ent.placa, f.valor_veiculo, f.valor_pago_entrada,
+                        cl.nome, ent.placa, 
                         f.valor_parcela, f.num_parcelas, f.dia_vencimento, f.observacao
                         from financiamento As f 
                         inner join cliente As cl on f.id_cliente = cl.id
@@ -167,9 +164,7 @@ public class FinanciamentoDB {
                          rs.getInt("nficha"),
                          rs.getDate("data_do_registro"),
                          rs.getString("nome"),
-                         rs.getString("placa"),
-                          rs.getDouble("valor_veiculo"),                       
-                         rs.getDouble("valor_pago_entrada"),
+                         rs.getString("placa"),                          
                            rs.getDouble("valor_parcela"),
                          rs.getInt("num_parcelas"),
                          rs.getInt("dia_vencimento"),                   
@@ -200,9 +195,7 @@ public class FinanciamentoDB {
                         resultSet.getInt("id"),
                        resultSet.getDate("data_do_registro"),
                         resultSet.getInt("nFicha"),                        
-                        resultSet.getDouble("valor_parcela"),
-                        resultSet.getDouble("valor_pago_entrada"),
-                        resultSet.getDouble("valor_veiculo"),
+                        resultSet.getDouble("valor_parcela"),                        
                         resultSet.getInt("num_parcelas"),
                         resultSet.getInt("dia_vencimento"),
                         resultSet.getInt("id_cliente"),
@@ -232,9 +225,7 @@ public class FinanciamentoDB {
                         resultSet.getInt("id"),
                        resultSet.getDate("data_do_registro"),
                         resultSet.getInt("nFicha"),                        
-                        resultSet.getDouble("valor_parcela"),
-                        resultSet.getDouble("valor_pago_entrada"),
-                        resultSet.getDouble("valor_veiculo"),
+                        resultSet.getDouble("valor_parcela"),                        
                         resultSet.getInt("num_parcelas"),
                         resultSet.getInt("dia_vencimento"),
                         resultSet.getInt("id_cliente"),
@@ -264,9 +255,7 @@ public class FinanciamentoDB {
                         resultSet.getInt("id"),
                        resultSet.getDate("data_do_registro"), 
                         resultSet.getInt("nFicha"),       
-                        resultSet.getDouble("valor_parcela"),
-                        resultSet.getDouble("valor_pago_entrada"),
-                        resultSet.getDouble("valor_veiculo"),
+                        resultSet.getDouble("valor_parcela"),                        
                         resultSet.getInt("num_parcelas"),
                         resultSet.getInt("dia_vencimento"),
                         resultSet.getInt("id_cliente"),
@@ -286,9 +275,7 @@ public class FinanciamentoDB {
       public static List<Financiamento> buscaPorNome(String nome){
          String sql = """
                       select f.id, 
-                      f.data_do_registro, 
-                      f.valor_pago_entrada, 
-                      f.valor_veiculo, 
+                      f.data_do_registro,                       
                       f.num_parcelas, 
                       f.observacao,
                       f.id_cliente, 
@@ -312,9 +299,7 @@ public class FinanciamentoDB {
                         resultSet.getInt("id"),
                        resultSet.getDate("data_do_registro"), 
                         resultSet.getInt("nFicha"),
-                        resultSet.getDouble("valor_parcela"),                        
-                        resultSet.getDouble("valor_pago_entrada"),
-                        resultSet.getDouble("valor_veiculo"),
+                        resultSet.getDouble("valor_parcela"),
                         resultSet.getInt("num_parcelas"),
                         resultSet.getInt("dia_vencimento"),
                         resultSet.getInt("id_cliente"),
@@ -344,9 +329,7 @@ public class FinanciamentoDB {
                         resultSet.getInt("id"),
                        resultSet.getDate("data_do_registro"),
                             resultSet.getInt("nFicha"),                        
-                        resultSet.getDouble("valor_parcela"),
-                        resultSet.getDouble("valor_pago_entrada"),
-                        resultSet.getDouble("valor_veiculo"),
+                        resultSet.getDouble("valor_parcela"),                        
                         resultSet.getInt("num_parcelas"),
                         resultSet.getInt("dia_vencimento"),
                         resultSet.getInt("id_cliente"),
@@ -400,7 +383,7 @@ public class FinanciamentoDB {
                    + "id_municipio = "+c.getId_municipio()+","
                    + "whatsapp = '"+c.getWhatsapp()+"',"
                    + "telefone = '"+c.getTelefone()+"',"
-                   + "complemento = '"+c.getComplemento()+"' WHERE id = "+c.getId()+";";
+                   + "complemento = '"+c.getComplemento()+"' WHERE id = "+f.getId_cliente()+";";
            
            Connection conn = ConnectionFactory.getConexao();
            

@@ -161,6 +161,11 @@ public class Cliente {
     public void setComplemento(String complemento) {
         this.complemento = complemento;
     }
+
+    @Override
+    public String toString() {
+        return "Cliente{" + "id=" + id + ", nome=" + nome + ", cpf=" + cpf + ", rg=" + rg + ", Cep=" + Cep + ", endereco=" + endereco + ", numero=" + numero + ", bairro=" + bairro + ", complemento=" + complemento + ", id_municipio=" + id_municipio + ", usuario=" + usuario + ", whatsapp=" + whatsapp + ", telefone=" + telefone + '}';
+    }
     
     
     

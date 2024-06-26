@@ -93,5 +93,15 @@ public class Validacao {
         return true;
     }
     
+    
+    public static Boolean isNumber(String str){
+        
+        char[] digito = str.toCharArray();
+        for(char d: digito){
+            if(!Character.isDigit(d)) return false;
+        }      
+        return true;
+    }
+    
 }
 

@@ -281,18 +281,16 @@ public class FormListarTodosFinanciamento extends javax.swing.JInternalFrame {
                 DefaultTableModel tableModel;
                 tableModel = (DefaultTableModel) this.tbFinanciamento.getModel();
                 tableModel.setNumRows(0);
-                Object[] headers = new Object[11];
+                Object[] headers = new Object[9];
                 headers[0] = "Id";
                 headers[1] = "Ficha";
                 headers[2] = "Data";
                 headers[3] = "Cliente";
-                headers[4] = "Placa";
-                headers[5] = "Valor veículo";
-                headers[6] = "Valor entrada";
-                headers[7] = "Valor parcela";
-                headers[8] = "Parcelas";
-                headers[9] = "Vencimento (dia)";
-                headers[10] = "Observação";
+                headers[4] = "Placa";               
+                headers[5] = "Valor parcela";
+                headers[6] = "Parcelas";
+                headers[7] = "Vencimento (dia)";
+                headers[8] = "Observação";
                 tableModel.setColumnIdentifiers(headers);
                 for(Financiamento f: listaFinanciamento ){
                     
@@ -301,13 +299,11 @@ public class FormListarTodosFinanciamento extends javax.swing.JInternalFrame {
                     colunas[1] = f.getFicha();
                     colunas[2] = f.getData_registro();
                     colunas[3] = f.getNome_cliente();
-                    colunas[4] = f.getPlaca();
-                    colunas[5] = f.getValor_veiculo();
-                    colunas[6] = f.getValor_pago_entrada();
-                    colunas[7] = f.getValor_parcela();
-                    colunas[8] = f.getNum_parcelas();
-                    colunas[9] = f.getDia_vencimento();
-                    colunas[10] = f.getOberservacao();                
+                    colunas[4] = f.getPlaca();                   
+                    colunas[5] = f.getValor_parcela();
+                    colunas[6] = f.getNum_parcelas();
+                    colunas[7] = f.getDia_vencimento();
+                    colunas[8] = f.getOberservacao();                
                     tableModel.addRow(colunas);
                 }
             }            

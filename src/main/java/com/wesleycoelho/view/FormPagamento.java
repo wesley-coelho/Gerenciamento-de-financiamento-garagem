@@ -952,8 +952,6 @@ public class FormPagamento extends javax.swing.JInternalFrame {
         
         this.txtNFicha.setText(String.valueOf(financiamento.getFicha()));
         this.txtValParcelaFinanciamento.setText(String.valueOf(financiamento.getValor_parcela()));
-        this.txtValEntradafinanciamento.setText(String.valueOf(financiamento.getValor_pago_entrada()));
-        this.txtValVeiculoFinanciamento.setText(String.valueOf(financiamento.getValor_veiculo()));
         this.txtNFicha.setText(String.valueOf(financiamento.getFicha()));
         this.cbQtdParcelasFinanciamento.setSelectedItem(String.valueOf(financiamento.getNum_parcelas()));
         this.cbDiaVencimentoFinanciamento.setSelectedItem(String.valueOf(financiamento.getDia_vencimento()));

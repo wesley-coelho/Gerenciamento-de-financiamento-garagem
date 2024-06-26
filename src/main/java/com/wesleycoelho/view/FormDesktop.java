@@ -915,7 +915,7 @@ public class FormDesktop extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSaidaMouseClicked
 
     private void btnRelatorioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnRelatorioMouseClicked
-        // TODO add your handling code here:
+       this.btnRelatorio.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         this.lblStatus.setText("Abrindo janela Relatórios!");
         this.btnEntrada.setOpaque(false);
         this.btnPagamento.setOpaque(false);
@@ -936,12 +936,15 @@ public class FormDesktop extends javax.swing.JFrame {
             frmRelatorio = new FormRelatorio(this.usuario);
             this.Desktop.add(frmRelatorio);
             frmRelatorio.setVisible(true);
+            frmRelatorio.toFront();
+            frmRelatorio.requestFocus();
         }
         this.lblStatus.setText("Status: Pronto!");
+        this.btnRelatorio.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_btnRelatorioMouseClicked
 
     private void btnPagamentoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPagamentoMouseClicked
-        // TODO add your handling code here:
+        this.btnPagamento.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         this.btnEntrada.setOpaque(false);
         this.btnRelatorio.setOpaque(false);
         this.btnPagamento.setOpaque(true);
@@ -960,8 +963,11 @@ public class FormDesktop extends javax.swing.JFrame {
             frmPagamento = new FormPagamento(this.usuario);
             this.Desktop.add(frmPagamento);
             frmPagamento.setVisible(true);
+            frmPagamento.toFront();
+            frmPagamento.requestFocus();
         }
         this.lblStatus.setText("Status: Pronto!");
+        this.btnPagamento.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         
     }//GEN-LAST:event_btnPagamentoMouseClicked
 
@@ -1021,10 +1027,9 @@ public class FormDesktop extends javax.swing.JFrame {
     }//GEN-LAST:event_btnPesquisarEntradaMouseMoved
 
     private void btnNovaEntradaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnNovaEntradaMouseClicked
-        // TODO add your handling code here:
-        
+        this.btnNovaEntrada.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         this.lblStatus.setText("Status: abrindo formulário 'Nova Entrada de Veículo'");
-  
+        this.lblStatus.repaint();
         FormNovaEntrada frmNovaEntrada;
         //abrir internal frame
         
@@ -1032,9 +1037,12 @@ public class FormDesktop extends javax.swing.JFrame {
             frmNovaEntrada = new FormNovaEntrada(this.usuario);
             this.Desktop.add(frmNovaEntrada);
             frmNovaEntrada.setVisible(true);
+            frmNovaEntrada.toFront();
+            frmNovaEntrada.requestFocus();
         }
         this.lblStatus.setText("Status: Pronto!");
-      
+        this.lblStatus.repaint();
+         this.btnNovaEntrada.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_btnNovaEntradaMouseClicked
 
     private void btnNovaEntradaMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnNovaEntradaMouseEntered
@@ -1088,7 +1096,7 @@ public class FormDesktop extends javax.swing.JFrame {
     }//GEN-LAST:event_btnNovaEntradaMouseReleased
 
     private void btnEditarEntradaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEditarEntradaMouseClicked
-        // TODO add your handling code here:
+          this.btnEditarEntrada.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
          FormEditarEntrada frmEditarEntrada;
         //abrir internal frame
         
@@ -1096,19 +1104,24 @@ public class FormDesktop extends javax.swing.JFrame {
             frmEditarEntrada = new FormEditarEntrada(this.usuario);
             this.Desktop.add(frmEditarEntrada);
             frmEditarEntrada.setVisible(true);
+            frmEditarEntrada.toFront();
+            frmEditarEntrada.requestFocus();
         }
+         this.btnEditarEntrada.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_btnEditarEntradaMouseClicked
 
     private void btnListarEntradaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnListarEntradaMouseClicked
-        // TODO add your handling code here:
+        this.btnListarEntrada.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         FormListarTodasEntradas frmListarEntradas;
         //abrir internal frame        
         if(EntradaVeiculo.janelaListarEntrada == false ){
             frmListarEntradas = new FormListarTodasEntradas(this.usuario);
             this.Desktop.add(frmListarEntradas);
             frmListarEntradas.setVisible(true);
+            frmListarEntradas.toFront();
+            frmListarEntradas.requestFocus();
         }
-        
+        this.btnListarEntrada.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         
     }//GEN-LAST:event_btnListarEntradaMouseClicked
 
@@ -1148,15 +1161,17 @@ public class FormDesktop extends javax.swing.JFrame {
     }//GEN-LAST:event_DesktopComponentAdded
 
     private void btnPesquisarEntradaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPesquisarEntradaMouseClicked
-        // TODO add your handling code here:
+       this.btnPesquisarEntrada.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         FormPesquisaEntrada frmPesquisarEntradas;
         //abrir internal frame        
         if(EntradaVeiculo.janelaPesquisarEntrada == false ){
             frmPesquisarEntradas = new FormPesquisaEntrada(this.usuario);
             this.Desktop.add(frmPesquisarEntradas);
             frmPesquisarEntradas.setVisible(true);
+            frmPesquisarEntradas.toFront();
+            frmPesquisarEntradas.requestFocus();
         }
-        
+         this.btnPesquisarEntrada.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         
     }//GEN-LAST:event_btnPesquisarEntradaMouseClicked
 
@@ -1167,6 +1182,7 @@ public class FormDesktop extends javax.swing.JFrame {
 
     private void btnNovoFinanciamentoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnNovoFinanciamentoMouseClicked
         // TODO add your handling code here:
+        this.btnNovoFinanciamento.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         this.lblStatus.setText("Status: abrindo formulário 'Novo Financiamento de Veículo'");
         FormNovoFinanciamento frmNovoFinanciamento;
         //abrir internal frame
@@ -1175,7 +1191,10 @@ public class FormDesktop extends javax.swing.JFrame {
             frmNovoFinanciamento = new FormNovoFinanciamento(this.usuario);
             this.Desktop.add(frmNovoFinanciamento);
             frmNovoFinanciamento.setVisible(true);
+            frmNovoFinanciamento.toFront();
+            frmNovoFinanciamento.requestFocus();
         }
+        this.btnNovoFinanciamento.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         this.lblStatus.setText("Status: Pronto!");
     }//GEN-LAST:event_btnNovoFinanciamentoMouseClicked
 
@@ -1205,8 +1224,7 @@ public class FormDesktop extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEditarFinanciamentoMouseMoved
 
     private void btnEditarFinanciamentoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEditarFinanciamentoMouseClicked
-        // TODO add your handling code here:
-        // TODO add your handling code here:
+       this.btnEditarFinanciamento.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
          FormEditarFinanciamento frmEditarfinanciamento;
         //abrir internal frame
         
@@ -1214,7 +1232,10 @@ public class FormDesktop extends javax.swing.JFrame {
             frmEditarfinanciamento = new FormEditarFinanciamento(this.usuario);
             this.Desktop.add(frmEditarfinanciamento);
             frmEditarfinanciamento.setVisible(true);
+            frmEditarfinanciamento.toFront();
+            frmEditarfinanciamento.requestFocus();
         }
+        this.btnEditarFinanciamento.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_btnEditarFinanciamentoMouseClicked
 
     private void btnEditarFinanciamentoMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEditarFinanciamentoMouseEntered
@@ -1243,14 +1264,17 @@ public class FormDesktop extends javax.swing.JFrame {
     }//GEN-LAST:event_btnListarFinanciamentoMouseMoved
 
     private void btnListarFinanciamentoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnListarFinanciamentoMouseClicked
-        // TODO add your handling code here:
+        this.btnListarFinanciamento.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         FormListarTodosFinanciamento frmListarTodosFinanciamento;
         //abrir internal frame        
         if(Financiamento.janelaListaTodosFinanciamento == false ){
             frmListarTodosFinanciamento = new FormListarTodosFinanciamento(this.usuario);
             this.Desktop.add(frmListarTodosFinanciamento);
             frmListarTodosFinanciamento.setVisible(true);
+            frmListarTodosFinanciamento.toFront();
+            frmListarTodosFinanciamento.requestFocus();            
         }
+         this.btnListarFinanciamento.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_btnListarFinanciamentoMouseClicked
 
     private void btnListarFinanciamentoMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnListarFinanciamentoMouseEntered
@@ -1279,14 +1303,17 @@ public class FormDesktop extends javax.swing.JFrame {
     }//GEN-LAST:event_btnPesquisarFinanciamentoMouseMoved
 
     private void btnPesquisarFinanciamentoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPesquisarFinanciamentoMouseClicked
-        // TODO add your handling code here:
+        this.btnPesquisarFinanciamento.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
          FormPesquisaFinanciamento frmPesquisaFinanciamento;
         //abrir internal frame        
         if(Financiamento.janelaPesquisaFinanciamento == false ){
             frmPesquisaFinanciamento = new FormPesquisaFinanciamento(this.usuario);
             this.Desktop.add(frmPesquisaFinanciamento);
             frmPesquisaFinanciamento.setVisible(true);
+            frmPesquisaFinanciamento.toFront();
+            frmPesquisaFinanciamento.requestFocus();
         }
+        this.btnPesquisarFinanciamento.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_btnPesquisarFinanciamentoMouseClicked
 
     private void btnPesquisarFinanciamentoMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPesquisarFinanciamentoMouseEntered
@@ -1319,7 +1346,7 @@ public class FormDesktop extends javax.swing.JFrame {
     }//GEN-LAST:event_btnNovaSaidaMouseMoved
 
     private void btnNovaSaidaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnNovaSaidaMouseClicked
-        // TODO add your handling code here:
+        this.btnNovaSaida.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
          this.lblStatus.setText("Status: abrindo formulário 'Nova Saída de Veículo'");
         FormNovaSaida frmNovaSaida;
         //abrir internal frame
@@ -1328,8 +1355,11 @@ public class FormDesktop extends javax.swing.JFrame {
             frmNovaSaida = new FormNovaSaida(this.usuario);
             this.Desktop.add(frmNovaSaida);
             frmNovaSaida.setVisible(true);
+            frmNovaSaida.toFront();
+            frmNovaSaida.requestFocus();
         }
         this.lblStatus.setText("Status: Pronto!");
+        this.btnNovaSaida.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_btnNovaSaidaMouseClicked
 
     private void btnNovaSaidaMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnNovaSaidaMouseEntered
@@ -1358,14 +1388,17 @@ public class FormDesktop extends javax.swing.JFrame {
     }//GEN-LAST:event_btnListarSaidaMouseMoved
 
     private void btnListarSaidaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnListarSaidaMouseClicked
-        // TODO add your handling code here:
+        this.btnListarSaida.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         FormListarTodasSaida frmListarSaidas;
         //abrir internal frame        
         if(SaidaVeiculo.janelaListarSaidas == false ){
             frmListarSaidas = new FormListarTodasSaida(this.usuario);
             this.Desktop.add(frmListarSaidas);
             frmListarSaidas.setVisible(true);
+            frmListarSaidas.toFront();
+            frmListarSaidas.requestFocus();
         }
+        this.btnListarSaida.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_btnListarSaidaMouseClicked
 
     private void btnListarSaidaMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnListarSaidaMouseEntered
@@ -1394,14 +1427,17 @@ public class FormDesktop extends javax.swing.JFrame {
     }//GEN-LAST:event_btnPesquisarSaidaMouseMoved
 
     private void btnPesquisarSaidaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPesquisarSaidaMouseClicked
-        // TODO add your handling code here:
+        this.btnPesquisarSaida.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         FormPesquisaSaida frmPesquisarSaidas;
         //abrir internal frame        
         if(SaidaVeiculo.janelaPesquisarSaida == false ){
             frmPesquisarSaidas = new FormPesquisaSaida(this.usuario);
             this.Desktop.add(frmPesquisarSaidas);
             frmPesquisarSaidas.setVisible(true);
+            frmPesquisarSaidas.toFront();
+            frmPesquisarSaidas.requestFocus();
         }
+        this.btnPesquisarSaida.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_btnPesquisarSaidaMouseClicked
 
     private void btnPesquisarSaidaMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPesquisarSaidaMouseEntered
