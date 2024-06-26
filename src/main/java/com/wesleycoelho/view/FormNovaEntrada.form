@@ -230,9 +230,9 @@
                               <Group type="102" attributes="0">
                                   <Component id="jLabel10" max="32767" attributes="0"/>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="txtDataEntrada" min="-2" pref="95" max="-2" attributes="0"/>
+                                  <Component id="txtDataEntrada" min="-2" pref="117" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="cbUFEntrada" min="-2" pref="157" max="-2" attributes="0"/>
+                              <Component id="cbUFEntrada" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -269,13 +269,15 @@
                       <Component id="jLabel8" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="jLabel9" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabel11" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="cbAnoEntrada" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="cbCorEntrada" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabel10" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtDataEntrada" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jLabel9" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel11" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbAnoEntrada" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbCorEntrada" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel10" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Component id="txtDataEntrada" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -437,9 +439,9 @@
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
           </AuxValues>
         </Component>
-        <Component class="javax.swing.JTextField" name="txtDataEntrada">
+        <Component class="com.toedter.calendar.JDateChooser" name="txtDataEntrada">
           <Properties>
-            <Property name="editable" type="boolean" value="false"/>
+            <Property name="dateFormatString" type="java.lang.String" value="d &apos;/&apos; MMM &apos;/&apos; y"/>
           </Properties>
           <Events>
             <EventHandler event="ancestorAdded" listener="javax.swing.event.AncestorListener" parameters="javax.swing.event.AncestorEvent" handler="txtDataEntradaAncestorAdded"/>

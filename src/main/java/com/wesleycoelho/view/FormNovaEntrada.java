@@ -79,7 +79,7 @@ public class FormNovaEntrada extends javax.swing.JInternalFrame {
         cbCidadeEntrada = new javax.swing.JComboBox<>();
         jLabel16 = new javax.swing.JLabel();
         cbUFEntrada = new javax.swing.JComboBox<>();
-        txtDataEntrada = new javax.swing.JTextField();
+        txtDataEntrada = new com.toedter.calendar.JDateChooser();
         jPanel6 = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
         txtProprietarioEntrada = new javax.swing.JTextField();
@@ -316,7 +316,7 @@ public class FormNovaEntrada extends javax.swing.JInternalFrame {
             }
         });
 
-        txtDataEntrada.setEditable(false);
+        txtDataEntrada.setDateFormatString("d '/' MMM '/' y");
         txtDataEntrada.addAncestorListener(new javax.swing.event.AncestorListener() {
             public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
                 txtDataEntradaAncestorAdded(evt);
@@ -375,8 +375,8 @@ public class FormNovaEntrada extends javax.swing.JInternalFrame {
                             .addGroup(jPanel5Layout.createSequentialGroup()
                                 .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGap(18, 18, 18)
-                                .addComponent(txtDataEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(cbUFEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(txtDataEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(cbUFEntrada, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
@@ -403,12 +403,13 @@ public class FormNovaEntrada extends javax.swing.JInternalFrame {
                     .addComponent(txtPlacaEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
-                    .addComponent(jLabel11)
-                    .addComponent(cbAnoEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cbCorEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel10)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel9)
+                        .addComponent(jLabel11)
+                        .addComponent(cbAnoEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cbCorEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel10))
                     .addComponent(txtDataEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -514,18 +515,8 @@ public class FormNovaEntrada extends javax.swing.JInternalFrame {
 
     private void btnSalvarEntradaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarEntradaActionPerformed
 
-        boolean fields = Validacao.checkFieldsFormFinanciamento(new String[]{
-            this.txtProprietarioEntrada.getText(),
-            this.txtTelefoneEntrada.getText(),
-            this.txtWhatsappEntrada.getText(),
-            this.txtMarcaEntrada.getText(),
-            this.txtModeloEntrada.getText(),
-            this.txtRenavamEntrada.getText(),
-            this.txtChassiEntrada.getText(),
-            this.txtPlacaEntrada.getText(),
-            this.cbCorEntrada.getSelectedItem().toString(),
-            this.cbCidadeEntrada.getSelectedItem().toString(),
-            this.cbUFEntrada.getSelectedItem().toString()
+        boolean fields = Validacao.checkFieldsFormFinanciamento(new String[]{            
+            this.txtPlacaEntrada.getText(),            
         });
        try{  
             if ( fields  ==  false) throw new RuntimeException("Preencha todos os campos!");         
@@ -536,8 +527,8 @@ public class FormNovaEntrada extends javax.swing.JInternalFrame {
             EntradaVeiculo entradaVeiculo = new EntradaVeiculo();
             entradaVeiculo.setNome_proprietario(this.txtProprietarioEntrada.getText());
             entradaVeiculo.setTelefone(this.txtTelefoneEntrada.getText());
-            entradaVeiculo.setWhatsapp(this.txtWhatsappEntrada.getText());                    
-            entradaVeiculo.setData_entrada(Date.valueOf(LocalDate.now()));
+            entradaVeiculo.setWhatsapp(this.txtWhatsappEntrada.getText());             
+            entradaVeiculo.setData_entrada(new java.sql.Date(this.txtDataEntrada.getDate().getTime()));
             entradaVeiculo.setMarca(this.txtMarcaEntrada.getText());
             entradaVeiculo.setModelo(this.txtModeloEntrada.getText());
             entradaVeiculo.setRenavam(this.txtRenavamEntrada.getText());
@@ -605,13 +596,6 @@ public class FormNovaEntrada extends javax.swing.JInternalFrame {
         
     }//GEN-LAST:event_formInternalFrameOpened
 
-    private void cbAnoEntradaAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_cbAnoEntradaAncestorAdded
-        // TODO add your handling code here:
-        for (int i = 1950; i < 2061; i++) {            
-            this.cbAnoEntrada.addItem(String.valueOf(i));
-        }
-    }//GEN-LAST:event_cbAnoEntradaAncestorAdded
-
     private void txtPesquisarEntradaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtPesquisarEntradaMouseClicked
         //recuperando os dados do formulario
         
@@ -637,33 +621,6 @@ public class FormNovaEntrada extends javax.swing.JInternalFrame {
    
     }//GEN-LAST:event_formAncestorRemoved
 
-    private void cbCidadeEntradaAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_cbCidadeEntradaAncestorAdded
-        // TODO add your handling code here:
-        List<Municipio> municipios;
-        
-        municipios = MunicipioDB.selectAllByState("São Paulo");
-        for(Municipio municipio: municipios){
-            this.cbCidadeEntrada.addItem(municipio.getNome());
-        }
-     
-    }//GEN-LAST:event_cbCidadeEntradaAncestorAdded
-
-    private void cbUFEntradaAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_cbUFEntradaAncestorAdded
-        // TODO add your handling code here:
-        List<Estado> estados;
-        
-        estados = EstadoDB.selectAll();
-        
-      for(Estado estado: estados){
-           this.cbUFEntrada.addItem(estado.getNome());
-      }
-    }//GEN-LAST:event_cbUFEntradaAncestorAdded
-
-    private void cbCorEntradaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cbCorEntradaKeyTyped
-        // TODO add your handling code here:
-        
-    }//GEN-LAST:event_cbCorEntradaKeyTyped
-
     private void btnLimparFormularioEntradaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLimparFormularioEntradaMouseClicked
         // TODO add your handling code here:
         this.txtChassiEntrada.setText("");
@@ -677,9 +634,25 @@ public class FormNovaEntrada extends javax.swing.JInternalFrame {
         
     }//GEN-LAST:event_btnLimparFormularioEntradaMouseClicked
 
+    private void txtProprietarioEntradaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtProprietarioEntradaKeyReleased
+        // TODO add your handling code here:
+        this.txtProprietarioEntrada.setText(this.txtProprietarioEntrada.getText().toUpperCase());
+    }//GEN-LAST:event_txtProprietarioEntradaKeyReleased
+
+    private void cbUFEntradaAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_cbUFEntradaAncestorAdded
+        // TODO add your handling code here:
+        List<Estado> estados;
+
+        estados = EstadoDB.selectAll();
+
+        for(Estado estado: estados){
+            this.cbUFEntrada.addItem(estado.getNome());
+        }
+    }//GEN-LAST:event_cbUFEntradaAncestorAdded
+
     private void cbUFEntradaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbUFEntradaItemStateChanged
         // TODO add your handling code here:
-        List<Municipio> municipios;        
+        List<Municipio> municipios;
         municipios = MunicipioDB.selectAllByState(cbUFEntrada.getSelectedItem().toString());
         this.cbCidadeEntrada.removeAllItems();
         for(Municipio municipio: municipios){
@@ -689,13 +662,56 @@ public class FormNovaEntrada extends javax.swing.JInternalFrame {
 
     private void cbUFEntradaComponentAdded(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_cbUFEntradaComponentAdded
         // TODO add your handling code here:
-        List<Municipio> municipios;        
+        List<Municipio> municipios;
         municipios = MunicipioDB.selectAllByState(cbUFEntrada.getSelectedItem().toString());
         this.cbCidadeEntrada.removeAllItems();
         for(Municipio municipio: municipios){
             this.cbCidadeEntrada.addItem(municipio.getNome());
         }
     }//GEN-LAST:event_cbUFEntradaComponentAdded
+
+    private void cbCidadeEntradaAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_cbCidadeEntradaAncestorAdded
+        // TODO add your handling code here:
+        List<Municipio> municipios;
+
+        municipios = MunicipioDB.selectAllByState("São Paulo");
+        for(Municipio municipio: municipios){
+            this.cbCidadeEntrada.addItem(municipio.getNome());
+        }
+
+    }//GEN-LAST:event_cbCidadeEntradaAncestorAdded
+
+    private void cbCorEntradaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cbCorEntradaKeyTyped
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_cbCorEntradaKeyTyped
+
+    private void cbCorEntradaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cbCorEntradaKeyReleased
+        // TODO add your handling code here:
+        this.cbCorEntrada.setSelectedItem(this.cbCorEntrada.getSelectedItem().toString().toUpperCase());
+    }//GEN-LAST:event_cbCorEntradaKeyReleased
+
+    private void cbAnoEntradaAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_cbAnoEntradaAncestorAdded
+        // TODO add your handling code here:
+        for (int i = 1950; i < 2061; i++) {
+            this.cbAnoEntrada.addItem(String.valueOf(i));
+        }
+    }//GEN-LAST:event_cbAnoEntradaAncestorAdded
+
+    private void txtPlacaEntradaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPlacaEntradaKeyReleased
+        // TODO add your handling code here:
+        this.txtPlacaEntrada.setText(this.txtPlacaEntrada.getText().toUpperCase());
+    }//GEN-LAST:event_txtPlacaEntradaKeyReleased
+
+    private void txtChassiEntradaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtChassiEntradaKeyReleased
+        // TODO add your handling code here:
+        this.txtChassiEntrada.setText(this.txtChassiEntrada.getText().toUpperCase());
+    }//GEN-LAST:event_txtChassiEntradaKeyReleased
+
+    private void txtRenavamEntradaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtRenavamEntradaKeyReleased
+        // TODO add your handling code here:
+        this.txtRenavamEntrada.setText(this.txtRenavamEntrada.getText().toUpperCase());
+    }//GEN-LAST:event_txtRenavamEntradaKeyReleased
 
     private void txtMarcaEntradaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMarcaEntradaKeyReleased
         // TODO add your handling code here:
@@ -707,34 +723,9 @@ public class FormNovaEntrada extends javax.swing.JInternalFrame {
         this.txtModeloEntrada.setText(this.txtModeloEntrada.getText().toUpperCase());
     }//GEN-LAST:event_txtModeloEntradaKeyReleased
 
-    private void txtRenavamEntradaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtRenavamEntradaKeyReleased
-        // TODO add your handling code here:
-        this.txtRenavamEntrada.setText(this.txtRenavamEntrada.getText().toUpperCase());
-    }//GEN-LAST:event_txtRenavamEntradaKeyReleased
-
-    private void txtChassiEntradaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtChassiEntradaKeyReleased
-        // TODO add your handling code here:
-        this.txtChassiEntrada.setText(this.txtChassiEntrada.getText().toUpperCase());
-    }//GEN-LAST:event_txtChassiEntradaKeyReleased
-
-    private void txtPlacaEntradaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPlacaEntradaKeyReleased
-        // TODO add your handling code here:
-        this.txtPlacaEntrada.setText(this.txtPlacaEntrada.getText().toUpperCase());
-    }//GEN-LAST:event_txtPlacaEntradaKeyReleased
-
-    private void cbCorEntradaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cbCorEntradaKeyReleased
-        // TODO add your handling code here:
-        this.cbCorEntrada.setSelectedItem(this.cbCorEntrada.getSelectedItem().toString().toUpperCase());
-    }//GEN-LAST:event_cbCorEntradaKeyReleased
-
-    private void txtProprietarioEntradaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtProprietarioEntradaKeyReleased
-        // TODO add your handling code here:
-        this.txtProprietarioEntrada.setText(this.txtProprietarioEntrada.getText().toUpperCase());
-    }//GEN-LAST:event_txtProprietarioEntradaKeyReleased
-
     private void txtDataEntradaAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_txtDataEntradaAncestorAdded
-        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");    
-        this.txtDataEntrada.setText(LocalDate.now().format(fmt));
+         java.util.Date data = new java.util.Date();
+        this.txtDataEntrada.setDate(data);
     }//GEN-LAST:event_txtDataEntradaAncestorAdded
 
 
@@ -766,7 +757,7 @@ public class FormNovaEntrada extends javax.swing.JInternalFrame {
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JTextField txtChassiEntrada;
-    private javax.swing.JTextField txtDataEntrada;
+    private com.toedter.calendar.JDateChooser txtDataEntrada;
     private javax.swing.JTextField txtMarcaEntrada;
     private javax.swing.JTextField txtModeloEntrada;
     private javax.swing.JTextField txtPesquisarEntrada;

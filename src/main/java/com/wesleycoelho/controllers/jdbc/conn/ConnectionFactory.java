@@ -42,8 +42,8 @@ public class ConnectionFactory {
     }
     
     private static Properties loadProperties(){
-        try (FileInputStream fs = new FileInputStream("C:\\Program Files\\JavaApplicationGaragem\\properties\\db.properties")){
-        //try (FileInputStream fs = new FileInputStream(".\\properties\\db.properties")){ 
+       // try (FileInputStream fs = new FileInputStream("C:\\Program Files\\JavaApplicationGaragem\\properties\\db.properties")){
+        try (FileInputStream fs = new FileInputStream(".\\properties\\db.properties")){ 
             Properties props = new Properties();
             props.load(fs);
             return props;
