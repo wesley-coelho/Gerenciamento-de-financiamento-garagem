@@ -14,6 +14,7 @@ import com.wesleycoelho.controllers.jdbc.conn.MunicipioDB;
 import com.wesleycoelho.controllers.jdbc.conn.ParcelamentoDB;
 import com.wesleycoelho.controllers.jdbc.conn.SaidaVeiculoDB;
 import com.wesleycoelho.model.Cliente;
+import com.wesleycoelho.model.DaoException;
 import com.wesleycoelho.model.Estado;
 import com.wesleycoelho.model.Financiamento;
 import com.wesleycoelho.model.Municipio;
@@ -23,10 +24,14 @@ import com.wesleycoelho.model.PrintingFichaVersoFinanciamento;
 import com.wesleycoelho.model.SaidaVeiculo;
 import com.wesleycoelho.model.Validacao;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.List;
 import javax.swing.JFormattedTextField;
 import javax.swing.JTextField;
@@ -67,7 +72,7 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
         jLabel22 = new javax.swing.JLabel();
         txtPesquisarPlaca = new javax.swing.JTextField();
         btnPesquisarEntrada = new javax.swing.JButton();
-        jPanel5 = new javax.swing.JPanel();
+        panelDadosCliente = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         txtNomeFinanciamento = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
@@ -92,20 +97,20 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
         txtCPFFinanciamento = new javax.swing.JTextField();
         jLabel28 = new javax.swing.JLabel();
         txtComplementoFinanciamento = new javax.swing.JTextField();
-        jPanel6 = new javax.swing.JPanel();
+        panelDadosFinanciamento = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
         dtFinanciamento = new com.toedter.calendar.JDateChooser();
         jLabel11 = new javax.swing.JLabel();
         cbQtdParcelasFinanciamento = new javax.swing.JComboBox<>();
         jLabel12 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
-        cbDiaVencimentoFinanciamento = new javax.swing.JComboBox<>();
         txtValParcelaFinanciamento = new javax.swing.JFormattedTextField();
         txtObsFinanciamento = new javax.swing.JTextField();
         jLabel24 = new javax.swing.JLabel();
         jLabel27 = new javax.swing.JLabel();
         txtFicha = new javax.swing.JFormattedTextField();
-        jPanel7 = new javax.swing.JPanel();
+        dataVencimentoPrimeiraParcela = new com.toedter.calendar.JDateChooser();
+        panelDadosVeiculo = new javax.swing.JPanel();
         jLabel16 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
@@ -256,8 +261,8 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
         });
         jToolBar1.add(btnPesquisarEntrada);
 
-        jPanel5.setBackground(new java.awt.Color(243, 245, 251));
-        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Cliente"));
+        panelDadosCliente.setBackground(new java.awt.Color(243, 245, 251));
+        panelDadosCliente.setBorder(javax.swing.BorderFactory.createTitledBorder("Cliente"));
 
         jLabel1.setText("*NOME:");
 
@@ -450,21 +455,21 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
             }
         });
 
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
+        javax.swing.GroupLayout panelDadosClienteLayout = new javax.swing.GroupLayout(panelDadosCliente);
+        panelDadosCliente.setLayout(panelDadosClienteLayout);
+        panelDadosClienteLayout.setHorizontalGroup(
+            panelDadosClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelDadosClienteLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(panelDadosClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelDadosClienteLayout.createSequentialGroup()
+                        .addGroup(panelDadosClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE)
                             .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(panelDadosClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtNomeFinanciamento)
-                            .addGroup(jPanel5Layout.createSequentialGroup()
+                            .addGroup(panelDadosClienteLayout.createSequentialGroup()
                                 .addComponent(txtRgFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -474,55 +479,55 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
                                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(19, 19, 19)
                                 .addComponent(txtCEPFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelDadosClienteLayout.createSequentialGroup()
+                        .addGroup(panelDadosClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(panelDadosClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtEnderecoFinanciamento)
-                            .addGroup(jPanel5Layout.createSequentialGroup()
+                            .addGroup(panelDadosClienteLayout.createSequentialGroup()
                                 .addComponent(txtBairroFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(jLabel28, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(txtComplementoFinanciamento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addComponent(txtComplementoFinanciamento, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE))))
+                    .addGroup(panelDadosClienteLayout.createSequentialGroup()
+                        .addGroup(panelDadosClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(panelDadosClienteLayout.createSequentialGroup()
                                 .addComponent(jLabel26)
                                 .addGap(18, 18, 18)
                                 .addComponent(txtWhatsappFinanciamento))
-                            .addGroup(jPanel5Layout.createSequentialGroup()
+                            .addGroup(panelDadosClienteLayout.createSequentialGroup()
                                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(txtNumeroFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(18, 18, 18)
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGroup(panelDadosClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelDadosClienteLayout.createSequentialGroup()
                                 .addComponent(cbCidadeFinanciamento, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGap(18, 18, 18)
                                 .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(cbUFFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel5Layout.createSequentialGroup()
+                            .addGroup(panelDadosClienteLayout.createSequentialGroup()
                                 .addComponent(jLabel25)
                                 .addGap(18, 18, 18)
                                 .addComponent(txtTelefoneFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
+        panelDadosClienteLayout.setVerticalGroup(
+            panelDadosClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelDadosClienteLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panelDadosClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(txtNomeFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panelDadosClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jLabel3)
                     .addComponent(jLabel4)
@@ -530,17 +535,17 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
                     .addComponent(txtRgFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtCPFFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panelDadosClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtEnderecoFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panelDadosClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtBairroFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6)
                     .addComponent(jLabel28)
                     .addComponent(txtComplementoFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panelDadosClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtNumeroFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7)
                     .addComponent(jLabel8)
@@ -548,7 +553,7 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
                     .addComponent(cbCidadeFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cbUFFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panelDadosClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel25)
                     .addComponent(txtWhatsappFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtTelefoneFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -556,8 +561,8 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel6.setBackground(new java.awt.Color(243, 245, 251));
-        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Financiamento"));
+        panelDadosFinanciamento.setBackground(new java.awt.Color(243, 245, 251));
+        panelDadosFinanciamento.setBorder(javax.swing.BorderFactory.createTitledBorder("Financiamento"));
 
         jLabel10.setText("DATA:");
 
@@ -579,10 +584,7 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
 
         jLabel12.setText("*VALOR PARCELA:");
 
-        jLabel15.setText("*DIA DE VENCIMENTO: ");
-
-        cbDiaVencimentoFinanciamento.setEditable(true);
-        cbDiaVencimentoFinanciamento.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "5", "10", "15", "20", "25" }));
+        jLabel15.setText("*VENCIMENTO DA 1ª PARCELA: ");
 
         txtValParcelaFinanciamento.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
         txtValParcelaFinanciamento.setText("0,00");
@@ -614,72 +616,72 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
             }
         });
 
-        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
-        jPanel6.setLayout(jPanel6Layout);
-        jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+        dataVencimentoPrimeiraParcela.setDateFormatString("dd'/'MM'/'yyyy");
+
+        javax.swing.GroupLayout panelDadosFinanciamentoLayout = new javax.swing.GroupLayout(panelDadosFinanciamento);
+        panelDadosFinanciamento.setLayout(panelDadosFinanciamentoLayout);
+        panelDadosFinanciamentoLayout.setHorizontalGroup(
+            panelDadosFinanciamentoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelDadosFinanciamentoLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGroup(panelDadosFinanciamentoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelDadosFinanciamentoLayout.createSequentialGroup()
                         .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(txtObsFinanciamento))
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel6Layout.createSequentialGroup()
+                    .addGroup(panelDadosFinanciamentoLayout.createSequentialGroup()
+                        .addGroup(panelDadosFinanciamentoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelDadosFinanciamentoLayout.createSequentialGroup()
                                 .addComponent(jLabel27, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(txtFicha, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(dtFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(dataVencimentoPrimeiraParcela, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(panelDadosFinanciamentoLayout.createSequentialGroup()
+                                .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(cbQtdParcelasFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(txtValParcelaFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel6Layout.createSequentialGroup()
-                                .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(cbQtdParcelasFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(cbDiaVencimentoFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                .addComponent(dtFinanciamento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addContainerGap())))
         );
-        jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
+        panelDadosFinanciamentoLayout.setVerticalGroup(
+            panelDadosFinanciamentoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelDadosFinanciamentoLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(dtFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel10)
+                .addGroup(panelDadosFinanciamentoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelDadosFinanciamentoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel27)
-                        .addComponent(txtFicha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(txtValParcelaFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel12)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel11)
-                        .addComponent(cbQtdParcelasFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel15)
-                        .addComponent(cbDiaVencimentoFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(txtFicha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel15))
+                    .addComponent(dataVencimentoPrimeiraParcela, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panelDadosFinanciamentoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(panelDadosFinanciamentoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel11)
+                        .addComponent(cbQtdParcelasFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtValParcelaFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel12)
+                        .addComponent(jLabel10))
+                    .addComponent(dtFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(panelDadosFinanciamentoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtObsFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel24))
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel7.setBackground(new java.awt.Color(243, 245, 251));
-        jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder("Veículo"));
+        panelDadosVeiculo.setBackground(new java.awt.Color(243, 245, 251));
+        panelDadosVeiculo.setBorder(javax.swing.BorderFactory.createTitledBorder("Veículo"));
 
         jLabel16.setText("MARCA:");
 
@@ -722,34 +724,34 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
             }
         });
 
-        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
-        jPanel7.setLayout(jPanel7Layout);
-        jPanel7Layout.setHorizontalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
+        javax.swing.GroupLayout panelDadosVeiculoLayout = new javax.swing.GroupLayout(panelDadosVeiculo);
+        panelDadosVeiculo.setLayout(panelDadosVeiculoLayout);
+        panelDadosVeiculoLayout.setHorizontalGroup(
+            panelDadosVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelDadosVeiculoLayout.createSequentialGroup()
                 .addGap(23, 23, 23)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel7Layout.createSequentialGroup()
+                .addGroup(panelDadosVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelDadosVeiculoLayout.createSequentialGroup()
                         .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtPlacaEntrada))
-                    .addGroup(jPanel7Layout.createSequentialGroup()
+                    .addGroup(panelDadosVeiculoLayout.createSequentialGroup()
                         .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtChassiEntrada))
-                    .addGroup(jPanel7Layout.createSequentialGroup()
+                    .addGroup(panelDadosVeiculoLayout.createSequentialGroup()
                         .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtRenavamEntrada))
-                    .addGroup(jPanel7Layout.createSequentialGroup()
+                    .addGroup(panelDadosVeiculoLayout.createSequentialGroup()
                         .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtModeloEntrada))
-                    .addGroup(jPanel7Layout.createSequentialGroup()
+                    .addGroup(panelDadosVeiculoLayout.createSequentialGroup()
                         .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtMarcaEntrada))
-                    .addGroup(jPanel7Layout.createSequentialGroup()
+                    .addGroup(panelDadosVeiculoLayout.createSequentialGroup()
                         .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cbAnoEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -760,31 +762,31 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
-        jPanel7Layout.setVerticalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
+        panelDadosVeiculoLayout.setVerticalGroup(
+            panelDadosVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelDadosVeiculoLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panelDadosVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel16)
                     .addComponent(txtMarcaEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panelDadosVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel17)
                     .addComponent(txtModeloEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panelDadosVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel18)
                     .addComponent(txtRenavamEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panelDadosVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtChassiEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel19))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panelDadosVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtPlacaEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel20))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panelDadosVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel21)
                     .addComponent(jLabel23)
                     .addComponent(cbAnoEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -800,9 +802,9 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(panelDadosFinanciamento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(panelDadosCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(panelDadosVeiculo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -810,12 +812,12 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(panelDadosVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(panelDadosCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
-                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18))
+                .addComponent(panelDadosFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
@@ -824,11 +826,12 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
     private void btnSalvarFinanciamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarFinanciamentoActionPerformed
 
     try{
+        
         String[] fields = {
             this.txtNomeFinanciamento.getText(),            
             this.txtValParcelaFinanciamento.getText(),            
             this.cbQtdParcelasFinanciamento.getSelectedItem().toString(),
-            this.cbDiaVencimentoFinanciamento.getSelectedItem().toString()
+            this.dataVencimentoPrimeiraParcela.getDate().toString()
         };
 
         if( !Validacao.checkFieldsFormFinanciamento(fields)){
@@ -837,8 +840,9 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
         }
 
         int id_uf = EstadoDB.searchIdStateByName(this.cbUFFinanciamento.getSelectedItem().toString());
+        if( id_uf == 0 ) throw new DaoException("Erro ao acessar a tabela uf");
         int id_municipio = MunicipioDB.searchIdByCidade(this.cbCidadeFinanciamento.getSelectedItem().toString(), id_uf);
-        
+        if( id_municipio == 0 ) throw new DaoException("Erro ao acessar a tabela municipio");
         //Dados do cliente para inserir no banco
         Cliente cliente = new Cliente();
         cliente.setNome(this.txtNomeFinanciamento.getText());
@@ -854,28 +858,35 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
         cliente.setTelefone("".equals(this.txtTelefoneFinanciamento.getText())?null:this.txtTelefoneFinanciamento.getText());
         cliente.setComplemento("".equals(this.txtComplementoFinanciamento.getText())?null:this.txtComplementoFinanciamento.getText());
         int id_cliente = ClienteDB.save(cliente);
-        
+        if( id_cliente == 0 ) throw new DaoException("Erro ao acessar a tabela cliente");
+        //manipulando data com Date e Calendar para obter o dia do mes e setar a data de vencmento da primeira parcela
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar cal = Calendar.getInstance();        
+        java.util.Date vencPrimeiraParcela = new java.util.Date(this.dataVencimentoPrimeiraParcela.getDate().getTime());
+        cal.setTime(vencPrimeiraParcela);
+      
         // inserir financiamento                
         Financiamento financiamento = new Financiamento(                        
             new java.sql.Date(this.dtFinanciamento.getDate().getTime()),
             "".equals(this.txtFicha.getText())?null:Integer.valueOf(this.txtFicha.getText()),
             "".equals(this.txtValParcelaFinanciamento.getText())?null:Double.valueOf(this.txtValParcelaFinanciamento.getText().replace(",", ".")),            
             "".equals(this.cbQtdParcelasFinanciamento.getSelectedItem().toString())?null:Integer.valueOf(this.cbQtdParcelasFinanciamento.getSelectedItem().toString()),
-            "".equals(this.cbDiaVencimentoFinanciamento.getSelectedItem().toString())?null:Integer.valueOf(this.cbDiaVencimentoFinanciamento.getSelectedItem().toString()),
+            "".equals(this.dataVencimentoPrimeiraParcela.getDate().toString())?null: cal.get(Calendar.DAY_OF_MONTH),
             id_cliente,
             "".equals(this.txtObsFinanciamento.getText())?null:this.txtObsFinanciamento.getText()
         );
         int id_financiamento = FinanciamentoDB.save(financiamento);
-        
+        if( id_financiamento == 0 ) throw new DaoException("Erro ao acessar a tabela financiamento");
         //registrar as parcelas          
         int numParcelas = financiamento.getNum_parcelas();        
-        LocalDate hoje = LocalDate.now();
-        java.sql.Date  data;
+        LocalDate vencPrimeiraParcelaLocalDate = LocalDate.parse(sdf.format(vencPrimeiraParcela), DateTimeFormatter.ISO_DATE);
+        java.sql.Date  dataVencParcela;
         Parcelamento parcela;
-        for( int i = 1; i <= numParcelas; i++){
-           data = Date.valueOf(hoje.plusMonths(i).withDayOfMonth(financiamento.getDia_vencimento()));
-           parcela = new Parcelamento(null,null, id_financiamento,data, false);
-           ParcelamentoDB.save(parcela);
+        for( int i = 0; i < numParcelas; i++){
+           dataVencParcela = Date.valueOf(vencPrimeiraParcelaLocalDate.plusMonths(i).withDayOfMonth(financiamento.getDia_vencimento()));
+           parcela = new Parcelamento(null,null, id_financiamento,dataVencParcela, false, false);
+           int id_parcela = ParcelamentoDB.save(parcela);
+            if( id_parcela == 0 ) throw new DaoException("Erro ao acessar a tabela parcelamento");
         }                    
                     
         //realizar a saída do veiculo
@@ -887,9 +898,12 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
                 entrada.getId(), 
                 id_financiamento
             );
-        SaidaVeiculoDB.save(saida);
-        JOptionPane.showMessageDialog(this, "Registrado com sucesso!"); 
-        
+        int id_saida = SaidaVeiculoDB.save(saida);
+        if( id_saida == 0 ) throw new DaoException("Erro ao acessar a tabela saida_veiculo");
+        JOptionPane.showMessageDialog(this, "Registrado com sucesso!");
+        limparCamposTipoTextFieldEformattedTextField(panelDadosVeiculo);
+        limparCamposTipoTextFieldEformattedTextField(panelDadosCliente);
+        limparCamposTipoTextFieldEformattedTextField(panelDadosFinanciamento);
         //Opção de imprimir ficha
         PrinterJob job = PrinterJob.getPrinterJob();  
         if( JOptionPane.showConfirmDialog(rootPane, "Deja impirmir a ficha?") == JOptionPane.YES_OPTION  ){  
@@ -904,7 +918,7 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
               boolean doPrint = job.printDialog();
                   if (doPrint) job.print();                           
           }
-    }catch(PrinterException | NullPointerException ex){
+    }catch(DaoException | PrinterException | NullPointerException ex){
         JOptionPane.showMessageDialog(null, ex.getMessage());
     }
         
@@ -919,13 +933,13 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnExcluirEntradaActionPerformed
 
     private void btnLimparFormularioEntradaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparFormularioEntradaActionPerformed
-       for(Component c: this.jPanel5.getComponents()){
+       for(Component c: this.panelDadosCliente.getComponents()){
          if( c instanceof JTextField || c instanceof JFormattedTextField){
              ((JTextField) c).setText("");
          }
        }
        
-       for(Component c : this.jPanel6.getComponents()){
+       for(Component c : this.panelDadosFinanciamento.getComponents()){
            if( c instanceof JTextField || c instanceof JFormattedTextField){
              ((JTextField) c).setText("");
          }
@@ -1258,6 +1272,15 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
         this.txtComplementoFinanciamento.setText(this.txtComplementoFinanciamento.getText().toUpperCase());
     }//GEN-LAST:event_txtComplementoFinanciamentoKeyReleased
 
+    private void limparCamposTipoTextFieldEformattedTextField(Container container){
+        Component[]  componentes =  container.getComponents(); 
+        for(Component c : componentes){
+            if( c instanceof JTextField  || c instanceof JFormattedTextField){
+                ((JTextField) c).setText("");
+            }
+        }
+    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnExcluirEntrada;
@@ -1268,9 +1291,9 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
     private javax.swing.JComboBox<String> cbAnoEntrada;
     private javax.swing.JComboBox<String> cbCidadeFinanciamento;
     private javax.swing.JComboBox<String> cbCorEntrada;
-    private javax.swing.JComboBox<String> cbDiaVencimentoFinanciamento;
     private javax.swing.JComboBox<String> cbQtdParcelasFinanciamento;
     private javax.swing.JComboBox<String> cbUFFinanciamento;
+    private com.toedter.calendar.JDateChooser dataVencimentoPrimeiraParcela;
     private com.toedter.calendar.JDateChooser dtFinanciamento;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -1298,11 +1321,11 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel7;
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JToolBar jToolBar1;
+    private javax.swing.JPanel panelDadosCliente;
+    private javax.swing.JPanel panelDadosFinanciamento;
+    private javax.swing.JPanel panelDadosVeiculo;
     private javax.swing.JTextField txtBairroFinanciamento;
     private javax.swing.JTextField txtCEPFinanciamento;
     private javax.swing.JTextField txtCPFFinanciamento;

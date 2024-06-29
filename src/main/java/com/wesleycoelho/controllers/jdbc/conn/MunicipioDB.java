@@ -129,7 +129,7 @@ public class MunicipioDB {
     }
     
     
-    public static int searchIdByCidade(String cidade, int id_uf){
+    public static int searchIdByCidade(String cidade, int id_uf) {
         String sql = "SELECT * FROM municipio WHERE id_uf = "+id_uf+" AND cidade = '"+cidade+"'";
          Connection conn = ConnectionFactory.getConexao();
          

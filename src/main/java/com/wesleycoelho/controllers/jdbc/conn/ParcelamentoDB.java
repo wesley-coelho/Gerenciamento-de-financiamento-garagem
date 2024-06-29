@@ -22,7 +22,7 @@ import javax.swing.JOptionPane;
 public class ParcelamentoDB {
     
      public static int save(Parcelamento parcela){
-         String sql = "INSERT INTO parcelamento (data_pagamento, valor_pagamento, id_financiamento, mes_ref, ispago) VALUES("+parcela.getData_pagamento()+", "+parcela.getValor_pagamento()+", "+parcela.getId_financiamento()+", '"+parcela.getMes_ref()+"', "+parcela.getIsPago()+");";
+         String sql = "INSERT INTO parcelamento (data_pagamento, valor_pagamento, id_financiamento, mes_ref, ispago, iscanceled) VALUES("+parcela.getData_pagamento()+", "+parcela.getValor_pagamento()+", "+parcela.getId_financiamento()+", '"+parcela.getMes_ref()+"', "+parcela.getIsPago()+", "+parcela.getIsCanceled()+");";
          Connection conn = ConnectionFactory.getConexao();
          
         try {
@@ -59,7 +59,8 @@ public class ParcelamentoDB {
                         rs.getDouble("valor_pagamento"),
                         rs.getInt("id_financiamento"),
                         rs.getDate("mes_ref"),
-                        rs.getBoolean("ispago")
+                        rs.getBoolean("ispago"),
+                        rs.getBoolean("iscanceled")
                 ));
             }
             ConnectionFactory.close(conn, st, rs);
@@ -75,9 +76,9 @@ public class ParcelamentoDB {
            String sql;
           
           if( parcela.getData_pagamento() != null  )
-                sql = "UPDATE parcelamento SET valor_pagamento =  "+parcela.getValor_pagamento()+", data_pagamento = '"+parcela.getData_pagamento()+"', ispago = "+parcela.getIsPago()+" WHERE id = "+parcela.getId()+";";
+                sql = "UPDATE parcelamento SET valor_pagamento =  "+parcela.getValor_pagamento()+", data_pagamento = '"+parcela.getData_pagamento()+"', ispago = "+parcela.getIsPago()+", iscanceled = "+parcela.getIsCanceled()+" WHERE id = "+parcela.getId()+";";
           else
-                sql = "UPDATE parcelamento SET valor_pagamento =  "+parcela.getValor_pagamento()+", data_pagamento = "+null+", ispago = "+parcela.getIsPago()+" WHERE id = "+parcela.getId()+";";
+                sql = "UPDATE parcelamento SET valor_pagamento =  "+parcela.getValor_pagamento()+", data_pagamento = "+null+", ispago = "+parcela.getIsPago()+", iscanceled = "+parcela.getIsCanceled()+" WHERE id = "+parcela.getId()+";";
           Connection conn = ConnectionFactory.getConexao();
          
         try {
@@ -110,7 +111,7 @@ public class ParcelamentoDB {
     
     }
       
-      public static LocalDate getLastParcela(int id_financiamento){
+    public static LocalDate getLastParcela(int id_financiamento){
          String sql = "select Max(mes_ref) from parcelamento where id_financiamento = "+id_financiamento+";";
          LocalDate parcela = null;
          Connection conn = ConnectionFactory.getConexao();
@@ -126,9 +127,34 @@ public class ParcelamentoDB {
         } catch (SQLException ex) {                    
             JOptionPane.showMessageDialog(null,ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE );
          return null;
+        }
+    }
+        
+        public static void atualizaDiaVencimento(int intervaloDias, int id_financiamento){
+           String sql;
+           int moduloIntervaloDias = Math.abs(intervaloDias);
+          if( intervaloDias < 0  )
+                sql = "update parcelamento " +
+                      "set mes_ref = mes_ref + interval '"+moduloIntervaloDias+" day' " +
+                      "where id_financiamento = "+id_financiamento+" and mes_ref >= current_date ";
+          else
+                sql = "update parcelamento " +
+                      "set mes_ref = mes_ref - interval '"+moduloIntervaloDias+" day' " +
+                      "where id_financiamento = "+id_financiamento+" and mes_ref >= current_date ";
+          Connection conn = ConnectionFactory.getConexao();
+         
+        try {
+            Statement st = conn.createStatement();
+            st.executeUpdate(sql);
+     
+        } catch (SQLException ex) {                    
+            JOptionPane.showMessageDialog(null,ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE );
+      
         } 
     
     }
+    
+   
     
 }
 

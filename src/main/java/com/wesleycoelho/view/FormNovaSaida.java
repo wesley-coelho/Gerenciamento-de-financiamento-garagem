@@ -12,6 +12,7 @@ import com.wesleycoelho.model.Usuario;
 import javax.swing.JOptionPane;
 import com.wesleycoelho.controllers.jdbc.conn.MunicipioDB;
 import com.wesleycoelho.controllers.jdbc.conn.SaidaVeiculoDB;
+import com.wesleycoelho.model.DaoException;
 import com.wesleycoelho.model.Estado;
 import com.wesleycoelho.model.Municipio;
 import com.wesleycoelho.model.SaidaVeiculo;
@@ -511,10 +512,14 @@ public class FormNovaSaida extends javax.swing.JInternalFrame {
                     entrada.getId(),
                     null
             );
-            SaidaVeiculoDB.save(saida);
-             this.entrada = null;
-            JOptionPane.showMessageDialog(rootPane, "Operação realizada com sucesso!", null, JOptionPane.INFORMATION_MESSAGE);
-            limparCamposForm();
+            try{
+                if (SaidaVeiculoDB.save(saida) == 0) throw new DaoException("Erro ao salvar saida!");
+                 this.entrada = null;
+                JOptionPane.showMessageDialog(rootPane, "Operação realizada com sucesso!", null, JOptionPane.INFORMATION_MESSAGE);
+                limparCamposForm();
+            }catch(DaoException ex){
+                JOptionPane.showMessageDialog(null, ex.getMessage());
+            }
         }
     }//GEN-LAST:event_btnSalvarSaidaActionPerformed
 
@@ -684,6 +689,8 @@ public class FormNovaSaida extends javax.swing.JInternalFrame {
         this.txtTelefoneEntrada.setText("");
         this.txtWhatsappEntrada.setText("");
     }
+    
+    
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

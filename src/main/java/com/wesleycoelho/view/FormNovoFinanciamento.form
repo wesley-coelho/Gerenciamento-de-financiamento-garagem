@@ -40,9 +40,9 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jPanel6" max="32767" attributes="0"/>
-                  <Component id="jPanel5" alignment="0" max="32767" attributes="0"/>
-                  <Component id="jPanel7" alignment="0" max="32767" attributes="0"/>
+                  <Component id="panelDadosFinanciamento" max="32767" attributes="0"/>
+                  <Component id="panelDadosCliente" alignment="0" max="32767" attributes="0"/>
+                  <Component id="panelDadosVeiculo" alignment="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -53,12 +53,12 @@
           <Group type="102" alignment="0" attributes="0">
               <Component id="jToolBar1" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jPanel7" min="-2" pref="202" max="-2" attributes="0"/>
+              <Component id="panelDadosVeiculo" min="-2" pref="202" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jPanel5" max="32767" attributes="0"/>
+              <Component id="panelDadosCliente" max="32767" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="jPanel6" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+              <Component id="panelDadosFinanciamento" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -177,7 +177,7 @@
         </Component>
       </SubComponents>
     </Container>
-    <Container class="javax.swing.JPanel" name="jPanel5">
+    <Container class="javax.swing.JPanel" name="panelDadosCliente">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="fb" green="f5" red="f3" type="rgb"/>
@@ -229,7 +229,7 @@
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
                                   <Component id="jLabel28" min="-2" pref="57" max="-2" attributes="0"/>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="txtComplementoFinanciamento" max="32767" attributes="0"/>
+                                  <Component id="txtComplementoFinanciamento" pref="156" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -512,7 +512,7 @@
         </Component>
       </SubComponents>
     </Container>
-    <Container class="javax.swing.JPanel" name="jPanel6">
+    <Container class="javax.swing.JPanel" name="panelDadosFinanciamento">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="fb" green="f5" red="f3" type="rgb"/>
@@ -535,33 +535,33 @@
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Component id="txtObsFinanciamento" max="32767" attributes="0"/>
                       </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Group type="103" groupAlignment="1" attributes="0">
+                      <Group type="102" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="jLabel27" min="-2" pref="47" max="-2" attributes="0"/>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
                                   <Component id="txtFicha" min="-2" pref="83" max="-2" attributes="0"/>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="jLabel10" min="-2" pref="47" max="-2" attributes="0"/>
+                                  <Component id="jLabel15" min="-2" pref="193" max="-2" attributes="0"/>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="dtFinanciamento" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="jLabel12" min="-2" pref="119" max="-2" attributes="0"/>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="txtValParcelaFinanciamento" min="-2" pref="86" max="-2" attributes="0"/>
+                                  <Component id="dataVencimentoPrimeiraParcela" min="-2" pref="161" max="-2" attributes="0"/>
                                   <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
-                                  <Component id="jLabel11" min="-2" pref="116" max="-2" attributes="0"/>
+                                  <Component id="jLabel11" min="-2" pref="107" max="-2" attributes="0"/>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="cbQtdParcelasFinanciamento" min="-2" pref="94" max="-2" attributes="0"/>
-                                  <EmptySpace max="32767" attributes="0"/>
-                                  <Component id="jLabel15" min="-2" pref="142" max="-2" attributes="0"/>
+                                  <Component id="cbQtdParcelasFinanciamento" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="cbDiaVencimentoFinanciamento" min="-2" pref="80" max="-2" attributes="0"/>
+                                  <Component id="jLabel12" min="-2" pref="106" max="-2" attributes="0"/>
+                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <Component id="txtValParcelaFinanciamento" min="-2" pref="86" max="-2" attributes="0"/>
+                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <Component id="jLabel10" min="-2" pref="47" max="-2" attributes="0"/>
+                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <Component id="dtFinanciamento" max="32767" attributes="0"/>
                               </Group>
                           </Group>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -572,34 +572,30 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="dtFinanciamento" min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jLabel10" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel27" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="txtFicha" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel15" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="txtValParcelaFinanciamento" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel12" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="dataVencimentoPrimeiraParcela" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="103" groupAlignment="3" attributes="0">
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="1" attributes="0">
+                      <Group type="103" alignment="1" groupAlignment="3" attributes="0">
                           <Component id="jLabel11" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="cbQtdParcelasFinanciamento" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtValParcelaFinanciamento" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel12" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel10" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Group type="103" alignment="0" groupAlignment="3" attributes="0">
-                          <Component id="jLabel15" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="cbDiaVencimentoFinanciamento" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="dtFinanciamento" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="txtObsFinanciamento" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel24" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="16" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -656,25 +652,8 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel15">
           <Properties>
-            <Property name="text" type="java.lang.String" value="*DIA DE VENCIMENTO: "/>
+            <Property name="text" type="java.lang.String" value="*VENCIMENTO DA 1&#xaa; PARCELA: "/>
           </Properties>
-        </Component>
-        <Component class="javax.swing.JComboBox" name="cbDiaVencimentoFinanciamento">
-          <Properties>
-            <Property name="editable" type="boolean" value="true"/>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="5">
-                <StringItem index="0" value="5"/>
-                <StringItem index="1" value="10"/>
-                <StringItem index="2" value="15"/>
-                <StringItem index="3" value="20"/>
-                <StringItem index="4" value="25"/>
-              </StringArray>
-            </Property>
-          </Properties>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
-          </AuxValues>
         </Component>
         <Component class="javax.swing.JFormattedTextField" name="txtValParcelaFinanciamento">
           <Properties>
@@ -719,9 +698,14 @@
             <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtFichaKeyPressed"/>
           </Events>
         </Component>
+        <Component class="com.toedter.calendar.JDateChooser" name="dataVencimentoPrimeiraParcela">
+          <Properties>
+            <Property name="dateFormatString" type="java.lang.String" value="dd&apos;/&apos;MM&apos;/&apos;yyyy"/>
+          </Properties>
+        </Component>
       </SubComponents>
     </Container>
-    <Container class="javax.swing.JPanel" name="jPanel7">
+    <Container class="javax.swing.JPanel" name="panelDadosVeiculo">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="fb" green="f5" red="f3" type="rgb"/>

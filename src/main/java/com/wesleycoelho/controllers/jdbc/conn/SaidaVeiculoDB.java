@@ -20,6 +20,7 @@ import javax.swing.JOptionPane;
  * @author Wesley
  */
 public class SaidaVeiculoDB {
+    
     public static int save(SaidaVeiculo saida){
          String sql = "INSERT INTO saida_veiculo (data_saida, usuario, id_cliente, id_entrada, id_financiamento) VALUES('"+saida.getData_saida()+"', '"+saida.getUsuario()+"', "+saida.getId_cliente()+", "+saida.getId_entrada()+", "+saida.getId_financiamento()+")";
          Connection conn = ConnectionFactory.getConexao();
@@ -167,6 +168,7 @@ public class SaidaVeiculoDB {
         }
         return null;
     }   
+    
     public static List<SaidaVeiculo> selectByPlaca(String placa){
          String sql = "SELECT "
                 + "entrada_veiculo.*, "                
@@ -209,7 +211,6 @@ public class SaidaVeiculoDB {
          
          return null;
      }
-    
     
 }
 

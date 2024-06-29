@@ -344,12 +344,6 @@ public class FormListarTodasEntradas extends javax.swing.JInternalFrame {
             tableModel = (DefaultTableModel) this.tbEntradasVeiculo.getModel();
             tableModel.setNumRows(0);
             for(EntradaVeiculo entrada: listaEntradas ){
-             
-                //obtendo a cidade
-//                String cidade = null;
-//                if ( entrada.getId_municipio() != 0 && entrada.getId_municipio() != null ){
-//                      cidade = MunicipioDB.searchById(entrada.getId_municipio()).getNome();
-//                }
                 Object[] colunas = new Object[12];
                 colunas[0] = entrada.getData_entrada();
                 colunas[1] = entrada.getNome_proprietario();
@@ -368,20 +362,12 @@ public class FormListarTodasEntradas extends javax.swing.JInternalFrame {
             return;
         }
         
-        if(this.cbFiltroLista.getSelectedItem().toString() == "Disponiveis"){
-            
-           listaEntradas = EntradaVeiculoDB.selectAllAvaliable();
-            
+        if(this.cbFiltroLista.getSelectedItem().toString() == "Disponiveis"){            
+           listaEntradas = EntradaVeiculoDB.selectAllAvaliable();            
             DefaultTableModel tableModel = new DefaultTableModel();
             tableModel = (DefaultTableModel) this.tbEntradasVeiculo.getModel();
             tableModel.setNumRows(0);
-            for(EntradaVeiculo entrada: listaEntradas ){
-                //obtendo a cidade
-//                String cidade = null;
-//                if ( entrada.getId_municipio() != 0 && entrada.getId_municipio() != null ){
-//                      cidade = MunicipioDB.searchById(entrada.getId_municipio()).getNome();
-//                }
-               
+            for(EntradaVeiculo entrada: listaEntradas ){ 
                 Object[] colunas = new Object[12];
                 colunas[0] = entrada.getData_entrada();
                 colunas[1] = entrada.getNome_proprietario();
@@ -399,12 +385,6 @@ public class FormListarTodasEntradas extends javax.swing.JInternalFrame {
             }
             return;
         }
-        
-      
-       
-        
-  
-       
         
     }//GEN-LAST:event_btnFiltrarEntradaActionPerformed
 

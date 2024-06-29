@@ -715,8 +715,6 @@ public class FormEditarEntrada extends javax.swing.JInternalFrame {
                         JOptionPane.showMessageDialog(this, "Estado não encontrado");
                     }
                 }
-                
-                
             }
         }
         

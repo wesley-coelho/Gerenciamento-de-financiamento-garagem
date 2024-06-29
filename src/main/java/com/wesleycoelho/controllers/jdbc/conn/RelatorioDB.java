@@ -57,7 +57,7 @@ public class RelatorioDB {
                      inner join parcelamento as p 
                      on f.id = p.id_financiamento
                      inner join cliente on cliente.id = f.id_cliente
-                     where p.mes_ref < CUrrent_Date And p.valor_pagamento is null
+                     where p.mes_ref < Current_Date And p.valor_pagamento is null And p.iscanceled = false
                      group by f.nficha, cliente.nome, cliente.telefone, cliente.whatsapp
                      order by cliente.nome;""";
          Connection conn = ConnectionFactory.getConexao();

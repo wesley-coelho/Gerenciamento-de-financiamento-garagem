@@ -25,6 +25,7 @@ import javax.swing.JOptionPane;
  * @author Wesley
  */
 public class ClienteDB {
+    
     public static int save(Cliente cliente){
          String sql = "INSERT INTO cliente (nome,cpf,rg,cep, endereco, numero, bairro, id_municipio, usuario, whatsapp, telefone, complemento) VALUES('"+cliente.getNome()+"', '"+cliente.getCpf()+"', '"+cliente.getRg()+"', '"+cliente.getCep()+"', '"+cliente.getEndereco()+"', "+cliente.getNumero()+", '"+cliente.getBairro()+"', "+cliente.getId_municipio()+", '"+cliente.getUsuario()+"', '"+cliente.getWhatsapp()+"', '"+cliente.getTelefone()+"', '"+cliente.getComplemento()+"')";
          Connection conn = ConnectionFactory.getConexao();
@@ -79,8 +80,7 @@ public class ClienteDB {
         }
         return null;
     }
-    
-    
+ 
     public static List<Cliente> buscaClientePorNome(String nome){
         String sql = "SELECT * FROM cliente WHERE nome LIKE '%"+nome+"%';";
         Connection conn = ConnectionFactory.getConexao();
@@ -114,6 +114,42 @@ public class ClienteDB {
         return null;
     }
     
-    
+    public static List<Cliente> buscaClientePorNFichaFinanciamento(int nficha){
+        String sql = ""
+                + "SELECT * FROM cliente "
+                + "INNER JOIN financiamento "
+                + "ON cliente.id = financiamento.id_cliente "
+                + "WHERE financiamento.nficha = "+nficha+";";
+        Connection conn = ConnectionFactory.getConexao();
+        
+        try{
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            List<Cliente> clientes = new ArrayList<>();
+            while( rs.next() ){
+                clientes.add(new Cliente(
+                       rs.getInt("id"),
+                       rs.getString("nome"),
+                        rs.getString("cpf"),
+                        rs.getString("rg"),
+                        rs.getString("cep"),
+                        rs.getString("endereco"),
+                        rs.getInt("numero"),
+                        rs.getString("bairro"),
+                        rs.getInt("id_municipio"),
+                        rs.getString("usuario"),
+                        rs.getString("whatsapp"),
+                        rs.getString("telefone"),
+                        rs.getString("complemento")
+                ));
+            }
+            ConnectionFactory.close(conn, st, rs);
+            return clientes;
+        }catch(SQLException ex){
+            JOptionPane.showMessageDialog(null,ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE );
+        }
+        return null;
+    }
+
 }
 

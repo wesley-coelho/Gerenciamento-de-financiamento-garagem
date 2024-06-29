@@ -36,7 +36,7 @@ public class EntradaVeiculoDB {
         
     }
     
-     public static void Editar(EntradaVeiculo entrada){
+    public static void Editar(EntradaVeiculo entrada){
          String sql = "UPDATE entrada_veiculo SET nome_proprietario = '"+entrada.getNome_proprietario()+"' ,data_entrada = '"+entrada.getData_entrada()+"',marca =  '"+entrada.getMarca()+"', modelo = '"+entrada.getModelo()+"', cor = '"+entrada.getCor()+"', placa = '"+entrada.getPlaca()+"', renavam = '"+entrada.getRenavam()+"', chassi = '"+entrada.getChassi()+"', id_municipio = "+entrada.getId_municipio()+" , usuario = '"+entrada.getUsuario()+"',ano_veiculo = '"+entrada.getAno()+"', telefone = '"+entrada.getTelefone()+"', whatsapp = '"+entrada.getWhatsapp()+"' WHERE id = '"+entrada.getId()+"'";
          Connection conn = ConnectionFactory.getConexao();
          
@@ -49,8 +49,7 @@ public class EntradaVeiculoDB {
         }        
     }
      
-     
-     public static EntradaVeiculo searchByPlaca(String placa){
+    public static EntradaVeiculo searchByPlaca(String placa){
         String sql = "SELECT * FROM entrada_veiculo WHERE placa LIKE '"+placa+"'";
          Connection conn = ConnectionFactory.getConexao();
          
@@ -84,7 +83,7 @@ public class EntradaVeiculoDB {
         return null;
     }
      
-     public static EntradaVeiculo procuraVeiculoDisponivelPorPlaca(String placa){
+    public static EntradaVeiculo procuraVeiculoDisponivelPorPlaca(String placa){
         String sql = "SELECT * FROM entrada_veiculo AS entrada LEFT OUTER JOIN saida_veiculo AS saida ON entrada.id = saida.id_entrada WHERE saida.id_entrada IS NULL AND entrada.placa = '"+placa+"'";
          Connection conn = ConnectionFactory.getConexao();
          
@@ -119,7 +118,7 @@ public class EntradaVeiculoDB {
         return null;
     }
      
-      public static EntradaVeiculo checaDisponibilidadeVeiculoPorPlaca(String placa){
+    public static EntradaVeiculo checaDisponibilidadeVeiculoPorPlaca(String placa){
         String sql = "SELECT * FROM entrada_veiculo AS entrada LEFT OUTER JOIN saida_veiculo AS saida ON entrada.id = saida.id_entrada WHERE saida.id_entrada IS NULL AND entrada.placa = '"+placa+"'";
          Connection conn = ConnectionFactory.getConexao();
          
@@ -153,7 +152,8 @@ public class EntradaVeiculoDB {
         }
         return null;
     }
-     public static List<EntradaVeiculo> selectAll(){
+    
+    public static List<EntradaVeiculo> selectAll(){
         String sql = "SELECT * FROM entrada_veiculo";
          Connection conn = ConnectionFactory.getConexao();
          
@@ -188,7 +188,7 @@ public class EntradaVeiculoDB {
         return null;
     }
      
-     public static List<EntradaVeiculo> selectAllDataOrganized(){
+    public static List<EntradaVeiculo> selectAllDataOrganized(){
         String sql = "SELECT entrada_veiculo.id, entrada_veiculo.nome_proprietario, entrada_veiculo.data_entrada, entrada_veiculo.marca, entrada_veiculo.modelo, entrada_veiculo.cor, entrada_veiculo.placa, entrada_veiculo.renavam, entrada_veiculo.chassi, entrada_veiculo.ano_veiculo, entrada_veiculo.telefone, entrada_veiculo.whatsapp, municipio.cidade FROM entrada_veiculo INNER JOIN municipio ON entrada_veiculo.id_municipio = municipio.id ORDER BY entrada_veiculo.data_entrada";
          Connection conn = ConnectionFactory.getConexao();
          
@@ -222,7 +222,7 @@ public class EntradaVeiculoDB {
         return null;
     }
      
-     public static List<EntradaVeiculo> selectAllNameOrganized(){
+    public static List<EntradaVeiculo> selectAllNameOrganized(){
         String sql = "SELECT entrada_veiculo.id, entrada_veiculo.nome_proprietario, entrada_veiculo.data_entrada, entrada_veiculo.marca, entrada_veiculo.modelo, entrada_veiculo.cor, entrada_veiculo.placa, entrada_veiculo.renavam, entrada_veiculo.chassi, entrada_veiculo.ano_veiculo, entrada_veiculo.telefone, entrada_veiculo.whatsapp, municipio.cidade FROM entrada_veiculo INNER JOIN municipio ON entrada_veiculo.id_municipio = municipio.id ORDER BY entrada_veiculo.nome_proprietario";
          Connection conn = ConnectionFactory.getConexao();
          
@@ -256,7 +256,7 @@ public class EntradaVeiculoDB {
         return null;
     }
      
-     public static List<EntradaVeiculo> selectAllYearOrganized(){
+    public static List<EntradaVeiculo> selectAllYearOrganized(){
         String sql = "SELECT entrada_veiculo.id, entrada_veiculo.nome_proprietario, entrada_veiculo.data_entrada, entrada_veiculo.marca, entrada_veiculo.modelo, entrada_veiculo.cor, entrada_veiculo.placa, entrada_veiculo.renavam, entrada_veiculo.chassi, entrada_veiculo.ano_veiculo, entrada_veiculo.telefone, entrada_veiculo.whatsapp, municipio.cidade FROM entrada_veiculo INNER JOIN municipio ON entrada_veiculo.id_municipio = municipio.id ORDER BY entrada_veiculo.ano_veiculo";
          Connection conn = ConnectionFactory.getConexao();
          
@@ -290,7 +290,7 @@ public class EntradaVeiculoDB {
         return null;
     }
      
-     public static List<EntradaVeiculo> selectAllPlacaOrganized(){
+    public static List<EntradaVeiculo> selectAllPlacaOrganized(){
         String sql = "SELECT entrada_veiculo.id, entrada_veiculo.nome_proprietario, entrada_veiculo.data_entrada, entrada_veiculo.marca, entrada_veiculo.modelo, entrada_veiculo.cor, entrada_veiculo.placa, entrada_veiculo.renavam, entrada_veiculo.chassi, entrada_veiculo.ano_veiculo, entrada_veiculo.telefone, entrada_veiculo.whatsapp, municipio.cidade FROM entrada_veiculo INNER JOIN municipio ON entrada_veiculo.id_municipio = municipio.id ORDER BY entrada_veiculo.placa";
          Connection conn = ConnectionFactory.getConexao();
          
@@ -325,8 +325,7 @@ public class EntradaVeiculoDB {
         return null;
     }
      
-     
-     public static List<EntradaVeiculo> selectAllMarcaOrganized(){
+    public static List<EntradaVeiculo> selectAllMarcaOrganized(){
         String sql = "SELECT entrada_veiculo.id, entrada_veiculo.nome_proprietario, entrada_veiculo.data_entrada, entrada_veiculo.marca, entrada_veiculo.modelo, entrada_veiculo.cor, entrada_veiculo.placa, entrada_veiculo.renavam, entrada_veiculo.chassi, entrada_veiculo.ano_veiculo, entrada_veiculo.telefone, entrada_veiculo.whatsapp, municipio.cidade FROM entrada_veiculo INNER JOIN municipio ON entrada_veiculo.id_municipio = municipio.id ORDER BY entrada_veiculo.marca";
          Connection conn = ConnectionFactory.getConexao();
          
@@ -360,7 +359,7 @@ public class EntradaVeiculoDB {
         return null;
     }
      
-     public static List<EntradaVeiculo> selectAllModeloOrganized(){
+    public static List<EntradaVeiculo> selectAllModeloOrganized(){
         String sql = "SELECT entrada_veiculo.id, entrada_veiculo.nome_proprietario, entrada_veiculo.data_entrada, entrada_veiculo.marca, entrada_veiculo.modelo, entrada_veiculo.cor, entrada_veiculo.placa, entrada_veiculo.renavam, entrada_veiculo.chassi, entrada_veiculo.ano_veiculo, entrada_veiculo.telefone, entrada_veiculo.whatsapp, municipio.cidade FROM entrada_veiculo INNER JOIN municipio ON entrada_veiculo.id_municipio = municipio.id ORDER BY entrada_veiculo.modelo";
          Connection conn = ConnectionFactory.getConexao();
          
@@ -394,7 +393,7 @@ public class EntradaVeiculoDB {
         return null;
     }
      
-     public static List<EntradaVeiculo> selectAllCidadeOrganized(){
+    public static List<EntradaVeiculo> selectAllCidadeOrganized(){
         String sql = "SELECT entrada_veiculo.id, entrada_veiculo.nome_proprietario, entrada_veiculo.data_entrada, entrada_veiculo.marca, entrada_veiculo.modelo, entrada_veiculo.cor, entrada_veiculo.placa, entrada_veiculo.renavam, entrada_veiculo.chassi, entrada_veiculo.ano_veiculo, entrada_veiculo.telefone, entrada_veiculo.whatsapp, municipio.cidade FROM entrada_veiculo INNER JOIN municipio ON entrada_veiculo.id_municipio = municipio.id ORDER BY municipio.cidade";
          Connection conn = ConnectionFactory.getConexao();
          
@@ -428,7 +427,7 @@ public class EntradaVeiculoDB {
         return null;
      }
      
-     public static List<EntradaVeiculo> selectByDate(String data){
+    public static List<EntradaVeiculo> selectByDate(String data){
          String sql = "SELECT * FROM entrada_veiculo WHERE data_entrada = '"+data+"'";
          Connection conn = ConnectionFactory.getConexao();
          
@@ -466,7 +465,7 @@ public class EntradaVeiculoDB {
          return null;
      }
      
-     public static List<EntradaVeiculo> selectByNomeProprietario(String nome){
+    public static List<EntradaVeiculo> selectByNomeProprietario(String nome){
          String sql = "SELECT * FROM entrada_veiculo WHERE nome_proprietario LIKE '%"+nome+"%'";
          Connection conn = ConnectionFactory.getConexao();
          
@@ -503,7 +502,7 @@ public class EntradaVeiculoDB {
          return null;
      }
      
-     public static List<EntradaVeiculo> selectByMarca(String marca){
+    public static List<EntradaVeiculo> selectByMarca(String marca){
          String sql = "SELECT * FROM entrada_veiculo WHERE marca LIKE '%"+marca+"%'";
          Connection conn = ConnectionFactory.getConexao();
          
@@ -540,7 +539,7 @@ public class EntradaVeiculoDB {
          return null;
      }
      
-     public static List<EntradaVeiculo> selectByModelo(String modelo){
+    public static List<EntradaVeiculo> selectByModelo(String modelo){
          String sql = "SELECT * FROM entrada_veiculo WHERE modelo LIKE '%"+modelo+"%'";
          Connection conn = ConnectionFactory.getConexao();
          
@@ -577,7 +576,7 @@ public class EntradaVeiculoDB {
          return null;
      }
      
-     public static List<EntradaVeiculo> selectByCor(String cor){
+    public static List<EntradaVeiculo> selectByCor(String cor){
          String sql = "SELECT * FROM entrada_veiculo WHERE cor LIKE '%"+cor+"%'";
          Connection conn = ConnectionFactory.getConexao();
          
@@ -614,7 +613,7 @@ public class EntradaVeiculoDB {
          return null;
      }
      
-     public static List<EntradaVeiculo> selectByAno(String ano){
+    public static List<EntradaVeiculo> selectByAno(String ano){
          String sql = "SELECT * FROM entrada_veiculo WHERE ano_veiculo LIKE '%"+ano+"%'";
          Connection conn = ConnectionFactory.getConexao();
          
@@ -650,9 +649,8 @@ public class EntradaVeiculoDB {
          
          return null;
      }
-     
-     
-     public static List<EntradaVeiculo> selectByChassi(String chassi){
+    
+    public static List<EntradaVeiculo> selectByChassi(String chassi){
          String sql = "SELECT * FROM entrada_veiculo WHERE chassi LIKE '%"+chassi+"%'";
          Connection conn = ConnectionFactory.getConexao();
          
@@ -689,7 +687,7 @@ public class EntradaVeiculoDB {
          return null;
      }
      
-     public static List<EntradaVeiculo> selectByRenavam(String renavam){
+    public static List<EntradaVeiculo> selectByRenavam(String renavam){
          String sql = "SELECT * FROM entrada_veiculo WHERE renavam LIKE '%"+renavam+"%'";
          Connection conn = ConnectionFactory.getConexao();
          
@@ -726,7 +724,7 @@ public class EntradaVeiculoDB {
          return null;
      }
      
-     public static List<EntradaVeiculo> selectByPlaca(String placa){
+    public static List<EntradaVeiculo> selectByPlaca(String placa){
          String sql = "SELECT * FROM entrada_veiculo WHERE placa LIKE '%"+placa+"%'";
          Connection conn = ConnectionFactory.getConexao();
          
@@ -762,9 +760,8 @@ public class EntradaVeiculoDB {
          
          return null;
      }
-     
         
-     public static List<EntradaVeiculo> selectByTelefone(String telefone){
+    public static List<EntradaVeiculo> selectByTelefone(String telefone){
          String sql = "SELECT * FROM entrada_veiculo WHERE telefone LIKE '%"+telefone+"%'";
          Connection conn = ConnectionFactory.getConexao();
          
@@ -801,8 +798,7 @@ public class EntradaVeiculoDB {
          return null;
      }
      
-     
-          public static List<EntradaVeiculo> selectByWhatsapp(String whatsapp){
+    public static List<EntradaVeiculo> selectByWhatsapp(String whatsapp){
          String sql = "SELECT * FROM entrada_veiculo WHERE whatsapp LIKE '%"+whatsapp+"%'";
          Connection conn = ConnectionFactory.getConexao();
          
@@ -838,9 +834,8 @@ public class EntradaVeiculoDB {
          
          return null;
      }
-          
-          
-       public static EntradaVeiculo buscaEntradaPorId(int id){
+        
+    public static EntradaVeiculo buscaEntradaPorId(int id){
          String sql = "SELECT * FROM entrada_veiculo WHERE id = "+id+";";
          Connection conn = ConnectionFactory.getConexao();
          
@@ -876,7 +871,7 @@ public class EntradaVeiculoDB {
          return null;
      }    
           
-      public static List<EntradaVeiculo> selectAllAvaliable(){
+    public static List<EntradaVeiculo> selectAllAvaliable(){
         String sql = "SELECT entrada_veiculo.id, "
                 + "entrada_veiculo.nome_proprietario, "
                 + "entrada_veiculo.data_entrada, "

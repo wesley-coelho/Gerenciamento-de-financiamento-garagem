@@ -700,9 +700,8 @@ public class FormPesquisaEntrada extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txtPesquisarEntradaMouseEntered
 
     private void btnPesquisarEntradaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarEntradaActionPerformed
-        // TODO add your handling code here:
-        if( this.cbFiltroPesquisa.getSelectedItem().toString() == "DATA"){
-           
+    
+        if( this.cbFiltroPesquisa.getSelectedItem().toString() == "DATA"){           
                 this.entradas = EntradaVeiculoDB.selectByDate(this.txtPesquisarEntrada.getText());
                 if(this.entradas != null && !this.entradas.isEmpty()){
                     this.lblTotalLista.setText(String.valueOf(this.entradas.size()));

@@ -311,8 +311,8 @@ public class FormRelatorio extends javax.swing.JInternalFrame {
                  String[][] dadosInadimpentes = new String[this.inadimplentes.size()][3];
                  
                  
-                //String path = "C:\\Program Files\\JavaApplicationGaragem\\inadimplentes.csv";
-                 String path = "C:\\Users\\Wesley\\Desktop\\inadimplentes.csv";
+                 String path = "C:\\Program Files\\JavaApplicationGaragem\\inadimplentes.csv";
+                 //String path = "C:\\Users\\Wesley\\Desktop\\inadimplentes.csv";
                  try( BufferedWriter bw = new BufferedWriter(new FileWriter(path) )){
                      bw.write("Nome;Telefone1;Telefone2");
                      bw.newLine();

@@ -66,13 +66,12 @@ public class PrintingFichaFrenteFinanciamento implements Printable{
         g.drawString("CEP: " + cliente.getCep(), 350, 130);
         g.drawString("Cidade: " + MunicipioDB.buscaCidadePorId(cliente.getId_municipio()).getNome(), 30, 150);
         g.drawString("Telefone: " + cliente.getTelefone(), 30, 170);
-        g.drawString("Whatsapp: " + cliente.getWhatsapp(), 350, 170);
-        
+        g.drawString("Whatsapp: " + cliente.getWhatsapp(), 350, 170);        
         g.drawString("Dados do financiamento: " ,30, 205);
         g.drawString("Marca: "+veiculo.getMarca() ,30, 225);
         g.drawString("Modelo: "+veiculo.getModelo(),30, 245);
         g.drawString("Ano: " +veiculo.getAno(),350, 245);
-        g.drawString("Cor: "+veiculo.getAno() ,30, 265);
+        g.drawString("Cor: "+veiculo.getCor() ,30, 265);
         g.drawString("Qtd. parcelas: "+financiamento.getNum_parcelas() ,350, 265);
         g.drawString("Valor: " +financiamento.getValor_parcela(),30, 285);
         g.drawString("1ª parcela: " +ParcelamentoDB.getFirstParcela(financiamento.getId()).format(dtf),30, 305);

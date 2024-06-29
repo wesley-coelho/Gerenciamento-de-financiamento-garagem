@@ -88,14 +88,10 @@ public class FormPagamento extends javax.swing.JInternalFrame {
         txtValParcelaFinanciamento = new javax.swing.JFormattedTextField();
         jLabel13 = new javax.swing.JLabel();
         cbQtdParcelasFinanciamento = new javax.swing.JComboBox<>();
-        txtValEntradafinanciamento = new javax.swing.JFormattedTextField();
         cbDiaVencimentoFinanciamento = new javax.swing.JComboBox<>();
         jLabel15 = new javax.swing.JLabel();
-        txtValVeiculoFinanciamento = new javax.swing.JFormattedTextField();
-        jLabel14 = new javax.swing.JLabel();
         txtObsFinanciamento = new javax.swing.JTextField();
         jLabel24 = new javax.swing.JLabel();
-        jLabel16 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
         txtNFicha = new javax.swing.JFormattedTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -139,6 +135,7 @@ public class FormPagamento extends javax.swing.JInternalFrame {
 
         btnSalvarEntrada.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons8-save-16.png"))); // NOI18N
         btnSalvarEntrada.setToolTipText("Salvar");
+        btnSalvarEntrada.setEnabled(false);
         btnSalvarEntrada.setFocusable(false);
         btnSalvarEntrada.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnSalvarEntrada.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -151,6 +148,7 @@ public class FormPagamento extends javax.swing.JInternalFrame {
 
         btnImprimirEntrada.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons8-print-16.png"))); // NOI18N
         btnImprimirEntrada.setToolTipText("Imprimir");
+        btnImprimirEntrada.setEnabled(false);
         btnImprimirEntrada.setFocusable(false);
         btnImprimirEntrada.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnImprimirEntrada.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -231,7 +229,7 @@ public class FormPagamento extends javax.swing.JInternalFrame {
         jLabel17.setText("     ");
         jToolBar1.add(jLabel17);
 
-        cbFiltroPesquisa.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "NOME", "PLACA", "CPF", " " }));
+        cbFiltroPesquisa.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "NOME", "FICHA", " " }));
         cbFiltroPesquisa.setMaximumSize(new java.awt.Dimension(300, 22));
         cbFiltroPesquisa.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -513,37 +511,13 @@ public class FormPagamento extends javax.swing.JInternalFrame {
 
         jLabel13.setText("QTD. PARCELAS:");
 
+        cbQtdParcelasFinanciamento.setEditable(true);
         cbQtdParcelasFinanciamento.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "2", "6", "10", "12", "18", "24", "30", "36", "42", "48", "50", "60", "72", " " }));
 
-        txtValEntradafinanciamento.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
-        txtValEntradafinanciamento.setText("0,00");
-        txtValEntradafinanciamento.setToolTipText("");
-        txtValEntradafinanciamento.setMaximumSize(new java.awt.Dimension(64, 22));
-        txtValEntradafinanciamento.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtValEntradafinanciamentoActionPerformed(evt);
-            }
-        });
-        txtValEntradafinanciamento.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                txtValEntradafinanciamentoKeyPressed(evt);
-            }
-        });
-
+        cbDiaVencimentoFinanciamento.setEditable(true);
         cbDiaVencimentoFinanciamento.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "5", "10", "15", "20", "25" }));
 
         jLabel15.setText("DIA DE VENCIMENTO: ");
-
-        txtValVeiculoFinanciamento.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
-        txtValVeiculoFinanciamento.setText("0,00");
-        txtValVeiculoFinanciamento.setToolTipText("");
-        txtValVeiculoFinanciamento.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                txtValVeiculoFinanciamentoKeyPressed(evt);
-            }
-        });
-
-        jLabel14.setText("VALOR VEÍCULO:");
 
         txtObsFinanciamento.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -552,8 +526,6 @@ public class FormPagamento extends javax.swing.JInternalFrame {
         });
 
         jLabel24.setText("OBS:");
-
-        jLabel16.setText("VALOR ENTRADA:");
 
         jLabel18.setText("FICHA:");
 
@@ -577,16 +549,8 @@ public class FormPagamento extends javax.swing.JInternalFrame {
                         .addGap(18, 18, 18)
                         .addComponent(txtObsFinanciamento))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(txtValVeiculoFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(cbDiaVencimentoFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
                                 .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(cbQtdParcelasFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -594,14 +558,15 @@ public class FormPagamento extends javax.swing.JInternalFrame {
                                 .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(txtNFicha, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(42, 42, 42)
                                 .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(txtValParcelaFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(txtValEntradafinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(cbDiaVencimentoFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(2, 2, 2)))
                         .addGap(0, 3, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -612,20 +577,14 @@ public class FormPagamento extends javax.swing.JInternalFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel12)
                     .addComponent(txtValParcelaFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel16)
-                    .addComponent(txtValEntradafinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel18)
-                    .addComponent(txtNFicha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtNFicha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel15)
+                    .addComponent(cbDiaVencimentoFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel14)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel13)
-                        .addComponent(cbQtdParcelasFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(txtValVeiculoFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel15)
-                        .addComponent(cbDiaVencimentoFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel13)
+                    .addComponent(cbQtdParcelasFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel24)
@@ -742,29 +701,21 @@ public class FormPagamento extends javax.swing.JInternalFrame {
           this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
           this.clientesComFinanciamento.clear();
        if( !this.txtPesquisarFinanciamento.getText().isBlank()){
-           if( "NOME".equals(this.cbFiltroPesquisa.getSelectedItem().toString())  ){
+           
+           if( "NOME".equals(this.cbFiltroPesquisa.getSelectedItem().toString() )  ){
                //PESQUISAR FINANCIAMENTO POR NOME
                this.clientes = ClienteDB.buscaClientePorNome(this.txtPesquisarFinanciamento.getText());
                if( Objects.nonNull(this.clientes) || this.clientes.size() != 0){ 
-                    DefaultTableModel tableModel = new DefaultTableModel();
-                    tableModel = (DefaultTableModel) this.tbClientesFinanciamento.getModel();
-                    tableModel.setNumRows(0);               
-                    for(Cliente cliente: this.clientes ){
-                        int id_entrada;                        
-                        id_entrada = SaidaVeiculoDB.buscaIdEntradaPorIdCliente(cliente.getId()); 
-                        if(id_entrada != 0){
-                            clientesComFinanciamento.add(cliente);
-                            Object[] colunas = new Object[9];
-                            colunas[0] = FinanciamentoDB.buscaNficha(cliente.getId());//ficha
-                            colunas[1] = cliente.getNome();//nome
-                            colunas[2] = cliente.getCpf();//cpf
-                            colunas[3] = EntradaVeiculoDB.buscaEntradaPorId(id_entrada).getPlaca();  //placa                                      
-                            tableModel.addRow(colunas);
-                            this.tbClientesFinanciamento.repaint();
-                        }
-                        
-                    }
-                      
+                    preencheTabelaTbClientesFinanciamento();
+                }else{
+                   JOptionPane.showMessageDialog(this, "Nenhum resultado encontrado");
+                    this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)); 
+               }
+           }else if( "FICHA".equals(this.cbFiltroPesquisa.getSelectedItem().toString()) ){
+                //PESQUISAR FINANCIAMENTO POR FICHA
+               this.clientes = ClienteDB.buscaClientePorNFichaFinanciamento(Integer.valueOf(this.txtPesquisarFinanciamento.getText()));
+               if( Objects.nonNull(this.clientes) || this.clientes.size() != 0){ 
+                    preencheTabelaTbClientesFinanciamento();
                 }else{
                    JOptionPane.showMessageDialog(this, "Nenhum resultado encontrado");
                     this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)); 
@@ -803,7 +754,7 @@ public class FormPagamento extends javax.swing.JInternalFrame {
         }else if( this.cbFiltroPesquisa.getSelectedItem().toString() == "NOME"){
             this.txtPesquisarFinanciamento.setText("DIGITE O NOME");
         }else{
-           this.txtPesquisarFinanciamento.setText("DIGITE O CPF (APENAS NÚMEROS)");  
+           this.txtPesquisarFinanciamento.setText("DIGITE O NÚMERO DA FICHA");  
         }
         
         
@@ -884,20 +835,6 @@ public class FormPagamento extends javax.swing.JInternalFrame {
        
     }//GEN-LAST:event_txtValParcelaFinanciamentoKeyPressed
 
-    private void txtValEntradafinanciamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtValEntradafinanciamentoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtValEntradafinanciamentoActionPerformed
-
-    private void txtValEntradafinanciamentoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtValEntradafinanciamentoKeyPressed
-        // TODO add your handling code here:
-        
-    }//GEN-LAST:event_txtValEntradafinanciamentoKeyPressed
-
-    private void txtValVeiculoFinanciamentoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtValVeiculoFinanciamentoKeyPressed
-        // TODO add your handling code here:
-       
-    }//GEN-LAST:event_txtValVeiculoFinanciamentoKeyPressed
-
     private void txtObsFinanciamentoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtObsFinanciamentoKeyPressed
         // TODO add your handling code here:
         
@@ -929,11 +866,11 @@ public class FormPagamento extends javax.swing.JInternalFrame {
         if(this.clientesComFinanciamento.isEmpty() ) return;
         this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         int selectedIndexTableClientes = this.tbClientesFinanciamento.getSelectedRow();
-        this.txtNomeFinanciamento.setText(this.clientes.get(selectedIndexTableClientes).getNome());
-        this.txtCPFFinanciamento.setText(this.clientes.get(selectedIndexTableClientes).getCpf());
-        this.txtRgFinanciamento.setText(this.clientes.get(selectedIndexTableClientes).getRg());
-        this.txtWhatsappFinanciamento.setText(this.clientes.get(selectedIndexTableClientes).getWhatsapp());
-        this.txtTelefoneFinanciamento.setText(this.clientes.get(selectedIndexTableClientes).getTelefone());
+        this.txtNomeFinanciamento.setText(this.clientesComFinanciamento.get(selectedIndexTableClientes).getNome());
+        this.txtCPFFinanciamento.setText(this.clientesComFinanciamento.get(selectedIndexTableClientes).getCpf());
+        this.txtRgFinanciamento.setText(this.clientesComFinanciamento.get(selectedIndexTableClientes).getRg());
+        this.txtWhatsappFinanciamento.setText(this.clientesComFinanciamento.get(selectedIndexTableClientes).getWhatsapp());
+        this.txtTelefoneFinanciamento.setText(this.clientesComFinanciamento.get(selectedIndexTableClientes).getTelefone());
         
         Integer id_cliente = this.clientesComFinanciamento.get(selectedIndexTableClientes).getId();
         
@@ -993,7 +930,25 @@ public class FormPagamento extends javax.swing.JInternalFrame {
      
     }//GEN-LAST:event_tbParcelasFinanciamentoKeyReleased
 
-    
+    private void preencheTabelaTbClientesFinanciamento(){
+        DefaultTableModel tableModel;
+                    tableModel = (DefaultTableModel) this.tbClientesFinanciamento.getModel();
+                    tableModel.setNumRows(0);               
+                    for(Cliente cliente: this.clientes ){
+                        int id_entrada;                        
+                        id_entrada = SaidaVeiculoDB.buscaIdEntradaPorIdCliente(cliente.getId()); 
+                        if(id_entrada != 0){
+                            clientesComFinanciamento.add(cliente);
+                            Object[] colunas = new Object[9];
+                            colunas[0] = FinanciamentoDB.buscaNficha(cliente.getId());//ficha
+                            colunas[1] = cliente.getNome();//nome
+                            colunas[2] = cliente.getCpf();//cpf
+                            colunas[3] = EntradaVeiculoDB.buscaEntradaPorId(id_entrada).getPlaca();  //placa                                      
+                            tableModel.addRow(colunas);
+                            this.tbClientesFinanciamento.repaint();
+                        }
+                    }
+    }
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1011,9 +966,7 @@ public class FormPagamento extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
@@ -1043,9 +996,7 @@ public class FormPagamento extends javax.swing.JInternalFrame {
     private javax.swing.JTextField txtPesquisarFinanciamento;
     private javax.swing.JFormattedTextField txtRgFinanciamento;
     private javax.swing.JFormattedTextField txtTelefoneFinanciamento;
-    private javax.swing.JFormattedTextField txtValEntradafinanciamento;
     private javax.swing.JFormattedTextField txtValParcelaFinanciamento;
-    private javax.swing.JFormattedTextField txtValVeiculoFinanciamento;
     private javax.swing.JFormattedTextField txtWhatsappFinanciamento;
     // End of variables declaration//GEN-END:variables
 }

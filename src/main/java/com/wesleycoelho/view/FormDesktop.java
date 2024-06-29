@@ -16,7 +16,6 @@ import java.awt.Cursor;
 
 
 import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -33,6 +32,7 @@ public class FormDesktop extends javax.swing.JFrame {
      Color corBotaoSubMenuReleased = new Color(63,69,104);
     /**
      * Creates new form FormDesktop
+     * @param user
      */
     public FormDesktop(Usuario user) {
         this.usuario = user;

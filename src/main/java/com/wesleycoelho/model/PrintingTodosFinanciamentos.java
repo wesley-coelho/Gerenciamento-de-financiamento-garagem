@@ -54,19 +54,17 @@ public class PrintingTodosFinanciamentos implements Printable{
         g.draw3DRect(410, 60, 50, 20, false);
         g.draw3DRect(460, 60, 50, 20, false);
         g.draw3DRect(510, 60, 50, 20, false);
-        g.draw3DRect(560, 60, 50, 20, false);
-        g.draw3DRect(610, 60, 50, 20, false);
-        g.draw3DRect(660, 60, 170, 20, false);
+        g.draw3DRect(560, 60, 240, 20, false);
+ 
         g.drawString("Ficha",35, 75); 
         g.drawString("Data",65, 75);
         g.drawString("Cliente",115, 75);
-        g.drawString("Placa",365, 75);
-        g.drawString("Veículo R$",415, 75);
-        g.drawString("Entrada R$",465, 75);
-        g.drawString("Parcela R$",515, 75);
-        g.drawString("Parcelas",565, 75);
-        g.drawString("Dia venc.",615, 75);
-        g.drawString("Obs",665, 75);
+        g.drawString("Placa",365, 75);        
+        g.drawString("Parcela R$",415, 75);        
+        g.drawString("Parcelas",465, 75);
+        g.drawString("Dia venc.",515, 75);
+        g.drawString("Obs",565, 75);
+        
         
         
         
@@ -87,10 +85,8 @@ public class PrintingTodosFinanciamentos implements Printable{
             g.draw3DRect(410, 80+20*j, 50, 20, false); 
             g.draw3DRect(460, 80+20*j, 50, 20, false); 
             g.draw3DRect(510, 80+20*j, 50, 20, false); 
-            g.draw3DRect(560, 80+20*j, 50, 20, false); 
-            g.draw3DRect(610, 80+20*j, 50, 20, false); 
-            g.draw3DRect(660, 80+20*j, 170, 20, false); 
-
+            g.draw3DRect(560, 80+20*j, 240, 20, false); 
+   
             g.drawString(tbFinanciamento.getModel().getValueAt(i, 1)== null?"":tbFinanciamento.getModel().getValueAt(i, 1).toString(), 35, 95+20*j);         
             g.drawString(tbFinanciamento.getModel().getValueAt(i, 2) == null?"":tbFinanciamento.getModel().getValueAt(i, 2).toString(), 65, 95+20*j);
             g.drawString(tbFinanciamento.getModel().getValueAt(i, 3) == null?"":tbFinanciamento.getModel().getValueAt(i, 3).toString(), 115, 95+20*j);
@@ -99,12 +95,10 @@ public class PrintingTodosFinanciamentos implements Printable{
 
              g.drawString(tbFinanciamento.getModel().getValueAt(i, 5) == null?"":tbFinanciamento.getModel().getValueAt(i, 5).toString(), 415, 95+20*j);
              g.drawString(tbFinanciamento.getModel().getValueAt(i, 6) == null?"":tbFinanciamento.getModel().getValueAt(i, 6).toString(), 465, 95+20*j);
-             g.drawString(tbFinanciamento.getModel().getValueAt(i, 7) == null?"":tbFinanciamento.getModel().getValueAt(i, 7).toString(), 515, 95+20*j);
-             g.drawString(tbFinanciamento.getModel().getValueAt(i, 8) == null? "": tbFinanciamento.getModel().getValueAt(i, 8).toString(), 565, 95+20*j);
-             g.drawString(tbFinanciamento.getModel().getValueAt(i, 9) == null? "":tbFinanciamento.getModel().getValueAt(i, 9).toString(), 615, 95+20*j);
-             g.setFont(new Font("Arial", Font.PLAIN, 5));
-             g.drawString(tbFinanciamento.getModel().getValueAt(i, 10) == null?"":tbFinanciamento.getModel().getValueAt(i, 10).toString(), 665, 95+20*j);
              g.setFont(new Font("Arial", Font.PLAIN, 6));
+             g.drawString(tbFinanciamento.getModel().getValueAt(i, 7) == null?"":tbFinanciamento.getModel().getValueAt(i, 7).toString(), 515, 95+20*j);
+             g.setFont(new Font("Arial", Font.PLAIN, 5));
+             g.drawString(tbFinanciamento.getModel().getValueAt(i, 8) == null? "": tbFinanciamento.getModel().getValueAt(i, 8).toString(), 565, 95+20*j);
              j++;
         } 
         return PAGE_EXISTS;

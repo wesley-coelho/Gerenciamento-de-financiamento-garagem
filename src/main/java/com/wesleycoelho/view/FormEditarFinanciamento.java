@@ -9,7 +9,9 @@ import com.wesleycoelho.model.EntradaVeiculo;
 import com.wesleycoelho.model.Usuario;
 import javax.swing.JOptionPane;
 import com.wesleycoelho.controllers.jdbc.conn.MunicipioDB;
+import com.wesleycoelho.controllers.jdbc.conn.ParcelamentoDB;
 import com.wesleycoelho.model.Cliente;
+import com.wesleycoelho.model.DaoException;
 import com.wesleycoelho.model.Estado;
 import com.wesleycoelho.model.Financiamento;
 import com.wesleycoelho.model.Municipio;
@@ -20,6 +22,7 @@ import com.wesleycoelho.model.Validacao;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -707,14 +710,15 @@ public class FormEditarFinanciamento extends javax.swing.JInternalFrame {
 
         cbQtdParcelasFinanciamento.setEditable(true);
         cbQtdParcelasFinanciamento.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "2", "6", "10", "12", "18", "24", "30", "36", "42", "48", "50", "60", "72", " " }));
+        cbQtdParcelasFinanciamento.setEnabled(false);
 
         jLabel12.setText("VALOR PARCELA:");
 
         jLabel15.setText("DIA DE VENCIMENTO: ");
 
-        cbDiaVencimentoFinanciamento.setEditable(true);
-        cbDiaVencimentoFinanciamento.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "5", "10", "15", "20", "25" }));
+        cbDiaVencimentoFinanciamento.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31" }));
 
+        txtValParcelaFinanciamento.setEditable(false);
         txtValParcelaFinanciamento.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
         txtValParcelaFinanciamento.setText("0,00");
         txtValParcelaFinanciamento.setMaximumSize(new java.awt.Dimension(64, 22));
@@ -733,6 +737,7 @@ public class FormEditarFinanciamento extends javax.swing.JInternalFrame {
         jLabel24.setText("OBS:");
 
         txtFicha.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+        txtFicha.setEnabled(false);
         txtFicha.setMaximumSize(new java.awt.Dimension(64, 22));
         txtFicha.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -838,7 +843,7 @@ public class FormEditarFinanciamento extends javax.swing.JInternalFrame {
      if( this.financiamento !=null){         
          
          //atualiza o financiamento
-         this.financiamento.setDia_vencimento(Integer.valueOf(this.cbDiaVencimentoFinanciamento.getSelectedItem().toString()));
+         //this.financiamento.setDia_vencimento(Integer.valueOf(this.cbDiaVencimentoFinanciamento.getSelectedItem().toString()));
          this.financiamento.setFicha(!"".equals(this.txtFicha.getText())?Integer.valueOf(this.txtFicha.getText()):null);
          this.financiamento.setOberservacao(!"".equals(this.txtObsFinanciamento.getText())?this.txtObsFinanciamento.getText(): null);
          this.financiamento.setValor_parcela(Double.valueOf(this.txtValParcelaFinanciamento.getText().replace(",", ".")));
@@ -856,9 +861,18 @@ public class FormEditarFinanciamento extends javax.swing.JInternalFrame {
          try{
              int id_Estado = EstadoDB.searchIdStateByName(this.cbUFFinanciamento.getSelectedItem().toString());
              this.financiamento.getCliente().setId_municipio(MunicipioDB.searchIdByCidade(this.cbCidadeFinanciamento.getSelectedItem().toString(), id_Estado));
+    
+             if( !"".equals(this.cbDiaVencimentoFinanciamento.getSelectedItem().toString()) && !Objects.equals(Integer.valueOf(this.cbDiaVencimentoFinanciamento.getSelectedItem().toString()), this.financiamento.getDia_vencimento()) ){
+                 //atualiza parcelas
+                 
+                 int intervaloDias = this.financiamento.getDia_vencimento() - Integer.valueOf(this.cbDiaVencimentoFinanciamento.getSelectedItem().toString());
+                  ParcelamentoDB.atualizaDiaVencimento(intervaloDias, this.financiamento.getId());                 
+                 this.financiamento.setDia_vencimento(Integer.valueOf(this.cbDiaVencimentoFinanciamento.getSelectedItem().toString()));                 
+             }
              FinanciamentoDB.update(this.financiamento, this.financiamento.getCliente());
+             JOptionPane.showMessageDialog(null, "Registro atualizado!","Update", JOptionPane.INFORMATION_MESSAGE);
          }catch(NullPointerException e){
-             JOptionPane.showMessageDialog(rootPane, "Falaha ao acesso o banco de dados!", null, JOptionPane.ERROR_MESSAGE);
+             JOptionPane.showMessageDialog(rootPane, "Falha ao acesso o banco de dados!", null, JOptionPane.ERROR_MESSAGE);
          }
          
          
@@ -950,13 +964,11 @@ public class FormEditarFinanciamento extends javax.swing.JInternalFrame {
 
     private void btnPesquisarFinanciamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarFinanciamentoActionPerformed
     
-            //pequisar por placa
-           
+            //pequisar pelo numero da ficha(int)           
             if( this.txtPesquisarFinanciamento.getText().isBlank()){
                 JOptionPane.showMessageDialog(this, "Digite o numero da ficha no campo de pesquisa!");
                 return;
-            }
-            
+            }            
             boolean testeCampoPesquisa = false;
             testeCampoPesquisa = Validacao.isNumber(this.txtPesquisarFinanciamento.getText());
             if( testeCampoPesquisa == false ) {
@@ -964,49 +976,55 @@ public class FormEditarFinanciamento extends javax.swing.JInternalFrame {
                 return;
             }
             
-            if( "Ficha".equals(this.cbOptionPesquisa.getSelectedItem().toString())){
-               this.financiamento = FinanciamentoDB.buscaFinanciamentoPorNFicha(Integer.parseInt(this.txtPesquisarFinanciamento.getText()));
-                //preenche formulario entrada
-           
-                this.txtMarcaEntrada.setText(this.financiamento.getVeiculo().getMarca());
-                this.txtModeloEntrada.setText(this.financiamento.getVeiculo().getModelo());
-                this.txtRenavamEntrada.setText(this.financiamento.getVeiculo().getRenavam());
-                this.txtChassiEntrada.setText(this.financiamento.getVeiculo().getChassi());
-                this.txtPlacaEntrada.setText(this.financiamento.getVeiculo().getPlaca());
-                this.cbAnoEntrada.setSelectedItem(this.financiamento.getVeiculo().getAno());
-                this.cbCorEntrada.setSelectedItem(this.financiamento.getVeiculo().getCor());
-                //fim formulario entrada
-                //preenche formulario cliente
-                this.txtNomeFinanciamento.setText(this.financiamento.getCliente().getNome());
-                this.txtRgFinanciamento.setText(this.financiamento.getCliente().getRg());
-                this.txtCPFFinanciamento.setText(this.financiamento.getCliente().getCpf());
-                this.txtCEPFinanciamento.setText(this.financiamento.getCliente().getCep());
-                this.txtEnderecoFinanciamento.setText(this.financiamento.getCliente().getEndereco());
-                this.txtBairroFinanciamento.setText(this.financiamento.getCliente().getBairro());
-                this.txtNumeroFinanciamento.setText(String.valueOf(this.financiamento.getCliente().getNumero()));                          
-                    Municipio municipio;                     
-                    municipio = MunicipioDB.buscaCidadePorId(this.financiamento.getCliente().getId_municipio());
-                    if( municipio != null ){
-                        this.cbCidadeFinanciamento.setSelectedItem(municipio.getNome());
-                        Estado estado;                        
-                        estado = EstadoDB.searchById(municipio.getId_uf());
-                        this.cbUFFinanciamento.setSelectedItem(estado.getNome()); 
-                    }
-                    else{
-                        JOptionPane.showMessageDialog(this, "Falha ao acessar banco de dados!");
-                    }
-                this.txtWhatsappFinanciamento.setText(this.financiamento.getCliente().getWhatsapp());
-                this.txtTelefoneFinanciamento.setText(this.financiamento.getCliente().getTelefone()); 
-                this.txtComplementoFinanciamento.setText(this.financiamento.getCliente().getComplemento());
-                //fim formulario cliente]
-                //preenche formulário financiamento
-                this.txtFicha.setText(String.valueOf(this.financiamento.getFicha()));
-                this.dtFinanciamento.setDate(this.financiamento.getData_registro());
-                this.txtValParcelaFinanciamento.setText(String.valueOf(this.financiamento.getValor_parcela()));
-                this.cbQtdParcelasFinanciamento.setSelectedItem(this.financiamento.getNum_parcelas());                
-                this.cbDiaVencimentoFinanciamento.setSelectedItem(this.financiamento.getDia_vencimento());
-                this.txtObsFinanciamento.setText(this.financiamento.getOberservacao());
-                //fim formulario financiamento
+            try{
+                if( "Ficha".equals(this.cbOptionPesquisa.getSelectedItem().toString())){
+                   this.financiamento = FinanciamentoDB.buscaFinanciamentoPorNFicha(Integer.parseInt(this.txtPesquisarFinanciamento.getText()));
+                    if( this.financiamento == null ) throw new DaoException("Nenhum financiamento encontrado ou falha ao acessar o banco de dados");
+
+                    //preenche formulario entrada           
+                    this.txtMarcaEntrada.setText(this.financiamento.getVeiculo().getMarca());
+                    this.txtModeloEntrada.setText(this.financiamento.getVeiculo().getModelo());
+                    this.txtRenavamEntrada.setText(this.financiamento.getVeiculo().getRenavam());
+                    this.txtChassiEntrada.setText(this.financiamento.getVeiculo().getChassi());
+                    this.txtPlacaEntrada.setText(this.financiamento.getVeiculo().getPlaca());
+                    this.cbAnoEntrada.setSelectedItem(this.financiamento.getVeiculo().getAno());
+                    this.cbCorEntrada.setSelectedItem(this.financiamento.getVeiculo().getCor());
+                    //fim formulario entrada
+                    //preenche formulario cliente
+                    this.txtNomeFinanciamento.setText(this.financiamento.getCliente().getNome());
+                    this.txtRgFinanciamento.setText(this.financiamento.getCliente().getRg());
+                    this.txtCPFFinanciamento.setText(this.financiamento.getCliente().getCpf());
+                    this.txtCEPFinanciamento.setText(this.financiamento.getCliente().getCep());
+                    this.txtEnderecoFinanciamento.setText(this.financiamento.getCliente().getEndereco());
+                    this.txtBairroFinanciamento.setText(this.financiamento.getCliente().getBairro());
+                    this.txtNumeroFinanciamento.setText(String.valueOf(this.financiamento.getCliente().getNumero()));                          
+                        Municipio municipio;                     
+                        municipio = MunicipioDB.buscaCidadePorId(this.financiamento.getCliente().getId_municipio());
+                        if( municipio != null ){
+                            this.cbCidadeFinanciamento.setSelectedItem(municipio.getNome());
+                            Estado estado;                        
+                            estado = EstadoDB.searchById(municipio.getId_uf());
+                            this.cbUFFinanciamento.setSelectedItem(estado.getNome()); 
+                        }
+                        else{
+                            JOptionPane.showMessageDialog(this, "Falha ao acessar banco de dados!");
+                        }
+                    this.txtWhatsappFinanciamento.setText(this.financiamento.getCliente().getWhatsapp());
+                    this.txtTelefoneFinanciamento.setText(this.financiamento.getCliente().getTelefone()); 
+                    this.txtComplementoFinanciamento.setText(this.financiamento.getCliente().getComplemento());
+                    //fim formulario cliente]
+                    //preenche formulário financiamento
+                    this.txtFicha.setText(String.valueOf(this.financiamento.getFicha()));
+                    this.dtFinanciamento.setDate(this.financiamento.getData_registro());
+                    this.txtValParcelaFinanciamento.setText(String.valueOf(this.financiamento.getValor_parcela()));
+                    this.cbQtdParcelasFinanciamento.setSelectedItem(this.financiamento.getNum_parcelas());                
+                    this.cbDiaVencimentoFinanciamento.setSelectedItem(this.financiamento.getDia_vencimento());
+                    this.txtObsFinanciamento.setText(this.financiamento.getOberservacao());
+                    //fim formulario financiamento
+                }
+            }
+            catch(DaoException ex){
+                JOptionPane.showMessageDialog(null, ex.getMessage());
             }
                             
                             

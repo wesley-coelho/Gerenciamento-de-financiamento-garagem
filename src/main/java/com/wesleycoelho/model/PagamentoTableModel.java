@@ -21,7 +21,7 @@ import javax.swing.table.TableModel;
  */
 public class PagamentoTableModel extends AbstractTableModel implements TableModel{
     List<Parcelamento> parcelas;
-    String[] columns = {"Parcela", "Vencimento", "Parcela R$", "Pagamento R$", "Pago" ,"Data"};
+    String[] columns = {"Parcela", "Vencimento", "Parcela R$", "Pagamento R$", "Pago" ,"Data", "Cancelado?"};
     Financiamento financiamento;
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     
@@ -50,6 +50,7 @@ public class PagamentoTableModel extends AbstractTableModel implements TableMode
             case 3 -> columns[3];
             case 4 -> columns[4];
             case 5 -> columns[5];
+            case 6 -> columns[6];    
             default -> "erro";
         };
     }
@@ -64,6 +65,7 @@ public class PagamentoTableModel extends AbstractTableModel implements TableMode
             case 3 -> valueRow.getValor_pagamento() == 0.0?null:valueRow.getValor_pagamento();
             case 4 -> valueRow.getIsPago();
             case 5 -> valueRow.getData_pagamento() != null?valueRow.getData_pagamento().toLocalDate().format(dtf):valueRow.getData_pagamento();
+            case 6 -> valueRow.getIsCanceled();
             default -> "Erro";
         };
         
@@ -91,6 +93,7 @@ public class PagamentoTableModel extends AbstractTableModel implements TableMode
             case 3 -> Double.class;
             case 4 -> Boolean.class;
             case 5 -> String.class;
+            case 6 -> Boolean.class;
             default -> null;
         };
     }
@@ -116,6 +119,11 @@ public class PagamentoTableModel extends AbstractTableModel implements TableMode
                         ParcelamentoDB.Pagamento(parcelas.get(rowIndex));
                         fireTableDataChanged();
                       }
+            case 6 -> {
+                        parcelas.get(rowIndex).setIsCanceled((Boolean)aValue);                        
+                        ParcelamentoDB.Pagamento(parcelas.get(rowIndex));
+                        fireTableDataChanged();
+                      }
         }
         
     }
@@ -126,7 +134,7 @@ public class PagamentoTableModel extends AbstractTableModel implements TableMode
     
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex){
-        return columnIndex == 3 || columnIndex == 4;
+        return columnIndex == 3 || columnIndex == 4 || columnIndex == 6;
     }
     
     

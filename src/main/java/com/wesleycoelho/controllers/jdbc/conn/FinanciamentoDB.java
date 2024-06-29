@@ -240,7 +240,7 @@ public class FinanciamentoDB {
          return null;
      } 
      
-    public static Financiamento buscaPorId(int id){
+     public static Financiamento buscaPorId(int id){
          String sql = "SELECT * FROM financiamento WHERE id = "+id+";";
          Connection conn = ConnectionFactory.getConexao();
          
@@ -270,9 +270,7 @@ public class FinanciamentoDB {
          return null;
      }
     
-    
-   
-      public static List<Financiamento> buscaPorNome(String nome){
+     public static List<Financiamento> buscaPorNome(String nome){
          String sql = """
                       select f.id, 
                       f.data_do_registro,                       
@@ -314,7 +312,7 @@ public class FinanciamentoDB {
          return null;
      }
       
-      public static List<Financiamento> buscaPorDiaVencimento(int dia){
+     public static List<Financiamento> buscaPorDiaVencimento(int dia){
          String sql = "SELECT * FROM financiamento WHERE dia_vencimento = "+dia+";";
          Connection conn = ConnectionFactory.getConexao();
          
@@ -344,7 +342,7 @@ public class FinanciamentoDB {
          return null;
      }
       
-      public static int buscaNficha(int id){
+     public static int buscaNficha(int id){
           String sql = "SELECT nFicha FROM financiamento WHERE id_cliente = "+id+";";
           Connection conn = ConnectionFactory.getConexao();
           
@@ -364,7 +362,7 @@ public class FinanciamentoDB {
           return 0;
       }
       
-      public static void update(Financiamento f, Cliente c){
+     public static void update(Financiamento f, Cliente c){
           
            String sql_1 = "UPDATE financiamento SET "
                    + "dia_vencimento = "+f.getDia_vencimento()+", "
@@ -392,7 +390,7 @@ public class FinanciamentoDB {
                 stmt.executeUpdate(sql_1);
                 stmt.executeUpdate(sql_2);
                 ConnectionFactory.close(conn, stmt);
-                JOptionPane.showMessageDialog(null, "Registro atualizado!","Update", JOptionPane.INFORMATION_MESSAGE);
+                
            }catch(SQLException ex){
                JOptionPane.showMessageDialog(null, ex.getMessage(), null, JOptionPane.ERROR_MESSAGE);
            }

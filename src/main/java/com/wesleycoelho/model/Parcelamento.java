@@ -19,6 +19,7 @@ public class Parcelamento {
     Integer id_financiamento;
     Date mes_ref;
     Boolean ispago;
+    Boolean isCanceled;
     public static boolean janelaPagamento = false;
     
 
@@ -30,21 +31,23 @@ public class Parcelamento {
         this.mes_ref = mes_ref;
     }
 
-    public Parcelamento(Date data_pagamento, Double valor_pagamento, Integer id_financiamento, Date mes_ref, Boolean ispago) {
+    public Parcelamento(Date data_pagamento, Double valor_pagamento, Integer id_financiamento, Date mes_ref, Boolean ispago, Boolean isCanceled) {
         this.data_pagamento = data_pagamento;
         this.valor_pagamento = valor_pagamento;
         this.id_financiamento = id_financiamento;
         this.mes_ref = mes_ref;
         this.ispago = ispago;
+        this.isCanceled = isCanceled;
     }
 
-    public Parcelamento(Integer id, Date data_pagamento, Double valor_pagamento, Integer id_financiamento, Date mes_ref, Boolean ispago) {
+    public Parcelamento(Integer id, Date data_pagamento, Double valor_pagamento, Integer id_financiamento, Date mes_ref, Boolean ispago, Boolean isCanceled) {
         this.id = id;
         this.data_pagamento = data_pagamento;
         this.valor_pagamento = valor_pagamento;
         this.id_financiamento = id_financiamento;
         this.mes_ref = mes_ref;
         this.ispago = ispago;
+        this.isCanceled = isCanceled;
     }
     
     
@@ -105,6 +108,14 @@ public class Parcelamento {
 
     public void setIsPago(Boolean ispago) {
         this.ispago = ispago;
+    }
+
+    public Boolean getIsCanceled() {
+        return isCanceled;
+    }
+
+    public void setIsCanceled(Boolean isCanceled) {
+        this.isCanceled = isCanceled;
     }
 
    
