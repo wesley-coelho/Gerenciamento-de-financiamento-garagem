@@ -9,6 +9,9 @@ package com.wesleycoelho.model;
  * @author Wesley
  */
 import java.sql.Date;
+import java.util.HashMap;
+import java.util.Map;
+import org.bson.Document;
 
 /**
  *
@@ -282,5 +285,23 @@ public class EntradaVeiculo {
         this.cidade = cidade;
     }
 
+    public Document toDocument(){
+        Map<String, Object> map = new HashMap<>();
+        map.put("nome_proprietario", nome_proprietario);
+        map.put("data_entrada", data_entrada);
+        map.put("marca", marca);
+        map.put("modelo", modelo);
+        map.put("cor", cor);
+        map.put("placa", placa);
+        map.put("renavam", renavam); 
+        map.put("chassi", chassi); 
+        map.put("id_municipio", id_municipio); 
+        map.put("ano", ano); 
+        map.put("telefone", telefone); 
+        map.put("whatsapp", whatsapp); 
+        
+        return new Document(map);
+    }
     
+       
 }

@@ -4,12 +4,15 @@
  */
 package mongoDB;
 
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.client.result.UpdateResult;
+import java.util.ArrayList;
+import java.util.List;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
@@ -34,6 +37,36 @@ public class CrudMongoDB {
         try (MongoClient client = ConnectionFactory.getMongoClient()) {
             MongoDatabase database = client.getDatabase(DATABASE_NAME);
             return database.getCollection(collectionName).deleteOne(doc);
+        }
+         
+    }
+    
+    public static Document search(String collectionName, Bson customFilter){
+        try (MongoClient client = ConnectionFactory.getMongoClient()) {
+            MongoDatabase database = client.getDatabase(DATABASE_NAME);
+            return database.getCollection(collectionName).find().filter(customFilter).first();
+        }
+         
+    }
+    
+    
+    
+     public static List<Document> searchAll(String collectionName){
+        try (MongoClient client = ConnectionFactory.getMongoClient()) {
+            MongoDatabase database = client.getDatabase(DATABASE_NAME);
+            FindIterable<Document> iterator = database.getCollection(collectionName).find();
+            List<Document> lista =  new ArrayList<>();
+            return iterator.into(lista);
+        }
+         
+    }
+     
+     public static List<Document> searchAll(String collectionName, Bson customFilter){
+        try (MongoClient client = ConnectionFactory.getMongoClient()) {
+            MongoDatabase database = client.getDatabase(DATABASE_NAME);
+            List<Document> lista = new ArrayList<>();
+            FindIterable<Document> iterator = database.getCollection(collectionName).find().filter(customFilter);
+            return iterator.into(lista);
         }
          
     }
