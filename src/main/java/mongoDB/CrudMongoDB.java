@@ -1,0 +1,78 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package mongoDB;
+
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.InsertOneResult;
+import com.mongodb.client.result.UpdateResult;
+import org.bson.Document;
+import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
+
+/**
+ *
+ * @author Wesley
+ */
+public class CrudMongoDB { 
+    private static final String DATABASE_NAME = "garagem7curvas";
+    
+    
+    public static InsertOneResult add(String collectionName, Document doc){
+        try (MongoClient client = ConnectionFactory.getMongoClient()) {
+            MongoDatabase database = client.getDatabase(DATABASE_NAME);
+            return database.getCollection(collectionName).insertOne(doc);
+        }
+         
+    }
+    
+    public static DeleteResult delete( String collectionName, Document doc){
+        try (MongoClient client = ConnectionFactory.getMongoClient()) {
+            MongoDatabase database = client.getDatabase(DATABASE_NAME);
+            return database.getCollection(collectionName).deleteOne(doc);
+        }
+         
+    }
+    
+    public static Document searchById(String collectionName, ObjectId id){
+        try (MongoClient client = ConnectionFactory.getMongoClient()) {
+            MongoDatabase database = client.getDatabase(DATABASE_NAME);
+            return database.getCollection(collectionName).find().filter(Filters.eq("_id", id)).first();
+        }
+         
+    }
+    
+    public static UpdateResult SearchAndUpdateOne(String collectionName, ObjectId id, Bson fieldToUpdate){
+        try (MongoClient client = ConnectionFactory.getMongoClient()) {
+            MongoDatabase database = client.getDatabase(DATABASE_NAME);
+            Bson doc =  database.getCollection(collectionName).find().filter(Filters.eq("_id", id)).first();
+            if ( doc != null ){
+                return database.getCollection(collectionName).updateOne(doc, new Document("$set",fieldToUpdate));                
+            } 
+            return null;
+        }         
+    }
+    
+    public static Document searchByFieldValue(String collectionName, String field, Object value){
+        try (MongoClient client = ConnectionFactory.getMongoClient()) {
+            MongoDatabase database = client.getDatabase(DATABASE_NAME);
+            return database.getCollection(collectionName).find().filter(Filters.eq(field, value)).first();
+        }
+         
+    }
+    
+    public static Document autenticaUsuario(String collectionName, String user, String password){
+        try (MongoClient client = ConnectionFactory.getMongoClient()) {
+            MongoDatabase database = client.getDatabase(DATABASE_NAME);
+            return database.getCollection(collectionName).find().filter(Filters.and(Filters.eq("usuario", user), Filters.eq("senha", password))).first();
+        }        
+         
+    }
+    
+    
+    
+}

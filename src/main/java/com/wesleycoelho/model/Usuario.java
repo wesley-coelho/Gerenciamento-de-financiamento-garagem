@@ -4,7 +4,10 @@
  */
 package com.wesleycoelho.model;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
+import org.bson.Document;
 
 /**
  *
@@ -63,6 +66,26 @@ public class Usuario {
     public void setAdministrador(boolean administrador) {
         this.administrador = administrador;
     }
+    
+    public static Usuario DocumentToJavaObj(Document doc){
+        Usuario u = new Usuario();
+        u.usuario = doc.getString("usuario");
+        u.senha = doc.getString("senha");
+        u.email = doc.getString("email");
+        u.administrador = doc.getBoolean("administrador");        
+        return u;
+    }
+    
+    public Document toDocument(){
+        Map<String, Object> user  = new HashMap<>();
+        user.put("usuario", usuario);
+        user.put("senha", senha);
+        user.put("email", email);
+        user.put("administrador", administrador);
+        return new Document(user);
+    }
+    
+    
 
     @Override
     public int hashCode() {

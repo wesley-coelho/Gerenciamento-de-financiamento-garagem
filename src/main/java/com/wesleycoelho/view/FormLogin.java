@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+import mongoDB.CrudMongoDB;
+import org.bson.Document;
 
 /**
  *
@@ -230,13 +232,18 @@ public class FormLogin extends javax.swing.JFrame {
         this.btnFazerLogin.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         String user = this.txtUser.getText();
         String senha = String.valueOf(this.txtPassword.getPassword());
-        List<Usuario> usuario = new ArrayList<Usuario>();
+        //List<Usuario> usuario = new ArrayList<Usuario>();
+        Document usuario;
         
-        if(!user.isEmpty() && !senha.isEmpty()){            
-                usuario = UsuarioDB.localizaUsuario(user, senha);                
+        if(!user.isEmpty() && !senha.isEmpty()){
+                
+                usuario = CrudMongoDB.autenticaUsuario("usuario", user, senha);
+             
+                //usuario = UsuarioDB.localizaUsuario(user, senha);                
             if(usuario!= null){
                     FormDesktop frmDesktop;
-                    frmDesktop = new FormDesktop(usuario.getFirst());
+                    
+                    frmDesktop = new FormDesktop(Usuario.DocumentToJavaObj(usuario));
                     this.btnFazerLogin.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                     frmDesktop.setVisible(true);
                     this.dispose();

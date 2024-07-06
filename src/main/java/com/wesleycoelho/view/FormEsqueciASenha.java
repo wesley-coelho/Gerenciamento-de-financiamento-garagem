@@ -4,12 +4,18 @@
  */
 package com.wesleycoelho.view;
 
+import com.mongodb.MongoException;
 import com.wesleycoelho.controllers.jdbc.conn.UsuarioDB;
 import com.wesleycoelho.model.Usuario;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import mongoDB.CrudMongoDB;
 import org.apache.commons.mail.DefaultAuthenticator;
+import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
+import org.bson.Document;
 
 /**
  *
@@ -134,30 +140,30 @@ public class FormEsqueciASenha extends javax.swing.JFrame {
         // TODO add your handling code here:
         String meuEmail = "cogashuco@gmail.com";
         String minhaSenha = "eiwoappmqheujjwv";
-        List<Usuario> usuario;
+        //List<Usuario> usuario;
         
-        String emailCadastrado = this.txtEmailCadastrado.getText();           
-        usuario = UsuarioDB.searchByEmail(emailCadastrado);
-        if(usuario != null){
+        String emailCadastrado = this.txtEmailCadastrado.getText();        
+        //usuario = UsuarioDB.searchByEmail(emailCadastrado);
+         Document doc = CrudMongoDB.searchByFieldValue("usuario", "email", emailCadastrado);
+        if(doc != null){
             SimpleEmail email = new SimpleEmail();
             email.setHostName("smtp.gmail.com");
             email.setSmtpPort(465);
             email.setAuthenticator(new DefaultAuthenticator(meuEmail, minhaSenha));
-            email.setSSLOnConnect(true);
-          
+            email.setSSLOnConnect(true);         
 
             try{
-
-
                 email.setFrom(meuEmail);
                 email.setSubject("Teste de envio de email");
-                email.setMsg("Sua senha é: " + usuario.getFirst().getSenha());
-                email.addTo(usuario.getFirst().getEmail());
+                email.setMsg("Sua senha é: " + doc.getString("senha"));
+                email.addTo(doc.getString("email"));
                 email.send();
                 JOptionPane.showMessageDialog(this, "Email enviado com sucesso!" ); 
 
-            }catch(Exception e){            
-                e.printStackTrace();
+            }catch(MongoException e){            
+                JOptionPane.showMessageDialog(null, e.getMessage());
+            } catch (EmailException ex) {
+                JOptionPane.showMessageDialog(null, ex.getMessage());
             }
         }else{
             JOptionPane.showMessageDialog(this, "Email não encontrado" ); 

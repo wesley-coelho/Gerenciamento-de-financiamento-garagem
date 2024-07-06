@@ -4,8 +4,11 @@
  */
 package com.wesleycoelho.view;
 
+import com.mongodb.client.result.InsertOneResult;
 import com.wesleycoelho.controllers.jdbc.conn.UsuarioDB;
 import com.wesleycoelho.model.Usuario;
+import javax.swing.JOptionPane;
+import mongoDB.CrudMongoDB;
 
 /**
  *
@@ -186,8 +189,11 @@ public class FormCadastroUsuario extends javax.swing.JFrame {
        usuario.setSenha(String.valueOf(this.txtPassword.getPassword()));
        usuario.setEmail(this.txtEmail.getText());
        usuario.setAdministrador(this.chkBoxAdministrador.isSelected());
-       
-       UsuarioDB.save(usuario);
+       InsertOneResult result = CrudMongoDB.add("usuario", usuario.toDocument());
+       if ( result != null  ){
+           JOptionPane.showMessageDialog(null, result.toString());
+       }
+       //UsuarioDB.save(usuario);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**

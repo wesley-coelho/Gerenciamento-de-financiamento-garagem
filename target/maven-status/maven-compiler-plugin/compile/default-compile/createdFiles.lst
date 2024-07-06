@@ -76,6 +76,7 @@ com\wesleycoelho\view\FormNovaEntrada$4.class
 com\wesleycoelho\model\PrintingTodosFinanciamentos.class
 com\wesleycoelho\view\FormNovoFinanciamento$26.class
 com\wesleycoelho\view\FormNovoFinanciamento$10.class
+mongoDB\CrudMongoDB.class
 com\wesleycoelho\view\FormDesktop$14.class
 com\wesleycoelho\view\FormRelatorio$4.class
 com\wesleycoelho\view\FormEditarFinanciamento$21.class
@@ -187,6 +188,7 @@ com\wesleycoelho\view\FormEditarEntrada$13.class
 com\wesleycoelho\view\FormListarTodosFinanciamento$6.class
 com\wesleycoelho\view\FormNovoFinanciamento$17.class
 com\wesleycoelho\view\FormNovoFinanciamento$16.class
+mongoDB\ConnectionFactory.class
 com\wesleycoelho\view\FormEditarFinanciamento$10.class
 com\wesleycoelho\view\FormEditarEntrada$12.class
 com\wesleycoelho\view\FormNovaSaida$17.class
