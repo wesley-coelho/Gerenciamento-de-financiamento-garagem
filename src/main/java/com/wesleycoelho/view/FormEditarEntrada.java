@@ -5,6 +5,7 @@
 package com.wesleycoelho.view;
 
 
+import com.mongodb.client.model.Filters;
 import com.wesleycoelho.controllers.jdbc.conn.EntradaVeiculoDB;
 import com.wesleycoelho.controllers.jdbc.conn.EstadoDB;
 import com.wesleycoelho.model.EntradaVeiculo;
@@ -17,6 +18,8 @@ import com.wesleycoelho.model.PrintingEntradaVeiculo;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.util.List;
+import mongoDB.CrudMongoDB;
+import org.bson.Document;
 
 /**
  *
@@ -279,7 +282,7 @@ public class FormEditarEntrada extends javax.swing.JInternalFrame {
             }
         });
 
-        cbCidadeEntrada.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Ribeirao Preto" }));
+        cbCidadeEntrada.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Ribeirão Preto" }));
         cbCidadeEntrada.setAutoscrolls(true);
         cbCidadeEntrada.setDoubleBuffered(true);
         cbCidadeEntrada.addAncestorListener(new javax.swing.event.AncestorListener() {
@@ -537,14 +540,19 @@ public class FormEditarEntrada extends javax.swing.JInternalFrame {
         this.entrada.setCor(this.cbCorEntrada.getSelectedItem().toString());
         nomeMunicipio = this.cbCidadeEntrada.getSelectedItem().toString();
         nome_Uf = this.cbUFEntrada.getSelectedItem().toString();
-        id_Uf = EstadoDB.searchIdStateByName(nome_Uf);           
-        id_Municipio = MunicipioDB.searchIdByCidade(nomeMunicipio, id_Uf);
+        
+        //id_Uf = EstadoDB.searchIdStateByName(nome_Uf);           
+        id_Uf = CrudMongoDB.searchByFieldValue("estados", "nome", nome_Uf).getInteger("id");
+        //id_Municipio = MunicipioDB.searchIdByCidade(nomeMunicipio, id_Uf);
+        id_Municipio = CrudMongoDB.search("cidades", Filters.and(Filters.eq("name", nomeMunicipio),Filters.eq("state_id", id_Uf))).getInteger("id");
         this.entrada.setId_municipio(id_Municipio);
          if(id_Uf == 0 || id_Municipio == 0)
             JOptionPane.showMessageDialog(this, "Erro ao acessar Banco de Dados");
         this.entrada.setAno(this.cbAnoEntrada.getSelectedItem().toString());
         this.entrada.setUsuario(this.usuario.getUsuario());
-        EntradaVeiculoDB.Editar(this.entrada);
+        
+        //EntradaVeiculoDB.Editar(this.entrada);
+        CrudMongoDB.replaceDocument("entrada_veiculo", this.entrada.getObjectId(), this.entrada.toDocument());
         JOptionPane.showMessageDialog(this, "Alteração realizada com sucesso!");
     }//GEN-LAST:event_btnSalvarEntradaActionPerformed
 
@@ -616,24 +624,26 @@ public class FormEditarEntrada extends javax.swing.JInternalFrame {
 
     private void cbCidadeEntradaAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_cbCidadeEntradaAncestorAdded
         // TODO add your handling code here:
-        List<Municipio> municipios;
-        
-        municipios = MunicipioDB.selectAllByState("São Paulo");
-        for(Municipio municipio: municipios){
-            this.cbCidadeEntrada.addItem(municipio.getNome());
+        List<Document> municipios;
+        Integer state_id_Sao_Paulo = CrudMongoDB.searchByFieldValue("estados", "nome", "São Paulo").getInteger("id");
+        municipios = CrudMongoDB.searchAll("cidades", Filters.eq("state_id", state_id_Sao_Paulo));
+     
+        for(Document municipio: municipios){
+            this.cbCidadeEntrada.addItem(municipio.getString("name"));
         }
      
     }//GEN-LAST:event_cbCidadeEntradaAncestorAdded
 
     private void cbUFEntradaAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_cbUFEntradaAncestorAdded
         // TODO add your handling code here:
-        List<Estado> estados;
-        
-        estados = EstadoDB.selectAll();
-        
-      for(Estado estado: estados){
-           this.cbUFEntrada.addItem(estado.getNome());
-      }
+         List<Document> estados;
+        estados = CrudMongoDB.searchAll("estados");
+        //estados = EstadoDB.selectAll();
+
+        for(Document estado: estados){    
+            this.cbUFEntrada.addItem(estado.getString("nome"));
+        }
+
     }//GEN-LAST:event_cbUFEntradaAncestorAdded
 
     private void cbCorEntradaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cbCorEntradaKeyTyped
@@ -664,32 +674,46 @@ public class FormEditarEntrada extends javax.swing.JInternalFrame {
 
     private void cbUFEntradaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbUFEntradaItemStateChanged
         // TODO add your handling code here:
-        List<Municipio> municipios;        
-        municipios = MunicipioDB.selectAllByState(cbUFEntrada.getSelectedItem().toString());
+       //List<municipio> municipios;
+    
+        List<Document> municipios;
+        String state_name = this.cbUFEntrada.getSelectedItem().toString();
+        Integer state_id = CrudMongoDB.searchByFieldValue("estados", "nome", state_name).getInteger("id");
+        municipios = CrudMongoDB.searchAll("cidades", Filters.eq("state_id", state_id));
+        //municipios = MunicipioDB.selectAllByState();
         this.cbCidadeEntrada.removeAllItems();
-        for(Municipio municipio: municipios){
-            this.cbCidadeEntrada.addItem(municipio.getNome());
+        for(Document municipio: municipios){
+            this.cbCidadeEntrada.addItem(municipio.getString("name"));
         }
     }//GEN-LAST:event_cbUFEntradaItemStateChanged
 
     private void cbUFEntradaComponentAdded(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_cbUFEntradaComponentAdded
         // TODO add your handling code here:
-        List<Municipio> municipios;        
-        municipios = MunicipioDB.selectAllByState(cbUFEntrada.getSelectedItem().toString());
+         //List<municipio> municipios;
+    
+        List<Document> municipios;
+        String state_name = cbUFEntrada.getSelectedItem().toString();
+        Integer state_id = CrudMongoDB.searchByFieldValue("estados", "nome", state_name).getInteger("id");
+        municipios = CrudMongoDB.searchAll("cidades", Filters.eq("state_id", state_id));
+        //municipios = MunicipioDB.selectAllByState();
         this.cbCidadeEntrada.removeAllItems();
-        for(Municipio municipio: municipios){
-            this.cbCidadeEntrada.addItem(municipio.getNome());
+        for(Document municipio: municipios){
+            this.cbCidadeEntrada.addItem(municipio.getString("name"));
         }
     }//GEN-LAST:event_cbUFEntradaComponentAdded
 
     private void btnPesquisarEntradaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarEntradaActionPerformed
         // TODO add your handling code here:
         if( !this.txtPesquisarEntrada.getText().isEmpty()){
-            this.entrada = EntradaVeiculoDB.searchByPlaca(txtPesquisarEntrada.getText());
-            if(entrada == null){
+            Document doc = CrudMongoDB.searchByFieldValue("entrada_veiculo", "placa", txtPesquisarEntrada.getText());
+          
+            //this.entrada = EntradaVeiculoDB.searchByPlaca(txtPesquisarEntrada.getText());
+            if(doc == null){
                 JOptionPane.showMessageDialog(this, "Placa não encontrada");
                 return;
-            }else{              
+            }else{ 
+                this.entrada = new EntradaVeiculo();
+                this.entrada.convertToJavaObj(doc);
                 this.txtMarcaEntrada.setText(entrada.getMarca());
                 this.txtModeloEntrada.setText(entrada.getModelo());
                 this.txtRenavamEntrada.setText(entrada.getRenavam());
@@ -702,14 +726,19 @@ public class FormEditarEntrada extends javax.swing.JInternalFrame {
                 this.txtTelefoneEntrada.setText(entrada.getTelefone()); 
                 this.txtWhatsappEntrada.setText(entrada.getWhatsapp()); 
                 
-                Municipio municipio;                
-                municipio = MunicipioDB.searchById(entrada.getId_municipio());
+                Municipio municipio = new Municipio(); 
                 
-                if(municipio != null){
+                //municipio = MunicipioDB.searchById(entrada.getId_municipio());
+                doc = CrudMongoDB.searchByFieldValue("cidades", "id",entrada.getId_municipio());
+                
+                if(doc != null){
+                    municipio.convertToJavaObj(doc);
                     this.cbCidadeEntrada.setSelectedItem(municipio.getNome());
-                    Estado estado;
-                    estado = EstadoDB.searchById(municipio.getId_uf());
-                    if( estado != null){
+                    Estado estado =  new Estado();
+                    doc = CrudMongoDB.searchByFieldValue("estados", "id",municipio.getId_uf());
+                    //estado = EstadoDB.searchById(municipio.getId_uf());
+                    if( doc != null){
+                        estado.convertToJavaObj(doc);
                         this.cbUFEntrada.setSelectedItem(estado.getNome());
                     }else{
                         JOptionPane.showMessageDialog(this, "Estado não encontrado");

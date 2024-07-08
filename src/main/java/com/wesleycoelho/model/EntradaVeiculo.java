@@ -12,13 +12,14 @@ import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 
 /**
  *
  * @author Wesley
  */
 public class EntradaVeiculo {
-    
+    ObjectId objectId;
     Integer id;
     String nome_proprietario = "";
     Date data_entrada = null;
@@ -173,6 +174,18 @@ public class EntradaVeiculo {
         this.id = id;
     }
 
+    public ObjectId getObjectId() {
+        return objectId;
+    }
+
+    public void setObjectId(ObjectId objectId) {
+        this.objectId = objectId;
+    }
+    
+    
+   
+    
+
     public String getNome_proprietario() {
         return nome_proprietario;
     }
@@ -284,9 +297,11 @@ public class EntradaVeiculo {
     public void setCidade(String cidade) {
         this.cidade = cidade;
     }
+    
+    
 
     public Document toDocument(){
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();      
         map.put("nome_proprietario", nome_proprietario);
         map.put("data_entrada", data_entrada);
         map.put("marca", marca);
@@ -303,5 +318,22 @@ public class EntradaVeiculo {
         return new Document(map);
     }
     
+    public void convertToJavaObj(Document doc){
+        if (doc != null){
+            this.objectId = doc.getObjectId("_id");
+            this.nome_proprietario = doc.getString("nome_proprietario");
+            this.data_entrada = new java.sql.Date(doc.getDate("data_entrada").getTime());
+            this.marca = doc.getString("marca");
+            this.modelo = doc.getString("modelo");
+            this.cor = doc.getString("cor");
+            this.placa = doc.getString("placa");
+            this.renavam = doc.getString("renavam");
+            this.chassi = doc.getString("chassi");
+            this.id_municipio = doc.getInteger("id_municipio");
+            this.ano = doc.getString("ano");
+            this.telefone = doc.getString("telefone");
+            this.whatsapp = doc.getString("whatsapp");
+        }
+    }
        
 }

@@ -4,6 +4,8 @@
  */
 package com.wesleycoelho.model;
 
+import org.bson.Document;
+
 /**
  *
  * @author Wesley
@@ -13,6 +15,8 @@ public class Estado {
     private Integer id;
     private String nome;
     private String sigla;
+    
+    public Estado(){}
 
     public Estado(Integer id, String nome, String sigla) {
         this.id = id;
@@ -44,7 +48,12 @@ public class Estado {
         this.sigla = sigla;
     }
     
-    
+    public void convertToJavaObj(Document doc){
+        
+        id = doc.getInteger("id");
+        nome = doc.getString("nome");
+        sigla = doc.getString("sigla");
+    }
     
 }
 

@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
+import mongoDB.CrudMongoDB;
+import org.bson.Document;
 
 
 
@@ -32,6 +34,7 @@ import javax.swing.table.DefaultTableModel;
 public class FormListarTodasEntradas extends javax.swing.JInternalFrame {
     private Usuario usuario = new Usuario();
     private List<EntradaVeiculo> listaEntradas;
+    private List<Document>       listaEntradasDoc;
     /**
      * Creates new form FormNovaEntrada
      */
@@ -338,25 +341,39 @@ public class FormListarTodasEntradas extends javax.swing.JInternalFrame {
         
         if(this.cbFiltroLista.getSelectedItem().toString() == "Todos"){
             
-            this.listaEntradas = EntradaVeiculoDB.selectAll();
-            
+            //this.listaEntradas = EntradaVeiculoDB.selectAll();
+            this.listaEntradasDoc = CrudMongoDB.searchAll("entrada_veiculo");
             DefaultTableModel tableModel = new DefaultTableModel();
             tableModel = (DefaultTableModel) this.tbEntradasVeiculo.getModel();
             tableModel.setNumRows(0);
-            for(EntradaVeiculo entrada: listaEntradas ){
+            for(Document entrada: listaEntradasDoc ){
                 Object[] colunas = new Object[12];
-                colunas[0] = entrada.getData_entrada();
-                colunas[1] = entrada.getNome_proprietario();
-                colunas[2] = entrada.getPlaca();
-                colunas[3] = entrada.getMarca();
-                colunas[4] = entrada.getModelo();
-                colunas[5] = entrada.getCor();
-                colunas[6] = entrada.getAno();
-                colunas[7] = entrada.getRenavam();
-                colunas[8] = entrada.getChassi();
-                colunas[9] = entrada.getCidade();
-                colunas[10] = entrada.getTelefone();
-                colunas[11] = entrada.getWhatsapp();
+//                colunas[0] = entrada.getData_entrada();
+//                colunas[1] = entrada.getNome_proprietario();
+//                colunas[2] = entrada.getPlaca();
+//                colunas[3] = entrada.getMarca();
+//                colunas[4] = entrada.getModelo();
+//                colunas[5] = entrada.getCor();
+//                colunas[6] = entrada.getAno();
+//                colunas[7] = entrada.getRenavam();
+//                colunas[8] = entrada.getChassi();
+//                colunas[9] = entrada.getCidade();
+//                colunas[10] = entrada.getTelefone();
+//                colunas[11] = entrada.getWhatsapp();                
+                colunas[0] = entrada.getDate("data_entrada");
+                colunas[1] = entrada.getString("nome_proprietario");
+                colunas[2] = entrada.getString("placa");
+                colunas[3] = entrada.getString("marca");
+                colunas[4] = entrada.getString("modelo");
+                colunas[5] = entrada.getString("cor");
+                colunas[6] = entrada.getString("ano");
+                colunas[7] = entrada.getString("renavam");
+                colunas[8] = entrada.getString("chassi");
+                colunas[9] = CrudMongoDB.searchByFieldValue("cidades", "id", entrada.getInteger("id_municipio")).getString("name");
+                colunas[10] = entrada.getString("telefone");
+                colunas[11] = entrada.getString("whatsapp");
+                
+                
                 tableModel.addRow(colunas);
             }
             return;

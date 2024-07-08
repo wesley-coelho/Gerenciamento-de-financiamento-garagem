@@ -79,6 +79,14 @@ public class CrudMongoDB {
          
     }
     
+    public static UpdateResult replaceDocument(String collectionName, ObjectId id, Document doc){
+        try (MongoClient client = ConnectionFactory.getMongoClient()) {
+            MongoDatabase database = client.getDatabase(DATABASE_NAME);
+            return database.getCollection(collectionName).replaceOne(Filters.eq(id), doc);
+        }   
+    
+    }
+    
     public static UpdateResult SearchAndUpdateOne(String collectionName, ObjectId id, Bson fieldToUpdate){
         try (MongoClient client = ConnectionFactory.getMongoClient()) {
             MongoDatabase database = client.getDatabase(DATABASE_NAME);

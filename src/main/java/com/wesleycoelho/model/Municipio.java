@@ -4,6 +4,8 @@
  */
 package com.wesleycoelho.model;
 
+import org.bson.Document;
+
 /**
  *
  * @author Wesley
@@ -12,6 +14,8 @@ public class Municipio {
     private Integer id;
     private String cidade;
     private Integer id_uf;
+    
+    public Municipio(){}
 
     public Municipio(Integer id, String cidade, Integer id_uf) {
         this.id = id;
@@ -43,6 +47,12 @@ public class Municipio {
         this.id_uf = id_uf;
     }
     
+    public void convertToJavaObj(Document doc){
+        
+        id = doc.getInteger("id");
+        cidade = doc.getString("name");
+        id_uf = doc.getInteger("state_id");
+    }
     
 }
 
