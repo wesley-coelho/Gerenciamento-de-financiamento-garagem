@@ -5,20 +5,38 @@
 package com.wesleycoelho.view;
 
 
+import com.mongodb.client.AggregateIterable;
+import com.mongodb.client.MongoClient;
+import static com.mongodb.client.model.Aggregates.lookup;
+import static com.mongodb.client.model.Aggregates.match;
+import static com.mongodb.client.model.Aggregates.project;
+import com.mongodb.client.model.Filters;
+import static com.mongodb.client.model.Filters.expr;
+import static com.mongodb.client.model.Projections.excludeId;
+import static com.mongodb.client.model.Projections.fields;
+import com.mongodb.client.model.Variable;
 import com.wesleycoelho.controllers.jdbc.conn.EstadoDB;
 import com.wesleycoelho.model.Usuario;
 import javax.swing.JOptionPane;
 import com.wesleycoelho.controllers.jdbc.conn.MunicipioDB;
 import com.wesleycoelho.controllers.jdbc.conn.SaidaVeiculoDB;
+import com.wesleycoelho.model.EntradaVeiculo;
 import com.wesleycoelho.model.Estado;
 import com.wesleycoelho.model.Municipio;
 import com.wesleycoelho.model.PrintingSaidaVeiculo;
 import com.wesleycoelho.model.SaidaVeiculo;
+import java.awt.Cursor;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
+import java.util.ArrayList;
+import static java.util.Arrays.asList;
 
 
 import java.util.List;
+import mongoDB.ConnectionFactory;
+import mongoDB.CrudMongoDB;
+import org.bson.Document;
+import org.bson.conversions.Bson;
 
 
 
@@ -28,7 +46,7 @@ import java.util.List;
  */
 public class FormPesquisaSaida extends javax.swing.JInternalFrame {
     Usuario usuario = new Usuario();
-    List<SaidaVeiculo> saidas;
+    List<SaidaVeiculo> saidas = new ArrayList<>();
     int iteratorLista = 0;
     /**
      * Creates new form FormNovaEntrada
@@ -694,9 +712,24 @@ public class FormPesquisaSaida extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txtPesquisarEntradaMouseEntered
 
     private void btnPesquisarEntradaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarEntradaActionPerformed
-        // TODO add your handling code here:
+       this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
     if(this.cbFiltroPesquisa.getSelectedItem().toString() == "PLACA" ){
-            this.saidas = SaidaVeiculoDB.selectByPlaca(this.txtPesquisarEntrada.getText().toUpperCase());
+            
+             List<Document> docEntradas = CrudMongoDB.searchAll("entrada_veiculo", Filters.eq("placa", this.txtPesquisarEntrada.getText().toUpperCase()));
+             List<Document> docSaidas = new ArrayList<>();
+             for(Document doc : docEntradas){
+                 Document d;
+                 d = CrudMongoDB.searchByFieldValue("saida_veiculo","id_entrada", doc.getObjectId("_id") );
+                 if( d != null)docSaidas.add(d);
+             }
+             for( Document d : docSaidas ){
+                 if(d != null) {
+                     SaidaVeiculo s = new SaidaVeiculo();
+                     s.convertToJavaObj(d);
+                     this.saidas.add(s);
+                 }
+             }
+            //this.saidas = SaidaVeiculoDB.selectByPlaca(this.txtPesquisarEntrada.getText().toUpperCase());
             if(this.saidas != null && !this.saidas.isEmpty()){
                     this.lblTotalLista.setText(String.valueOf(this.saidas.size()));
                     preencheResultadoConsulta(iteratorLista);
@@ -705,7 +738,7 @@ public class FormPesquisaSaida extends javax.swing.JInternalFrame {
                     JOptionPane.showMessageDialog(this, "Nenhum resultado encontrado");
                 }
         }
-        
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_btnPesquisarEntradaActionPerformed
 
     private void cbFiltroPesquisaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cbFiltroPesquisaFocusGained
@@ -741,21 +774,28 @@ public class FormPesquisaSaida extends javax.swing.JInternalFrame {
 
     private void preencheResultadoConsulta(int i){
         this.lblAtualResult.setText(String.valueOf(i + 1));
-                this.txtMarcaEntrada.setText(saidas.get(i).getEntrada().getMarca());
-                this.txtModeloEntrada.setText(saidas.get(i).getEntrada().getModelo());
-                this.txtRenavamEntrada.setText(saidas.get(i).getEntrada().getRenavam());
-                this.txtChassiEntrada.setText(saidas.get(i).getEntrada().getChassi());
-                this.txtPlacaEntrada.setText(saidas.get(i).getEntrada().getPlaca());
-                this.cbAnoEntrada.setSelectedItem(saidas.get(i).getEntrada().getAno());
-                this.cbCorEntrada.setSelectedItem(saidas.get(i).getEntrada().getCor());
+                EntradaVeiculo entrada = new EntradaVeiculo();
+                Document doc = CrudMongoDB.searchByFieldValue("entrada_veiculo", "_id", saidas.get(i).getId_entradaMongo());
+                entrada.convertToJavaObj(doc);
+                this.txtMarcaEntrada.setText(entrada.getMarca());
+                this.txtModeloEntrada.setText(entrada.getModelo());
+                this.txtRenavamEntrada.setText(entrada.getRenavam());
+                this.txtChassiEntrada.setText(entrada.getChassi());
+                this.txtPlacaEntrada.setText(entrada.getPlaca());
+                this.cbAnoEntrada.setSelectedItem(entrada.getAno());
+                this.cbCorEntrada.setSelectedItem(entrada.getCor());
                 this.DataChooserEntrada.setDate(saidas.get(i).getData_saida());                  
-                this.txtProprietarioEntrada.setText(saidas.get(i).getEntrada().getNome_proprietario());
-                this.txtTelefoneEntrada.setText(saidas.get(i).getEntrada().getTelefone()); 
-                this.txtWhatsappEntrada.setText(saidas.get(i).getEntrada().getWhatsapp());
-                Municipio municipio;
-                municipio = MunicipioDB.searchById(saidas.get(i).getEntrada().getId_municipio()); 
-                Estado estado;
-                estado = EstadoDB.searchById(municipio.getId_uf());                  
+                this.txtProprietarioEntrada.setText(entrada.getNome_proprietario());
+                this.txtTelefoneEntrada.setText(entrada.getTelefone()); 
+                this.txtWhatsappEntrada.setText(entrada.getWhatsapp());
+                Municipio municipio = new Municipio();
+                doc = CrudMongoDB.searchByFieldValue("cidades", "id", entrada.getId_municipio());
+                municipio.convertToJavaObj(doc);
+                //municipio = MunicipioDB.searchById(saidas.get(i).getEntrada().getId_municipio()); 
+                Estado estado = new Estado();
+                doc = CrudMongoDB.searchByFieldValue("estados", "id", municipio.getId_uf());
+                estado.convertToJavaObj(doc);
+                //estado = EstadoDB.searchById(municipio.getId_uf());                  
                 this.cbUFEntrada.setSelectedItem(estado.getNome());
                 this.cbCidadeEntrada.setSelectedItem(municipio.getNome());
     }

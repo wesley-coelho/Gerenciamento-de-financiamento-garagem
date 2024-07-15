@@ -12,10 +12,16 @@ import com.wesleycoelho.model.Cliente;
 import com.wesleycoelho.model.Financiamento;
 import com.wesleycoelho.model.PrintingTodosFinanciamentos;
 import com.wesleycoelho.model.SaidaVeiculo;
+import java.awt.Cursor;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
+import mongoDB.CrudMongoDB;
+import org.bson.Document;
 
 /**
  *
@@ -26,7 +32,7 @@ public class FormListarTodosFinanciamento extends javax.swing.JInternalFrame {
     EntradaVeiculo entrada;
     Cliente cliente;
     Financiamento financiamento;
-    List<Financiamento> listaFinanciamento;
+    List<Financiamento> listaFinanciamento  = new ArrayList<>();
     SaidaVeiculo saida;
     /**
      * Creates new form FormNovaEntrada
@@ -275,39 +281,49 @@ public class FormListarTodosFinanciamento extends javax.swing.JInternalFrame {
 
     private void btnPesquisarFinanciamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarFinanciamentoActionPerformed
         // TODO add your handling code here: 
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        this.listaFinanciamento.clear();
         if( this.cbFiltroFinanciamento.getSelectedItem().toString() == "Todos" ){
-            this.listaFinanciamento = FinanciamentoDB.selectAll();
+            List<Document> docs = CrudMongoDB.searchAll("financiamento");
+            if( docs != null && docs.size() != 0 ){
+                for(Document doc : docs){
+                    Financiamento f = new Financiamento();
+                    f.convertToJavaObj(doc);
+                    this.listaFinanciamento.add(f);
+                }
+            }
+            //this.listaFinanciamento = FinanciamentoDB.selectAll();
             if( this.listaFinanciamento != null){
                 DefaultTableModel tableModel;
                 tableModel = (DefaultTableModel) this.tbFinanciamento.getModel();
                 tableModel.setNumRows(0);
-                Object[] headers = new Object[9];
-                headers[0] = "Id";
-                headers[1] = "Ficha";
-                headers[2] = "Data";
-                headers[3] = "Cliente";
-                headers[4] = "Placa";               
-                headers[5] = "Valor parcela";
-                headers[6] = "Parcelas";
-                headers[7] = "Vencimento (dia)";
-                headers[8] = "Observação";
+                Object[] headers = new Object[8];
+             
+                headers[0] = "Ficha";
+                headers[1] = "Data";
+                headers[2] = "Cliente";
+                headers[3] = "Placa";               
+                headers[4] = "Valor parcela";
+                headers[5] = "Parcelas";
+                headers[6] = "Vencimento (dia)";
+                headers[7] = "Observação";
                 tableModel.setColumnIdentifiers(headers);
                 for(Financiamento f: listaFinanciamento ){
                     
-                    Object[] colunas = new Object[11];
-                    colunas[0] = f.getId();
-                    colunas[1] = f.getFicha();
-                    colunas[2] = f.getData_registro();
-                    colunas[3] = f.getNome_cliente();
-                    colunas[4] = f.getPlaca();                   
-                    colunas[5] = f.getValor_parcela();
-                    colunas[6] = f.getNum_parcelas();
-                    colunas[7] = f.getDia_vencimento();
-                    colunas[8] = f.getOberservacao();                
+                    Object[] colunas = new Object[8];             
+                    colunas[0] = f.getFicha();
+                    colunas[1] = f.getData_registro().toLocalDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                    colunas[2] = CrudMongoDB.searchByFieldValue("cliente", "_id", f.getId_clienteMongo()).getString("nome");
+                    colunas[3] = CrudMongoDB.searchByFieldValue("entrada_veiculo", "_id", f.getId_entradaMongo()).getString("placa");                   
+                    colunas[4] = f.getValor_parcela();
+                    colunas[5] = f.getNum_parcelas();
+                    colunas[6] = f.getDia_vencimento();
+                    colunas[7] = f.getObservacao();                
                     tableModel.addRow(colunas);
                 }
             }            
-        }           
+        } 
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_btnPesquisarFinanciamentoActionPerformed
 
 

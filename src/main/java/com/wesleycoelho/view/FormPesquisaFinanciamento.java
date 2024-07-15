@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JInternalFrame.java to edit this template
  */
 package com.wesleycoelho.view;
+import com.mongodb.client.model.Filters;
 import com.wesleycoelho.controllers.jdbc.conn.ClienteDB;
 import com.wesleycoelho.controllers.jdbc.conn.EntradaVeiculoDB;
 import com.wesleycoelho.controllers.jdbc.conn.EstadoDB;
@@ -11,27 +12,32 @@ import com.wesleycoelho.controllers.jdbc.conn.MunicipioDB;
 import com.wesleycoelho.controllers.jdbc.conn.SaidaVeiculoDB;
 import com.wesleycoelho.model.Cliente;
 import com.wesleycoelho.model.EntradaVeiculo;
+import com.wesleycoelho.model.Estado;
 import com.wesleycoelho.model.Financiamento;
 import com.wesleycoelho.model.Municipio;
 import com.wesleycoelho.model.PrintingFichaFrenteFinanciamento;
 import com.wesleycoelho.model.PrintingFichaVersoFinanciamento;
 import com.wesleycoelho.model.SaidaVeiculo;
 import com.wesleycoelho.model.Usuario;
+import java.awt.Cursor;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import static java.lang.Integer.parseInt;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.JOptionPane;
+import mongoDB.CrudMongoDB;
+import org.bson.Document;
 /**
  *
  * @author Wesley
  */
 public class FormPesquisaFinanciamento extends javax.swing.JInternalFrame {
     Usuario usuario = new Usuario();
-    List<Financiamento> financiamentos;
+    List<Financiamento> financiamentos = new ArrayList<>();
     int iteratorLista = 0;
     /**
      * Creates new form FormNovaEntrada
@@ -351,7 +357,7 @@ public class FormPesquisaFinanciamento extends javax.swing.JInternalFrame {
         jLabel17.setText("     ");
         jToolBar1.add(jLabel17);
 
-        cbFiltroPesquisa.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Data", "Nome do cliente", "Observação", "Id", "Dia do vencimento", " " }));
+        cbFiltroPesquisa.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Ficha", "Nome do cliente", "Observação", "Dia do vencimento", " " }));
         cbFiltroPesquisa.setMaximumSize(new java.awt.Dimension(300, 22));
         cbFiltroPesquisa.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -938,10 +944,19 @@ public class FormPesquisaFinanciamento extends javax.swing.JInternalFrame {
 
     private void btnPesquisarFinanciamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarFinanciamentoActionPerformed
         // TODO add your handling code here:
+         this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         if( !this.txtPesquisarFinanciamento.getText().isBlank() ){
-            if( this.cbFiltroPesquisa.getSelectedItem().toString() == "Data"){
-                //buscar financiamentos por data
-                financiamentos = FinanciamentoDB.buscaPorData(this.txtPesquisarFinanciamento.getText());
+            if( this.cbFiltroPesquisa.getSelectedItem().toString() == "Ficha"){
+                //buscar financiamentos pela ficha
+                List<Document> docs = CrudMongoDB.searchAll("financiamento", Filters.eq("ficha", Integer.valueOf(this.txtPesquisarFinanciamento.getText())));
+                if( docs != null && docs.size() > 0 ){
+                    for(Document doc : docs){
+                        Financiamento f = new Financiamento();
+                        f.convertToJavaObj(doc);
+                        financiamentos.add(f);
+                    }
+                }
+                //financiamentos = FinanciamentoDB.buscaPorData(this.txtPesquisarFinanciamento.getText());
                 if( financiamentos != null && financiamentos.size() > 0){
                    
                     this.lblTotalLista.setText(String.valueOf(financiamentos.size()));
@@ -973,15 +988,6 @@ public class FormPesquisaFinanciamento extends javax.swing.JInternalFrame {
                     JOptionPane.showMessageDialog(this, "Nenhum registro encontrado!");
                       return;
                 }
-            }else if( this.cbFiltroPesquisa.getSelectedItem().toString() == "id" ){
-               //buscar pelo id              
-                if( FinanciamentoDB.buscaPorId(parseInt(this.txtPesquisarFinanciamento.getText())) != null){
-                     this.lblTotalLista.setText("1");
-                    atualizaListaFinanciamento(this.iteratorLista);                    
-                }else{
-                    JOptionPane.showMessageDialog(this, "Nenhum registro encontrado!");
-                      return;
-                }
             }else if( this.cbFiltroPesquisa.getSelectedItem().toString() == "Dia do vencimento" ){
                //buscar pelo dia_vencimento 
                financiamentos = FinanciamentoDB.buscaPorDiaVencimento(parseInt(this.txtPesquisarFinanciamento.getText()));
@@ -994,7 +1000,7 @@ public class FormPesquisaFinanciamento extends javax.swing.JInternalFrame {
                 }
             }
         }
-        
+         this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_btnPesquisarFinanciamentoActionPerformed
 
     private void cbFiltroPesquisaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cbFiltroPesquisaFocusGained
@@ -1189,12 +1195,14 @@ public class FormPesquisaFinanciamento extends javax.swing.JInternalFrame {
     
     private void atualizaListaFinanciamento(int iterator){
         int id_cliente;
-        Municipio municipio;
-        String estado;
+        Municipio municipio = new Municipio();
+        Estado estado = new Estado();
         //obtendo o cliente
-        Cliente cliente ;
-        cliente = ClienteDB.buscaClientePorId(financiamentos.get(iterator).getId_cliente());
-        if(cliente != null){
+        Cliente cliente = new Cliente() ;
+        Document doc = CrudMongoDB.searchByFieldValue("cliente", "_id", financiamentos.get(iterator).getId_clienteMongo());     
+        //cliente = ClienteDB.buscaClientePorId(financiamentos.get(iterator).getId_cliente());
+        if(doc != null){
+            cliente.convertToJavaObj(doc);
             this.txtNomeFinanciamento.setText(cliente.getNome());
             this.txtRgFinanciamento.setText(cliente.getRg());
             this.txtCPFFinanciamento.setText(cliente.getCpf());
@@ -1202,15 +1210,20 @@ public class FormPesquisaFinanciamento extends javax.swing.JInternalFrame {
             this.txtEnderecoFinanciamento.setText(cliente.getEndereco());
             this.txtBairroFinanciamento.setText(cliente.getBairro());
             this.txtNumeroFinanciamento.setText(String.valueOf(cliente.getNumero()));
-            municipio = MunicipioDB.buscaCidadePorId(cliente.getId_municipio());
-            if(municipio != null){
+            doc = CrudMongoDB.searchByFieldValue("cidades", "id", cliente.getId_municipio());
+        
+            //municipio = MunicipioDB.buscaCidadePorId(cliente.getId_municipio());
+            if(doc != null){
+                municipio.convertToJavaObj(doc);
                 this.cbCidadeFinanciamento.setSelectedItem(municipio.getNome());
             }else{
                 JOptionPane.showMessageDialog(this, "id_municipio não encontrado na tabela municipio");
             }
-            estado = EstadoDB.searchById(municipio.getId_uf()).getNome();
-            if(estado != null){
-                this.cbUFFinanciamento.setSelectedItem(estado);
+            doc = CrudMongoDB.searchByFieldValue("estados", "id", municipio.getId_uf());
+            //estado = EstadoDB.searchById(municipio.getId_uf()).getNome();
+            if(doc != null){
+                estado.convertToJavaObj(doc);
+                this.cbUFFinanciamento.setSelectedItem(estado.getNome());
             }else{
                 JOptionPane.showMessageDialog(this, "id_uf não encontrado na tabela estado");
             }
@@ -1225,13 +1238,18 @@ public class FormPesquisaFinanciamento extends javax.swing.JInternalFrame {
         //fim cliente
         
         //obtendo a saida veiculo
-        SaidaVeiculo saida = null;
-        saida = SaidaVeiculoDB.buscaSaidaPorIdFinanciamento(financiamentos.get(iterator).getId());
-        if(saida != null){
+        SaidaVeiculo saida = new SaidaVeiculo();
+        doc = CrudMongoDB.searchByFieldValue("saida_veiculo", "id_financiamento", financiamentos.get(iterator).getIdMongo());
+        //saida = SaidaVeiculoDB.buscaSaidaPorIdFinanciamento(financiamentos.get(iterator).getId());
+        if(doc != null){
+            saida.convertToJavaObj(doc);
             //obtendo entrada pelo id_entrada
-            EntradaVeiculo entrada = null;
-            entrada = EntradaVeiculoDB.buscaEntradaPorId(saida.getId_entrada());
-            if(entrada != null){
+            
+            doc = CrudMongoDB.searchByFieldValue("entrada_veiculo", "_id", saida.getId_entradaMongo());
+            //entrada = EntradaVeiculoDB.buscaEntradaPorId(saida.getId_entrada());
+            if(doc != null){
+                EntradaVeiculo entrada = new EntradaVeiculo();
+                entrada.convertToJavaObj(doc);
                 this.txtMarcaEntrada.setText(entrada.getMarca());
                 this.txtModeloEntrada.setText(entrada.getModelo());
                 this.txtRenavamEntrada.setText(entrada.getRenavam());
@@ -1245,7 +1263,7 @@ public class FormPesquisaFinanciamento extends javax.swing.JInternalFrame {
                 this.txtValParcelaFinanciamento.setText(String.valueOf(financiamentos.get(iterator).getValor_parcela()));                
                 this.cbQtdParcelasFinanciamento.setSelectedItem(String.valueOf(financiamentos.get(iterator).getNum_parcelas()));
                 this.cbDiaVencimentoFinanciamento.setSelectedItem(String.valueOf(financiamentos.get(iterator).getDia_vencimento()));
-                this.txtObsFinanciamento.setText(financiamentos.get(iterator).getOberservacao());
+                this.txtObsFinanciamento.setText(financiamentos.get(iterator).getObservacao());
                 this.lblAtualResult.setText(String.valueOf(iterator + 1));
             }else{
                 JOptionPane.showMessageDialog(this, "Entrada veículo não localizada");

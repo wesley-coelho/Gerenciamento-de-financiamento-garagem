@@ -3,6 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JInternalFrame.java to edit this template
  */
 package com.wesleycoelho.view;
+import com.mongodb.MongoException;
+import com.mongodb.client.model.Filters;
 import com.wesleycoelho.controllers.jdbc.conn.EstadoDB;
 import com.wesleycoelho.controllers.jdbc.conn.FinanciamentoDB;
 import com.wesleycoelho.model.EntradaVeiculo;
@@ -19,12 +21,15 @@ import com.wesleycoelho.model.PrintingFichaFrenteFinanciamento;
 import com.wesleycoelho.model.PrintingFichaVersoFinanciamento;
 import com.wesleycoelho.model.SaidaVeiculo;
 import com.wesleycoelho.model.Validacao;
+import java.awt.Cursor;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import mongoDB.CrudMongoDB;
+import org.bson.Document;
 
 
 
@@ -36,10 +41,10 @@ import java.util.logging.Logger;
  */
 public class FormEditarFinanciamento extends javax.swing.JInternalFrame {
     Usuario usuario = new Usuario();
-    EntradaVeiculo entrada;
-    Cliente cliente;
-    Financiamento financiamento;
-    SaidaVeiculo saida;
+    EntradaVeiculo entrada = new EntradaVeiculo();
+    Cliente cliente = new Cliente();
+    Financiamento financiamento = new Financiamento();
+    SaidaVeiculo saida = new SaidaVeiculo();
     /**
      * Creates new form FormNovaEntrada
      */
@@ -840,43 +845,46 @@ public class FormEditarFinanciamento extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSalvarFinanciamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarFinanciamentoActionPerformed
-     if( this.financiamento !=null){         
-         
-         //atualiza o financiamento
-         //this.financiamento.setDia_vencimento(Integer.valueOf(this.cbDiaVencimentoFinanciamento.getSelectedItem().toString()));
-         this.financiamento.setFicha(!"".equals(this.txtFicha.getText())?Integer.valueOf(this.txtFicha.getText()):null);
-         this.financiamento.setOberservacao(!"".equals(this.txtObsFinanciamento.getText())?this.txtObsFinanciamento.getText(): null);
-         this.financiamento.setValor_parcela(Double.valueOf(this.txtValParcelaFinanciamento.getText().replace(",", ".")));
-         //valores da entrada
-         this.financiamento.getCliente().setNome(!"".equals(this.txtNomeFinanciamento.getText())?this.txtNomeFinanciamento.getText():null);
-         this.financiamento.getCliente().setBairro(!"".equals(this.txtBairroFinanciamento.getText())?this.txtBairroFinanciamento.getText():null);
-         this.financiamento.getCliente().setCep(!"".equals(this.txtCEPFinanciamento.getText())?this.txtCEPFinanciamento.getText():null);
-         this.financiamento.getCliente().setCpf(!"".equals(this.txtCPFFinanciamento.getText())?this.txtCPFFinanciamento.getText():null);
-         this.financiamento.getCliente().setEndereco(!"".equals(this.txtEnderecoFinanciamento.getText())?this.txtEnderecoFinanciamento.getText():null);
-         this.financiamento.getCliente().setNumero("".equals(this.txtNumeroFinanciamento.getText())? null : Integer.valueOf(this.txtNumeroFinanciamento.getText()));
-         this.financiamento.getCliente().setRg(!"".equals(this.txtRgFinanciamento.getText())?this.txtRgFinanciamento.getText(): null);
-         this.financiamento.getCliente().setTelefone(!"".equals(this.txtTelefoneFinanciamento.getText())?this.txtTelefoneFinanciamento.getText():null);
-         this.financiamento.getCliente().setWhatsapp(!"".equals(this.txtWhatsappFinanciamento.getText())?this.txtWhatsappFinanciamento.getText():null);
-         this.financiamento.getCliente().setComplemento(!"".equals(this.txtComplementoFinanciamento.getText())?this.txtComplementoFinanciamento.getText():null);
-         try{
-             int id_Estado = EstadoDB.searchIdStateByName(this.cbUFFinanciamento.getSelectedItem().toString());
-             this.financiamento.getCliente().setId_municipio(MunicipioDB.searchIdByCidade(this.cbCidadeFinanciamento.getSelectedItem().toString(), id_Estado));
-    
-             if( !"".equals(this.cbDiaVencimentoFinanciamento.getSelectedItem().toString()) && !Objects.equals(Integer.valueOf(this.cbDiaVencimentoFinanciamento.getSelectedItem().toString()), this.financiamento.getDia_vencimento()) ){
-                 //atualiza parcelas
-                 
-                 int intervaloDias = this.financiamento.getDia_vencimento() - Integer.valueOf(this.cbDiaVencimentoFinanciamento.getSelectedItem().toString());
-                  ParcelamentoDB.atualizaDiaVencimento(intervaloDias, this.financiamento.getId());                 
-                 this.financiamento.setDia_vencimento(Integer.valueOf(this.cbDiaVencimentoFinanciamento.getSelectedItem().toString()));                 
-             }
-             FinanciamentoDB.update(this.financiamento, this.financiamento.getCliente());
-             JOptionPane.showMessageDialog(null, "Registro atualizado!","Update", JOptionPane.INFORMATION_MESSAGE);
-         }catch(NullPointerException e){
-             JOptionPane.showMessageDialog(rootPane, "Falha ao acesso o banco de dados!", null, JOptionPane.ERROR_MESSAGE);
-         }
-         
-         
-     } 
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        if( this.financiamento !=null){     
+            //atualiza o financiamento
+            //this.financiamento.setDia_vencimento(Integer.valueOf(this.cbDiaVencimentoFinanciamento.getSelectedItem().toString()));
+            this.financiamento.setFicha(!"".equals(this.txtFicha.getText())?Integer.valueOf(this.txtFicha.getText()):null);
+            this.financiamento.setObservacao(!"".equals(this.txtObsFinanciamento.getText())?this.txtObsFinanciamento.getText(): null);
+            this.financiamento.setValor_parcela(Double.valueOf(this.txtValParcelaFinanciamento.getText().replace(",", ".")));
+            //valores da entrada
+            this.cliente.setNome(!"".equals(this.txtNomeFinanciamento.getText())?this.txtNomeFinanciamento.getText():null);
+            this.cliente.setBairro(!"".equals(this.txtBairroFinanciamento.getText())?this.txtBairroFinanciamento.getText():null);
+            this.cliente.setCep(!"".equals(this.txtCEPFinanciamento.getText())?this.txtCEPFinanciamento.getText():null);
+            this.cliente.setCpf(!"".equals(this.txtCPFFinanciamento.getText())?this.txtCPFFinanciamento.getText():null);
+            this.cliente.setEndereco(!"".equals(this.txtEnderecoFinanciamento.getText())?this.txtEnderecoFinanciamento.getText():null);
+            this.cliente.setNumero("".equals(this.txtNumeroFinanciamento.getText())? null : Integer.valueOf(this.txtNumeroFinanciamento.getText()));
+            this.cliente.setRg(!"".equals(this.txtRgFinanciamento.getText())?this.txtRgFinanciamento.getText(): null);
+            this.cliente.setTelefone(!"".equals(this.txtTelefoneFinanciamento.getText())?this.txtTelefoneFinanciamento.getText():null);
+            this.cliente.setWhatsapp(!"".equals(this.txtWhatsappFinanciamento.getText())?this.txtWhatsappFinanciamento.getText():null);
+            this.cliente.setComplemento(!"".equals(this.txtComplementoFinanciamento.getText())?this.txtComplementoFinanciamento.getText():null);
+            try{
+                int id_Estado = CrudMongoDB.searchByFieldValue("estados", "nome", this.cbUFFinanciamento.getSelectedItem().toString()).getInteger("id");
+                //int id_Estado = EstadoDB.searchIdStateByName(this.cbUFFinanciamento.getSelectedItem().toString());
+                //this.cliente.setId_municipio(MunicipioDB.searchIdByCidade(this.cbCidadeFinanciamento.getSelectedItem().toString(), id_Estado));
+                this.cliente.setId_municipio(CrudMongoDB.search("cidades", Filters.and(Filters.eq("name", this.cbCidadeFinanciamento.getSelectedItem().toString()), Filters.eq("state_id",id_Estado ))).getInteger("id"));
+                if( !"".equals(this.cbDiaVencimentoFinanciamento.getSelectedItem().toString()) && !Objects.equals(Integer.valueOf(this.cbDiaVencimentoFinanciamento.getSelectedItem().toString()), this.financiamento.getDia_vencimento()) ){
+                    //atualiza parcelas
+
+                    int intervaloDias = this.financiamento.getDia_vencimento() - Integer.valueOf(this.cbDiaVencimentoFinanciamento.getSelectedItem().toString());
+
+                   //arcelamentoDB.atualizaDiaVencimento(intervaloDias, this.financiamento.getId());                 
+                    this.financiamento.setDia_vencimento(Integer.valueOf(this.cbDiaVencimentoFinanciamento.getSelectedItem().toString()));                 
+                }
+                CrudMongoDB.replaceDocument("cliente", this.cliente.getIdMongo(), this.cliente.toDocument());
+                CrudMongoDB.replaceDocument("financiamento", this.financiamento.getIdMongo(), this.financiamento.toDocument());
+                //FinanciamentoDB.update(this.financiamento, this.financiamento.getCliente());
+                JOptionPane.showMessageDialog(null, "Registro atualizado!","Update", JOptionPane.INFORMATION_MESSAGE);
+            }catch(NullPointerException e){
+                JOptionPane.showMessageDialog(rootPane, "Falha ao acesso o banco de dados!", null, JOptionPane.ERROR_MESSAGE);
+            }
+        } 
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_btnSalvarFinanciamentoActionPerformed
 
     private void btnImprimirFinanciamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirFinanciamentoActionPerformed
@@ -963,7 +971,7 @@ public class FormEditarFinanciamento extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txtPesquisarFinanciamentoMouseReleased
 
     private void btnPesquisarFinanciamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarFinanciamentoActionPerformed
-    
+            this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             //pequisar pelo numero da ficha(int)           
             if( this.txtPesquisarFinanciamento.getText().isBlank()){
                 JOptionPane.showMessageDialog(this, "Digite o numero da ficha no campo de pesquisa!");
@@ -978,40 +986,50 @@ public class FormEditarFinanciamento extends javax.swing.JInternalFrame {
             
             try{
                 if( "Ficha".equals(this.cbOptionPesquisa.getSelectedItem().toString())){
-                   this.financiamento = FinanciamentoDB.buscaFinanciamentoPorNFicha(Integer.parseInt(this.txtPesquisarFinanciamento.getText()));
-                    if( this.financiamento == null ) throw new DaoException("Nenhum financiamento encontrado ou falha ao acessar o banco de dados");
-
+                    Document doc = CrudMongoDB.searchByFieldValue("financiamento", "ficha", Integer.parseInt(this.txtPesquisarFinanciamento.getText()));
+                   
+                   //this.financiamento = FinanciamentoDB.buscaFinanciamentoPorNFicha(Integer.parseInt(this.txtPesquisarFinanciamento.getText()));
+                    if( doc == null ) throw new DaoException("Nenhum financiamento encontrado ou falha ao acessar o banco de dados");
+                       this.financiamento.convertToJavaObj(doc);
+                       doc = CrudMongoDB.searchByFieldValue("entrada_veiculo", "_id",this.financiamento.getId_entradaMongo());
+                       this.entrada.convertToJavaObj(doc);
                     //preenche formulario entrada           
-                    this.txtMarcaEntrada.setText(this.financiamento.getVeiculo().getMarca());
-                    this.txtModeloEntrada.setText(this.financiamento.getVeiculo().getModelo());
-                    this.txtRenavamEntrada.setText(this.financiamento.getVeiculo().getRenavam());
-                    this.txtChassiEntrada.setText(this.financiamento.getVeiculo().getChassi());
-                    this.txtPlacaEntrada.setText(this.financiamento.getVeiculo().getPlaca());
-                    this.cbAnoEntrada.setSelectedItem(this.financiamento.getVeiculo().getAno());
-                    this.cbCorEntrada.setSelectedItem(this.financiamento.getVeiculo().getCor());
+                    this.txtMarcaEntrada.setText(this.entrada.getMarca());
+                    this.txtModeloEntrada.setText(this.entrada.getModelo());
+                    this.txtRenavamEntrada.setText(this.entrada.getRenavam());
+                    this.txtChassiEntrada.setText(this.entrada.getChassi());
+                    this.txtPlacaEntrada.setText(this.entrada.getPlaca());
+                    this.cbAnoEntrada.setSelectedItem(this.entrada.getAno());
+                    this.cbCorEntrada.setSelectedItem(this.entrada.getCor());
                     //fim formulario entrada
                     //preenche formulario cliente
-                    this.txtNomeFinanciamento.setText(this.financiamento.getCliente().getNome());
-                    this.txtRgFinanciamento.setText(this.financiamento.getCliente().getRg());
-                    this.txtCPFFinanciamento.setText(this.financiamento.getCliente().getCpf());
-                    this.txtCEPFinanciamento.setText(this.financiamento.getCliente().getCep());
-                    this.txtEnderecoFinanciamento.setText(this.financiamento.getCliente().getEndereco());
-                    this.txtBairroFinanciamento.setText(this.financiamento.getCliente().getBairro());
-                    this.txtNumeroFinanciamento.setText(String.valueOf(this.financiamento.getCliente().getNumero()));                          
-                        Municipio municipio;                     
-                        municipio = MunicipioDB.buscaCidadePorId(this.financiamento.getCliente().getId_municipio());
-                        if( municipio != null ){
+                     doc = CrudMongoDB.searchByFieldValue("cliente", "_id",this.financiamento.getId_clienteMongo());
+                    this.cliente.convertToJavaObj(doc);
+                    this.txtNomeFinanciamento.setText(this.cliente.getNome());
+                    this.txtRgFinanciamento.setText(this.cliente.getRg());
+                    this.txtCPFFinanciamento.setText(this.cliente.getCpf());
+                    this.txtCEPFinanciamento.setText(this.cliente.getCep());
+                    this.txtEnderecoFinanciamento.setText(this.cliente.getEndereco());
+                    this.txtBairroFinanciamento.setText(this.cliente.getBairro());
+                    this.txtNumeroFinanciamento.setText(String.valueOf(this.cliente.getNumero()));                          
+                        Municipio municipio = new Municipio();                    
+                        //municipio = MunicipioDB.buscaCidadePorId(this.financiamento.getCliente().getId_municipio());
+                        doc = CrudMongoDB.searchByFieldValue("cidades", "id", this.cliente.getId_municipio());
+                        if( doc != null ){
+                            municipio.convertToJavaObj(doc);
                             this.cbCidadeFinanciamento.setSelectedItem(municipio.getNome());
-                            Estado estado;                        
-                            estado = EstadoDB.searchById(municipio.getId_uf());
+                            Estado estado = new Estado();  
+                            doc = CrudMongoDB.searchByFieldValue("estados", "id", municipio.getId_uf());
+                            estado.convertToJavaObj(doc);
+                            //estado = EstadoDB.searchById(municipio.getId_uf());
                             this.cbUFFinanciamento.setSelectedItem(estado.getNome()); 
                         }
                         else{
                             JOptionPane.showMessageDialog(this, "Falha ao acessar banco de dados!");
                         }
-                    this.txtWhatsappFinanciamento.setText(this.financiamento.getCliente().getWhatsapp());
-                    this.txtTelefoneFinanciamento.setText(this.financiamento.getCliente().getTelefone()); 
-                    this.txtComplementoFinanciamento.setText(this.financiamento.getCliente().getComplemento());
+                    this.txtWhatsappFinanciamento.setText(this.cliente.getWhatsapp());
+                    this.txtTelefoneFinanciamento.setText(this.cliente.getTelefone()); 
+                    this.txtComplementoFinanciamento.setText(this.cliente.getComplemento());
                     //fim formulario cliente]
                     //preenche formulário financiamento
                     this.txtFicha.setText(String.valueOf(this.financiamento.getFicha()));
@@ -1019,13 +1037,14 @@ public class FormEditarFinanciamento extends javax.swing.JInternalFrame {
                     this.txtValParcelaFinanciamento.setText(String.valueOf(this.financiamento.getValor_parcela()));
                     this.cbQtdParcelasFinanciamento.setSelectedItem(this.financiamento.getNum_parcelas());                
                     this.cbDiaVencimentoFinanciamento.setSelectedItem(this.financiamento.getDia_vencimento());
-                    this.txtObsFinanciamento.setText(this.financiamento.getOberservacao());
+                    this.txtObsFinanciamento.setText(this.financiamento.getObservacao());
                     //fim formulario financiamento
                 }
             }
-            catch(DaoException ex){
+            catch( NullPointerException | DaoException ex){
                 JOptionPane.showMessageDialog(null, ex.getMessage());
             }
+            this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                             
                             
                        

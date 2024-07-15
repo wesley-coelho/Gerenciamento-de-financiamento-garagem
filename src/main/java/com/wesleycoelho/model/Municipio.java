@@ -5,12 +5,14 @@
 package com.wesleycoelho.model;
 
 import org.bson.Document;
+import org.bson.types.ObjectId;
 
 /**
  *
  * @author Wesley
  */
 public class Municipio {
+ 
     private Integer id;
     private String cidade;
     private Integer id_uf;
@@ -22,6 +24,7 @@ public class Municipio {
         this.cidade = cidade;
         this.id_uf = id_uf;
     }
+  
 
     public Integer getId() {
         return id;
@@ -31,6 +34,8 @@ public class Municipio {
         this.id = id;
     }
 
+   
+    
     public String getNome() {
         return this.cidade;
     }

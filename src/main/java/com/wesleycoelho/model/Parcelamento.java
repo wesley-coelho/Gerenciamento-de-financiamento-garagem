@@ -7,6 +7,10 @@ package com.wesleycoelho.model;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
+import org.bson.Document;
+import org.bson.types.ObjectId;
 
 /**
  *
@@ -14,24 +18,26 @@ import java.time.format.DateTimeFormatter;
  */
 public class Parcelamento {
     Integer id;
+    ObjectId idMongo;
     Date data_pagamento;
     Double valor_pagamento;
-    Integer id_financiamento;
+    ObjectId id_financiamento;
+    Integer id_financiamentoPostgres;
     Date mes_ref;
     Boolean ispago;
     Boolean isCanceled;
     public static boolean janelaPagamento = false;
     
 
-    public Parcelamento(Integer id, Date data_pagamento, Double valor_pagamento, Integer id_financiamento, Date mes_ref) {
-        this.id = id;
+    public Parcelamento(ObjectId idMongo, Date data_pagamento, Double valor_pagamento, ObjectId id_financiamento, Date mes_ref) {
+        this.idMongo = idMongo;
         this.data_pagamento =data_pagamento;
         this.valor_pagamento = valor_pagamento;
         this.id_financiamento = id_financiamento;
         this.mes_ref = mes_ref;
     }
 
-    public Parcelamento(Date data_pagamento, Double valor_pagamento, Integer id_financiamento, Date mes_ref, Boolean ispago, Boolean isCanceled) {
+    public Parcelamento(Date data_pagamento, Double valor_pagamento, ObjectId id_financiamento, Date mes_ref, Boolean ispago, Boolean isCanceled) {
         this.data_pagamento = data_pagamento;
         this.valor_pagamento = valor_pagamento;
         this.id_financiamento = id_financiamento;
@@ -40,11 +46,21 @@ public class Parcelamento {
         this.isCanceled = isCanceled;
     }
 
-    public Parcelamento(Integer id, Date data_pagamento, Double valor_pagamento, Integer id_financiamento, Date mes_ref, Boolean ispago, Boolean isCanceled) {
-        this.id = id;
+    public Parcelamento(ObjectId idMongo, Date data_pagamento, Double valor_pagamento, ObjectId id_financiamento, Date mes_ref, Boolean ispago, Boolean isCanceled) {
+        this.idMongo = idMongo;
         this.data_pagamento = data_pagamento;
         this.valor_pagamento = valor_pagamento;
         this.id_financiamento = id_financiamento;
+        this.mes_ref = mes_ref;
+        this.ispago = ispago;
+        this.isCanceled = isCanceled;
+    }
+    
+    public Parcelamento(Integer id, Date data_pagamento, Double valor_pagamento, Integer id_financiamentoPostgres, Date mes_ref, Boolean ispago, Boolean isCanceled) {
+        this.id = id;
+        this.data_pagamento = data_pagamento;
+        this.valor_pagamento = valor_pagamento;
+        this.id_financiamentoPostgres = id_financiamentoPostgres;
         this.mes_ref = mes_ref;
         this.ispago = ispago;
         this.isCanceled = isCanceled;
@@ -58,10 +74,29 @@ public class Parcelamento {
     public Integer getId() {
         return id;
     }
+   
 
     public void setId(Integer id) {
         this.id = id;
     }
+
+    public ObjectId getIdMongo() {
+        return idMongo;
+    }
+
+    public void setIdMongo(ObjectId idMongo) {
+        this.idMongo = idMongo;
+    }
+
+    public Boolean getIspago() {
+        return ispago;
+    }
+
+    public void setIspago(Boolean ispago) {
+        this.ispago = ispago;
+    }
+    
+    
 
     public Date getData_pagamento() {
         return data_pagamento;
@@ -86,11 +121,11 @@ public class Parcelamento {
         this.valor_pagamento = valor_pagamento;
     }
 
-    public Integer getId_financiamento() {
+    public ObjectId getId_financiamento() {
         return id_financiamento;
     }
 
-    public void setId_financiamento(Integer id_financiamento) {
+    public void setId_financiamento(ObjectId id_financiamento) {
         this.id_financiamento = id_financiamento;
     }
 
@@ -118,9 +153,17 @@ public class Parcelamento {
         this.isCanceled = isCanceled;
     }
 
-   
-    
-    
+   public Document toDocument(){
+       Map<String, Object> map = new HashMap<>();
+       if( idMongo != null ) map.put("_id", idMongo);
+       map.put("data_pagamento", data_pagamento);
+       map.put("valor_pagamento", valor_pagamento);
+       map.put("id_financiamento", id_financiamento);
+       map.put("mes_ref", mes_ref);
+       map.put("ispago", ispago);
+       map.put("iscanceled", isCanceled);       
+       return new Document(map);
+   }
     
 }
 

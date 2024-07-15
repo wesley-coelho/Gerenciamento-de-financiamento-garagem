@@ -3,8 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JInternalFrame.java to edit this template
  */
 package com.wesleycoelho.view;
+import com.mongodb.MongoException;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.result.InsertOneResult;
 import com.wesleycoelho.controllers.jdbc.conn.ClienteDB;
-import com.wesleycoelho.controllers.jdbc.conn.EntradaVeiculoDB;
 import com.wesleycoelho.controllers.jdbc.conn.EstadoDB;
 import com.wesleycoelho.controllers.jdbc.conn.FinanciamentoDB;
 import com.wesleycoelho.model.EntradaVeiculo;
@@ -25,6 +27,7 @@ import com.wesleycoelho.model.SaidaVeiculo;
 import com.wesleycoelho.model.Validacao;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Cursor;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.sql.Date;
@@ -35,6 +38,11 @@ import java.util.Calendar;
 import java.util.List;
 import javax.swing.JFormattedTextField;
 import javax.swing.JTextField;
+import mongoDB.CrudMongoDB;
+import org.bson.Document;
+import org.bson.types.ObjectId;
+
+
 
 
 
@@ -45,7 +53,7 @@ import javax.swing.JTextField;
  */
 public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
     Usuario usuario = new Usuario();
-    EntradaVeiculo entrada;
+    EntradaVeiculo entrada = new EntradaVeiculo();
     /**
      * Creates new form FormNovaEntrada
      */
@@ -358,7 +366,7 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
 
         jLabel9.setText("UF:");
 
-        cbCidadeFinanciamento.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Ribeirao Preto" }));
+        cbCidadeFinanciamento.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Ribeirão Preto" }));
         cbCidadeFinanciamento.addAncestorListener(new javax.swing.event.AncestorListener() {
             public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
                 cbCidadeFinanciamentoAncestorAdded(evt);
@@ -824,7 +832,7 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSalvarFinanciamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarFinanciamentoActionPerformed
-
+     this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
     try{
         
         String[] fields = {
@@ -839,9 +847,13 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
            return;
         }
 
-        int id_uf = EstadoDB.searchIdStateByName(this.cbUFFinanciamento.getSelectedItem().toString());
+        //int id_uf = EstadoDB.searchIdStateByName(this.cbUFFinanciamento.getSelectedItem().toString());
+        int id_uf = CrudMongoDB.searchByFieldValue("estados", "nome", this.cbUFFinanciamento.getSelectedItem().toString()).getInteger("id");
+      
         if( id_uf == 0 ) throw new DaoException("Erro ao acessar a tabela uf");
-        int id_municipio = MunicipioDB.searchIdByCidade(this.cbCidadeFinanciamento.getSelectedItem().toString(), id_uf);
+        //int id_municipio = MunicipioDB.searchIdByCidade(this.cbCidadeFinanciamento.getSelectedItem().toString(), id_uf);
+        int id_municipio = CrudMongoDB.search("cidades", Filters.and(Filters.eq("name", this.cbCidadeFinanciamento.getSelectedItem().toString()),Filters.eq("state_id",id_uf ))).getInteger("id");
+     
         if( id_municipio == 0 ) throw new DaoException("Erro ao acessar a tabela municipio");
         //Dados do cliente para inserir no banco
         Cliente cliente = new Cliente();
@@ -857,8 +869,11 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
         cliente.setWhatsapp("".equals(this.txtWhatsappFinanciamento.getText())?null:this.txtWhatsappFinanciamento.getText());
         cliente.setTelefone("".equals(this.txtTelefoneFinanciamento.getText())?null:this.txtTelefoneFinanciamento.getText());
         cliente.setComplemento("".equals(this.txtComplementoFinanciamento.getText())?null:this.txtComplementoFinanciamento.getText());
-        int id_cliente = ClienteDB.save(cliente);
-        if( id_cliente == 0 ) throw new DaoException("Erro ao acessar a tabela cliente");
+       
+        InsertOneResult result =  CrudMongoDB.add("cliente", cliente.toDocument());
+        ObjectId id_cliente = result.getInsertedId().asObjectId().getValue();
+        //int id_cliente = ClienteDB.save(cliente);
+        if( id_cliente == null ) throw new DaoException("Erro ao acessar a tabela cliente");
         //manipulando data com Date e Calendar para obter o dia do mes e setar a data de vencmento da primeira parcela
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Calendar cal = Calendar.getInstance();        
@@ -872,11 +887,16 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
             "".equals(this.txtValParcelaFinanciamento.getText())?null:Double.valueOf(this.txtValParcelaFinanciamento.getText().replace(",", ".")),            
             "".equals(this.cbQtdParcelasFinanciamento.getSelectedItem().toString())?null:Integer.valueOf(this.cbQtdParcelasFinanciamento.getSelectedItem().toString()),
             "".equals(this.dataVencimentoPrimeiraParcela.getDate().toString())?null: cal.get(Calendar.DAY_OF_MONTH),
+            "".equals(this.txtObsFinanciamento.getText())?null:this.txtObsFinanciamento.getText(),
             id_cliente,
-            "".equals(this.txtObsFinanciamento.getText())?null:this.txtObsFinanciamento.getText()
+            this.entrada.getId()
         );
-        int id_financiamento = FinanciamentoDB.save(financiamento);
-        if( id_financiamento == 0 ) throw new DaoException("Erro ao acessar a tabela financiamento");
+        
+        //int id_financiamento = FinanciamentoDB.save(financiamento);
+        result = CrudMongoDB.add("financiamento", financiamento.toDocument());
+        CrudMongoDB.SearchAndUpdateOne("entrada_veiculo", this.entrada.getId(), Filters.eq("disponivel", false));
+        ObjectId id_financiamento = result.getInsertedId().asObjectId().getValue();
+        if( id_financiamento == null ) throw new DaoException("Erro ao acessar a tabela financiamento");
         //registrar as parcelas          
         int numParcelas = financiamento.getNum_parcelas();        
         LocalDate vencPrimeiraParcelaLocalDate = LocalDate.parse(sdf.format(vencPrimeiraParcela), DateTimeFormatter.ISO_DATE);
@@ -885,8 +905,9 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
         for( int i = 0; i < numParcelas; i++){
            dataVencParcela = Date.valueOf(vencPrimeiraParcelaLocalDate.plusMonths(i).withDayOfMonth(financiamento.getDia_vencimento()));
            parcela = new Parcelamento(null,null, id_financiamento,dataVencParcela, false, false);
-           int id_parcela = ParcelamentoDB.save(parcela);
-            if( id_parcela == 0 ) throw new DaoException("Erro ao acessar a tabela parcelamento");
+           ObjectId id_parcela = CrudMongoDB.add("parcelamento", parcela.toDocument()).getInsertedId().asObjectId().getValue();
+           //int id_parcela = ParcelamentoDB.save(parcela);
+            if( id_parcela == null ) throw new DaoException("Erro ao acessar a tabela parcelamento");
         }                    
                     
         //realizar a saída do veiculo
@@ -898,8 +919,9 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
                 entrada.getId(), 
                 id_financiamento
             );
-        int id_saida = SaidaVeiculoDB.save(saida);
-        if( id_saida == 0 ) throw new DaoException("Erro ao acessar a tabela saida_veiculo");
+        ObjectId id_saida = CrudMongoDB.add("saida_veiculo", saida.toDocument()).getInsertedId().asObjectId().getValue();
+        //int id_saida = SaidaVeiculoDB.save(saida);
+        if( id_saida == null ) throw new DaoException("Erro ao acessar a tabela saida_veiculo");
         JOptionPane.showMessageDialog(this, "Registrado com sucesso!");
         limparCamposTipoTextFieldEformattedTextField(panelDadosVeiculo);
         limparCamposTipoTextFieldEformattedTextField(panelDadosCliente);
@@ -907,21 +929,26 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
         //Opção de imprimir ficha
         PrinterJob job = PrinterJob.getPrinterJob();  
         if( JOptionPane.showConfirmDialog(rootPane, "Deja impirmir a ficha?") == JOptionPane.YES_OPTION  ){  
-              Financiamento f = FinanciamentoDB.buscaPorId(id_financiamento);
+              Document doc = CrudMongoDB.searchById("financiamento", id_financiamento);
+              Financiamento f = new Financiamento();
+              f.convertToJavaObj(doc);
               job.setPrintable(new PrintingFichaFrenteFinanciamento(f));
               boolean doPrint = job.printDialog();
               if (doPrint) job.print();
           }
         //imprimir verso da ficha
-          if( JOptionPane.showConfirmDialog(rootPane, "Deja impirmir o verso da ficha?") == JOptionPane.YES_OPTION  ){                               
-              job.setPrintable(new PrintingFichaVersoFinanciamento(FinanciamentoDB.buscaPorId(id_financiamento)));
+          if( JOptionPane.showConfirmDialog(rootPane, "Deja impirmir o verso da ficha?") == JOptionPane.YES_OPTION  ){
+              Document doc = CrudMongoDB.searchById("financiamento", id_financiamento);
+              Financiamento f = new Financiamento();
+              f.convertToJavaObj(doc);
+              job.setPrintable(new PrintingFichaVersoFinanciamento(f));
               boolean doPrint = job.printDialog();
                   if (doPrint) job.print();                           
           }
-    }catch(DaoException | PrinterException | NullPointerException ex){
+    }catch(MongoException | DaoException | PrinterException | NullPointerException ex){
         JOptionPane.showMessageDialog(null, ex.getMessage());
     }
-        
+       this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));  
     }//GEN-LAST:event_btnSalvarFinanciamentoActionPerformed
 
     private void btnImprimirEntradaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirEntradaActionPerformed
@@ -993,42 +1020,72 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
 
     private void cbUFFinanciamentoAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_cbUFFinanciamentoAncestorAdded
         // TODO add your handling code here:
-        List<Estado> estados;
+        //List<Estado> estados;
+        //estados = EstadoDB.selectAll();
+        //for(Estado estado: estados){
+            //this.cbUFFinanciamento.addItem(estado.getNome());
+        //}
+        List<Document> estados;
+        estados = CrudMongoDB.searchAll("estados");
+        //estados = EstadoDB.selectAll();
 
-        estados = EstadoDB.selectAll();
-
-        for(Estado estado: estados){
-            this.cbUFFinanciamento.addItem(estado.getNome());
+        for(Document estado: estados){    
+            this.cbUFFinanciamento.addItem(estado.getString("nome"));
         }
     }//GEN-LAST:event_cbUFFinanciamentoAncestorAdded
 
     private void cbUFFinanciamentoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbUFFinanciamentoItemStateChanged
         // TODO add your handling code here:
-        List<Municipio> municipios;
-        municipios = MunicipioDB.selectAllByState(cbUFFinanciamento.getSelectedItem().toString());
+//        List<Municipio> municipios;
+//        municipios = MunicipioDB.selectAllByState(cbUFFinanciamento.getSelectedItem().toString());
+//        this.cbCidadeFinanciamento.removeAllItems();
+//        for(Municipio municipio: municipios){
+//            this.cbCidadeFinanciamento.addItem(municipio.getNome());
+//        }
+        List<Document> municipios;
+        String state_name = cbUFFinanciamento.getSelectedItem().toString();
+        Integer state_id = CrudMongoDB.searchByFieldValue("estados", "nome", state_name).getInteger("id");
+        municipios = CrudMongoDB.searchAll("cidades", Filters.eq("state_id", state_id));
+        //municipios = MunicipioDB.selectAllByState();
         this.cbCidadeFinanciamento.removeAllItems();
-        for(Municipio municipio: municipios){
-            this.cbCidadeFinanciamento.addItem(municipio.getNome());
+        for(Document municipio: municipios){
+            this.cbCidadeFinanciamento.addItem(municipio.getString("name"));
         }
     }//GEN-LAST:event_cbUFFinanciamentoItemStateChanged
 
     private void cbUFFinanciamentoComponentAdded(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_cbUFFinanciamentoComponentAdded
         // TODO add your handling code here:
-        List<Municipio> municipios;
-        municipios = MunicipioDB.selectAllByState(cbUFFinanciamento.getSelectedItem().toString());
+//        List<Municipio> municipios;
+//        municipios = MunicipioDB.selectAllByState(cbUFFinanciamento.getSelectedItem().toString());
+//        this.cbCidadeFinanciamento.removeAllItems();
+//        for(Municipio municipio: municipios){
+//            this.cbCidadeFinanciamento.addItem(municipio.getNome());
+//        }
+         List<Document> municipios;
+        String state_name = cbUFFinanciamento.getSelectedItem().toString();
+        Integer state_id = CrudMongoDB.searchByFieldValue("estados", "nome", state_name).getInteger("id");
+        municipios = CrudMongoDB.searchAll("cidades", Filters.eq("state_id", state_id));
+        //municipios = MunicipioDB.selectAllByState();
         this.cbCidadeFinanciamento.removeAllItems();
-        for(Municipio municipio: municipios){
-            this.cbCidadeFinanciamento.addItem(municipio.getNome());
+        for(Document municipio: municipios){
+            this.cbCidadeFinanciamento.addItem(municipio.getString("name"));
         }
     }//GEN-LAST:event_cbUFFinanciamentoComponentAdded
 
     private void cbCidadeFinanciamentoAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_cbCidadeFinanciamentoAncestorAdded
         // TODO add your handling code here:
-        List<Municipio> municipios;
-
-        municipios = MunicipioDB.selectAllByState("São Paulo");
-        for(Municipio municipio: municipios){
-            this.cbCidadeFinanciamento.addItem(municipio.getNome());
+//        List<Municipio> municipios;
+//
+//        municipios = MunicipioDB.selectAllByState("São Paulo");
+//        for(Municipio municipio: municipios){
+//            this.cbCidadeFinanciamento.addItem(municipio.getNome());
+//        }
+        List<Document> municipios;
+        Integer state_id_Sao_Paulo = CrudMongoDB.searchByFieldValue("estados", "nome", "São Paulo").getInteger("id");
+        municipios = CrudMongoDB.searchAll("cidades", Filters.eq("state_id", state_id_Sao_Paulo));
+     
+        for(Document municipio: municipios){
+            this.cbCidadeFinanciamento.addItem(municipio.getString("name"));
         }
     }//GEN-LAST:event_cbCidadeFinanciamentoAncestorAdded
 
@@ -1128,9 +1185,12 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txtPesquisarPlacaMouseReleased
 
     private void btnPesquisarEntradaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarEntradaActionPerformed
-        // TODO add your handling code here:
-        this.entrada = EntradaVeiculoDB.procuraVeiculoDisponivelPorPlaca(this.txtPesquisarPlaca.getText());
-            if(this.entrada != null){                    
+         this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        //this.entrada = EntradaVeiculoDB.procuraVeiculoDisponivelPorPlaca(this.txtPesquisarPlaca.getText());
+         Document doc = CrudMongoDB.getDatabase().getCollection("entrada_veiculo").find(Filters.and(Filters.eq("disponivel", true), Filters.eq("placa", this.txtPesquisarPlaca.getText()))).first();
+         
+        if(doc != null){
+                   this.entrada.convertToJavaObj(doc);
                    this.txtMarcaEntrada.setText(this.entrada.getMarca());
                    this.txtModeloEntrada.setText(this.entrada.getModelo());
                    this.txtRenavamEntrada.setText(this.entrada.getRenavam());
@@ -1148,6 +1208,7 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
                    this.cbCorEntrada.setSelectedItem("");   
                     JOptionPane.showMessageDialog(this, "Nenhum resultado encontrado");
                  }
+         this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_btnPesquisarEntradaActionPerformed
 
     private void txtPesquisarPlacaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPesquisarPlacaKeyReleased

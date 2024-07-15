@@ -23,7 +23,7 @@ import javax.swing.JOptionPane;
 public class FinanciamentoDB {
     
      public static int save(Financiamento financiamento){
-         String sql = "INSERT INTO financiamento (data_do_registro,valor_parcela, num_parcelas, observacao, id_cliente, dia_vencimento, nFicha) VALUES('"+financiamento.getData_registro()+"', "+financiamento.getValor_parcela()+","+financiamento.getNum_parcelas()+",'"+financiamento.getOberservacao()+"',"+financiamento.getId_cliente()+","+financiamento.getDia_vencimento()+", "+financiamento.getFicha()+");";
+         String sql = "INSERT INTO financiamento (data_do_registro,valor_parcela, num_parcelas, observacao, id_cliente, dia_vencimento, nFicha) VALUES('"+financiamento.getData_registro()+"', "+financiamento.getValor_parcela()+","+financiamento.getNum_parcelas()+",'"+financiamento.getObservacao()+"',"+financiamento.getId_cliente()+","+financiamento.getDia_vencimento()+", "+financiamento.getFicha()+");";
          Connection conn = ConnectionFactory.getConexao();           
          
         try {
@@ -367,7 +367,7 @@ public class FinanciamentoDB {
            String sql_1 = "UPDATE financiamento SET "
                    + "dia_vencimento = "+f.getDia_vencimento()+", "
                    + "nficha = "+f.getFicha()+","
-                   + "observacao = '"+f.getOberservacao()+"',"
+                   + "observacao = '"+f.getObservacao()+"',"
                    + "valor_parcela = "+f.getValor_parcela()+" WHERE id = "+f.getId()+";";
            
            String sql_2 = "UPDATE cliente SET "

@@ -892,7 +892,7 @@ public class FormPagamento extends javax.swing.JInternalFrame {
         this.txtNFicha.setText(String.valueOf(financiamento.getFicha()));
         this.cbQtdParcelasFinanciamento.setSelectedItem(String.valueOf(financiamento.getNum_parcelas()));
         this.cbDiaVencimentoFinanciamento.setSelectedItem(String.valueOf(financiamento.getDia_vencimento()));
-        this.txtObsFinanciamento.setText(financiamento.getOberservacao());
+        this.txtObsFinanciamento.setText(financiamento.getObservacao());
         
         List<Parcelamento> parcelas = ParcelamentoDB.buscaParcelasPorIdFinanciamento(financiamento.getId());
         if(!parcelas.isEmpty() ){    

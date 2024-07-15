@@ -13,14 +13,18 @@ import com.wesleycoelho.model.Usuario;
 import javax.swing.JOptionPane;
 import com.wesleycoelho.model.Estado;
 import com.wesleycoelho.model.SaidaVeiculo;
+import java.awt.Cursor;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
+import mongoDB.CrudMongoDB;
+import org.bson.Document;
 
 
 
@@ -322,31 +326,39 @@ public class FormListarTodasSaida extends javax.swing.JInternalFrame {
 
     private void btnFiltrarEntradaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFiltrarEntradaActionPerformed
         // TODO add your handling code here:
-        
+         this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         if(this.cbFiltroLista.getSelectedItem().toString() == "Todos"){
-            
-            List<SaidaVeiculo> listaSaidas = SaidaVeiculoDB.selectAll();
-            
+            List<Document> docs = CrudMongoDB.searchAll("saida_veiculo");
+            //List<SaidaVeiculo> listaSaidas = SaidaVeiculoDB.selectAll();
+            List<SaidaVeiculo> listaSaidas = new ArrayList<>();
+            for(Document doc:docs){
+                SaidaVeiculo s = new SaidaVeiculo();
+                s.convertToJavaObj(doc);
+                listaSaidas.add(s);
+            }
             DefaultTableModel tableModel = new DefaultTableModel();
             tableModel = (DefaultTableModel) this.tbEntradasVeiculo.getModel();
             tableModel.setNumRows(0);
             for(SaidaVeiculo saida: listaSaidas ){
+                EntradaVeiculo e = new EntradaVeiculo();
+                Document d = CrudMongoDB.searchByFieldValue("entrada_veiculo", "_id", saida.getId_entradaMongo());
+                e.convertToJavaObj(d);
                 Object[] colunas = new Object[11];
                 colunas[0] = saida.getData_saida();
-                colunas[1] = saida.getEntrada().getNome_proprietario();
-                colunas[2] = saida.getEntrada().getPlaca();
-                colunas[3] = saida.getEntrada().getMarca();
-                colunas[4] = saida.getEntrada().getModelo();
-                colunas[5] = saida.getEntrada().getCor();
-                colunas[6] = saida.getEntrada().getAno();
-                colunas[7] = saida.getEntrada().getRenavam();
-                colunas[8] = saida.getEntrada().getChassi();            
-                colunas[9] = saida.getEntrada().getTelefone();
-                colunas[10] = saida.getEntrada().getWhatsapp();
+                colunas[1] = e.getNome_proprietario();
+                colunas[2] = e.getPlaca();
+                colunas[3] = e.getMarca();
+                colunas[4] = e.getModelo();
+                colunas[5] = e.getCor();
+                colunas[6] = e.getAno();
+                colunas[7] = e.getRenavam();
+                colunas[8] = e.getChassi();            
+                colunas[9] = e.getTelefone();
+                colunas[10] = e.getWhatsapp();
                 tableModel.addRow(colunas);
             }    
         }
-        
+         this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         
         
     }//GEN-LAST:event_btnFiltrarEntradaActionPerformed

@@ -4,6 +4,7 @@
  */
 package com.wesleycoelho.view;
 
+import com.mongodb.client.model.Filters;
 import com.wesleycoelho.controllers.jdbc.conn.ConnectionFactory;
 import com.wesleycoelho.controllers.jdbc.conn.EntradaVeiculoDB;
 import com.wesleycoelho.controllers.jdbc.conn.EstadoDB;
@@ -12,12 +13,15 @@ import com.wesleycoelho.model.Usuario;
 import javax.swing.JOptionPane;
 import com.wesleycoelho.model.Estado;
 import com.wesleycoelho.model.PrintingEntradaVeiculo;
+import java.awt.Cursor;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -338,7 +342,7 @@ public class FormListarTodasEntradas extends javax.swing.JInternalFrame {
 
     private void btnFiltrarEntradaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFiltrarEntradaActionPerformed
         // TODO add your handling code here:
-        
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         if(this.cbFiltroLista.getSelectedItem().toString() == "Todos"){
             
             //this.listaEntradas = EntradaVeiculoDB.selectAll();
@@ -348,19 +352,8 @@ public class FormListarTodasEntradas extends javax.swing.JInternalFrame {
             tableModel.setNumRows(0);
             for(Document entrada: listaEntradasDoc ){
                 Object[] colunas = new Object[12];
-//                colunas[0] = entrada.getData_entrada();
-//                colunas[1] = entrada.getNome_proprietario();
-//                colunas[2] = entrada.getPlaca();
-//                colunas[3] = entrada.getMarca();
-//                colunas[4] = entrada.getModelo();
-//                colunas[5] = entrada.getCor();
-//                colunas[6] = entrada.getAno();
-//                colunas[7] = entrada.getRenavam();
-//                colunas[8] = entrada.getChassi();
-//                colunas[9] = entrada.getCidade();
-//                colunas[10] = entrada.getTelefone();
-//                colunas[11] = entrada.getWhatsapp();                
-                colunas[0] = entrada.getDate("data_entrada");
+              
+                colunas[0] = new java.sql.Date(entrada.getDate("data_entrada").getTime()).toLocalDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
                 colunas[1] = entrada.getString("nome_proprietario");
                 colunas[2] = entrada.getString("placa");
                 colunas[3] = entrada.getString("marca");
@@ -376,33 +369,36 @@ public class FormListarTodasEntradas extends javax.swing.JInternalFrame {
                 
                 tableModel.addRow(colunas);
             }
+            this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
             return;
         }
         
         if(this.cbFiltroLista.getSelectedItem().toString() == "Disponiveis"){            
-           listaEntradas = EntradaVeiculoDB.selectAllAvaliable();            
+            this.listaEntradasDoc = CrudMongoDB.searchAll("entrada_veiculo", Filters.eq("disponivel", true));
+            //listaEntradas = EntradaVeiculoDB.selectAllAvaliable();            
             DefaultTableModel tableModel = new DefaultTableModel();
             tableModel = (DefaultTableModel) this.tbEntradasVeiculo.getModel();
             tableModel.setNumRows(0);
-            for(EntradaVeiculo entrada: listaEntradas ){ 
+            for(Document entrada:  this.listaEntradasDoc ){ 
                 Object[] colunas = new Object[12];
-                colunas[0] = entrada.getData_entrada();
-                colunas[1] = entrada.getNome_proprietario();
-                colunas[2] = entrada.getPlaca();
-                colunas[3] = entrada.getMarca();
-                colunas[4] = entrada.getModelo();
-                colunas[5] = entrada.getCor();
-                colunas[6] = entrada.getAno();
-                colunas[7] = entrada.getRenavam();
-                colunas[8] = entrada.getChassi();
-                colunas[9] = entrada.getCidade();
-                colunas[10] = entrada.getTelefone();
-                colunas[11] = entrada.getWhatsapp();
+                colunas[0] = entrada.getDate("data_entrada");
+                colunas[1] = entrada.getString("nome_proprietario");
+                colunas[2] = entrada.getString("placa");
+                colunas[3] = entrada.getString("marca");
+                colunas[4] = entrada.getString("modelo");
+                colunas[5] = entrada.getString("cor");
+                colunas[6] = entrada.getString("ano");
+                colunas[7] = entrada.getString("renavam");
+                colunas[8] = entrada.getString("chassi");
+                colunas[9] = CrudMongoDB.searchByFieldValue("cidades", "id", entrada.getInteger("id_municipio")).getString("name");
+                colunas[10] = entrada.getString("telefone");
+                colunas[11] = entrada.getString("whatsapp");
                 tableModel.addRow(colunas);
             }
+            this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
             return;
         }
-        
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_btnFiltrarEntradaActionPerformed
 
     private void formComponentAdded(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_formComponentAdded

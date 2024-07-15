@@ -5,6 +5,7 @@
 package com.wesleycoelho.view;
 
 
+import com.mongodb.client.model.Filters;
 import com.wesleycoelho.controllers.jdbc.conn.EntradaVeiculoDB;
 import com.wesleycoelho.controllers.jdbc.conn.EstadoDB;
 import com.wesleycoelho.model.EntradaVeiculo;
@@ -14,11 +15,16 @@ import com.wesleycoelho.controllers.jdbc.conn.MunicipioDB;
 import com.wesleycoelho.model.Estado;
 import com.wesleycoelho.model.Municipio;
 import com.wesleycoelho.model.PrintingEntradaVeiculo;
+import java.awt.Cursor;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
+import java.util.ArrayList;
 
 
 import java.util.List;
+import mongoDB.CrudMongoDB;
+import org.bson.Document;
+import org.bson.types.ObjectId;
 
 
 
@@ -700,9 +706,17 @@ public class FormPesquisaEntrada extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txtPesquisarEntradaMouseEntered
 
     private void btnPesquisarEntradaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarEntradaActionPerformed
-    
-        if( this.cbFiltroPesquisa.getSelectedItem().toString() == "DATA"){           
-                this.entradas = EntradaVeiculoDB.selectByDate(this.txtPesquisarEntrada.getText());
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        if( this.cbFiltroPesquisa.getSelectedItem().toString() == "DATA"){ 
+            List<Document> listaVeiculos = CrudMongoDB.searchAll("entrada_veiculo", Filters.eq("data_entrada", this.txtPesquisarEntrada.getText().toUpperCase()));
+            List<EntradaVeiculo> lista = new ArrayList<>();
+            for(Document doc : listaVeiculos){
+                EntradaVeiculo e = new EntradaVeiculo();
+                e.convertToJavaObj(doc);
+                lista.add(e);
+            }
+            this.entradas = lista;
+                //this.entradas = EntradaVeiculoDB.selectByDate(this.txtPesquisarEntrada.getText());
                 if(this.entradas != null && !this.entradas.isEmpty()){
                     this.lblTotalLista.setText(String.valueOf(this.entradas.size()));
                     preencheResultadoConsulta(iteratorLista);
@@ -711,7 +725,15 @@ public class FormPesquisaEntrada extends javax.swing.JInternalFrame {
                     JOptionPane.showMessageDialog(this, "Nenhum resultado encontrado");
                 }
         }else if(this.cbFiltroPesquisa.getSelectedItem().toString() == "NOME PROPRIETARIO" ){
-            this.entradas = EntradaVeiculoDB.selectByNomeProprietario(this.txtPesquisarEntrada.getText().toUpperCase());
+            List<Document> listaVeiculos = CrudMongoDB.searchAll("entrada_veiculo", Filters.eq("nome_proprietario", this.txtPesquisarEntrada.getText().toUpperCase()));
+            List<EntradaVeiculo> lista = new ArrayList<>();
+            for(Document doc : listaVeiculos){
+                EntradaVeiculo e = new EntradaVeiculo();
+                e.convertToJavaObj(doc);
+                lista.add(e);
+            }
+            this.entradas = lista;
+            //this.entradas = EntradaVeiculoDB.selectByNomeProprietario(this.txtPesquisarEntrada.getText().toUpperCase());
             if(this.entradas != null && !this.entradas.isEmpty()){
                     this.lblTotalLista.setText(String.valueOf(this.entradas.size()));
                     preencheResultadoConsulta(iteratorLista);
@@ -720,7 +742,15 @@ public class FormPesquisaEntrada extends javax.swing.JInternalFrame {
                     JOptionPane.showMessageDialog(this, "Nenhum resultado encontrado");
                 }
         }else if(this.cbFiltroPesquisa.getSelectedItem().toString() == "MARCA" ){
-            this.entradas = EntradaVeiculoDB.selectByMarca(this.txtPesquisarEntrada.getText().toUpperCase());
+            List<Document> listaVeiculos = CrudMongoDB.searchAll("entrada_veiculo", Filters.eq("marca", this.txtPesquisarEntrada.getText().toUpperCase()));
+            List<EntradaVeiculo> lista = new ArrayList<>();
+            for(Document doc : listaVeiculos){
+                EntradaVeiculo e = new EntradaVeiculo();
+                e.convertToJavaObj(doc);
+                lista.add(e);
+            }
+            this.entradas = lista;
+            //this.entradas = EntradaVeiculoDB.selectByMarca(this.txtPesquisarEntrada.getText().toUpperCase());
             if(this.entradas != null && !this.entradas.isEmpty()){
                     this.lblTotalLista.setText(String.valueOf(this.entradas.size()));
                     preencheResultadoConsulta(iteratorLista);
@@ -729,7 +759,15 @@ public class FormPesquisaEntrada extends javax.swing.JInternalFrame {
                     JOptionPane.showMessageDialog(this, "Nenhum resultado encontrado");
                 }
         }else if(this.cbFiltroPesquisa.getSelectedItem().toString() == "MODELO" ){
-            this.entradas = EntradaVeiculoDB.selectByModelo(this.txtPesquisarEntrada.getText().toUpperCase());
+            List<Document> listaVeiculos = CrudMongoDB.searchAll("entrada_veiculo", Filters.eq("modelo", this.txtPesquisarEntrada.getText().toUpperCase()));
+            List<EntradaVeiculo> lista = new ArrayList<>();
+            for(Document doc : listaVeiculos){
+                EntradaVeiculo e = new EntradaVeiculo();
+                e.convertToJavaObj(doc);
+                lista.add(e);
+            }
+            this.entradas = lista;
+            //this.entradas = EntradaVeiculoDB.selectByModelo(this.txtPesquisarEntrada.getText().toUpperCase());
             if(this.entradas != null && !this.entradas.isEmpty()){
                     this.lblTotalLista.setText(String.valueOf(this.entradas.size()));
                     preencheResultadoConsulta(iteratorLista);
@@ -738,7 +776,15 @@ public class FormPesquisaEntrada extends javax.swing.JInternalFrame {
                     JOptionPane.showMessageDialog(this, "Nenhum resultado encontrado");
                 }
         }else if(this.cbFiltroPesquisa.getSelectedItem().toString() == "COR" ){
-            this.entradas = EntradaVeiculoDB.selectByCor(this.txtPesquisarEntrada.getText().toUpperCase());
+            List<Document> listaVeiculos = CrudMongoDB.searchAll("entrada_veiculo", Filters.eq("cor", this.txtPesquisarEntrada.getText().toUpperCase()));
+            List<EntradaVeiculo> lista = new ArrayList<>();
+            for(Document doc : listaVeiculos){
+                EntradaVeiculo e = new EntradaVeiculo();
+                e.convertToJavaObj(doc);
+                lista.add(e);
+            }
+            this.entradas = lista;
+            //this.entradas = EntradaVeiculoDB.selectByCor(this.txtPesquisarEntrada.getText().toUpperCase());
             if(this.entradas != null && !this.entradas.isEmpty()){
                     this.lblTotalLista.setText(String.valueOf(this.entradas.size()));
                     preencheResultadoConsulta(iteratorLista);
@@ -747,7 +793,15 @@ public class FormPesquisaEntrada extends javax.swing.JInternalFrame {
                     JOptionPane.showMessageDialog(this, "Nenhum resultado encontrado");
                 }
         }else if(this.cbFiltroPesquisa.getSelectedItem().toString() == "ANO" ){
-            this.entradas = EntradaVeiculoDB.selectByAno(this.txtPesquisarEntrada.getText());
+            List<Document> listaVeiculos = CrudMongoDB.searchAll("entrada_veiculo", Filters.eq("ano", this.txtPesquisarEntrada.getText().toUpperCase()));
+            List<EntradaVeiculo> lista = new ArrayList<>();
+            for(Document doc : listaVeiculos){
+                EntradaVeiculo e = new EntradaVeiculo();
+                e.convertToJavaObj(doc);
+                lista.add(e);
+            }
+            this.entradas = lista;
+            //this.entradas = EntradaVeiculoDB.selectByAno(this.txtPesquisarEntrada.getText());
             if(this.entradas != null && !this.entradas.isEmpty()){
                     this.lblTotalLista.setText(String.valueOf(this.entradas.size()));
                     preencheResultadoConsulta(iteratorLista);
@@ -756,11 +810,27 @@ public class FormPesquisaEntrada extends javax.swing.JInternalFrame {
                     JOptionPane.showMessageDialog(this, "Nenhum resultado encontrado");
                 }
         }else if(this.cbFiltroPesquisa.getSelectedItem().toString() == "RENAVAM" ){
-            this.entradas = EntradaVeiculoDB.selectByRenavam(this.txtPesquisarEntrada.getText().toUpperCase());
+            List<Document> listaVeiculos = CrudMongoDB.searchAll("entrada_veiculo", Filters.eq("renavam", this.txtPesquisarEntrada.getText().toUpperCase()));
+            List<EntradaVeiculo> lista = new ArrayList<>();
+            for(Document doc : listaVeiculos){
+                EntradaVeiculo e = new EntradaVeiculo();
+                e.convertToJavaObj(doc);
+                lista.add(e);
+            }
+            this.entradas = lista;
+            //this.entradas = EntradaVeiculoDB.selectByRenavam(this.txtPesquisarEntrada.getText().toUpperCase());
             this.lblTotalLista.setText(String.valueOf(entradas.size()));     
             preencheResultadoConsulta(iteratorLista);
         }else if(this.cbFiltroPesquisa.getSelectedItem().toString() == "PLACA" ){
-            this.entradas = EntradaVeiculoDB.selectByPlaca(this.txtPesquisarEntrada.getText().toUpperCase());
+            List<Document> listaVeiculos = CrudMongoDB.searchAll("entrada_veiculo", Filters.eq("placa", this.txtPesquisarEntrada.getText().toUpperCase()));
+            List<EntradaVeiculo> lista = new ArrayList<>();
+            for(Document doc : listaVeiculos){
+                EntradaVeiculo e = new EntradaVeiculo();
+                e.convertToJavaObj(doc);
+                lista.add(e);
+            }
+            this.entradas = lista;
+        // this.entradas = EntradaVeiculoDB.selectByPlaca(this.txtPesquisarEntrada.getText().toUpperCase());
             if(this.entradas != null && !this.entradas.isEmpty()){
                     this.lblTotalLista.setText(String.valueOf(this.entradas.size()));
                     preencheResultadoConsulta(iteratorLista);
@@ -769,7 +839,15 @@ public class FormPesquisaEntrada extends javax.swing.JInternalFrame {
                     JOptionPane.showMessageDialog(this, "Nenhum resultado encontrado");
                 }
         }else if(this.cbFiltroPesquisa.getSelectedItem().toString() == "CHASSI" ){
-            this.entradas = EntradaVeiculoDB.selectByChassi(this.txtPesquisarEntrada.getText().toUpperCase());
+            List<Document> listaVeiculos = CrudMongoDB.searchAll("entrada_veiculo", Filters.eq("chassi", this.txtPesquisarEntrada.getText().toUpperCase()));
+            List<EntradaVeiculo> lista = new ArrayList<>();
+            for(Document doc : listaVeiculos){
+                EntradaVeiculo e = new EntradaVeiculo();
+                e.convertToJavaObj(doc);
+                lista.add(e);
+            }
+            this.entradas = lista;
+            //this.entradas = EntradaVeiculoDB.selectByChassi(this.txtPesquisarEntrada.getText().toUpperCase());
             if(this.entradas != null && !this.entradas.isEmpty()){
                     this.lblTotalLista.setText(String.valueOf(this.entradas.size()));
                     preencheResultadoConsulta(iteratorLista);
@@ -778,7 +856,15 @@ public class FormPesquisaEntrada extends javax.swing.JInternalFrame {
                     JOptionPane.showMessageDialog(this, "Nenhum resultado encontrado");
                 }
         }else if(this.cbFiltroPesquisa.getSelectedItem().toString() == "TELEFONE" ){
-            this.entradas = EntradaVeiculoDB.selectByTelefone(this.txtPesquisarEntrada.getText());
+            List<Document> listaVeiculos = CrudMongoDB.searchAll("entrada_veiculo", Filters.eq("telefone", this.txtPesquisarEntrada.getText().toUpperCase()));
+            List<EntradaVeiculo> lista = new ArrayList<>();
+            for(Document doc : listaVeiculos){
+                EntradaVeiculo e = new EntradaVeiculo();
+                e.convertToJavaObj(doc);
+                lista.add(e);
+            }
+            this.entradas = lista;
+            //this.entradas = EntradaVeiculoDB.selectByTelefone(this.txtPesquisarEntrada.getText());
             if(this.entradas != null && !this.entradas.isEmpty()){
                     this.lblTotalLista.setText(String.valueOf(this.entradas.size()));
                     preencheResultadoConsulta(iteratorLista);
@@ -787,7 +873,15 @@ public class FormPesquisaEntrada extends javax.swing.JInternalFrame {
                     JOptionPane.showMessageDialog(this, "Nenhum resultado encontrado");
                 }
         }else if(this.cbFiltroPesquisa.getSelectedItem().toString() == "WHATSAPP" ){
-            this.entradas = EntradaVeiculoDB.selectByWhatsapp(this.txtPesquisarEntrada.getText());
+            List<Document> listaVeiculos = CrudMongoDB.searchAll("entrada_veiculo", Filters.eq("whatsapp", this.txtPesquisarEntrada.getText().toUpperCase()));
+            List<EntradaVeiculo> lista = new ArrayList<>();
+            for(Document doc : listaVeiculos){
+                EntradaVeiculo e = new EntradaVeiculo();
+                e.convertToJavaObj(doc);
+                lista.add(e);
+            }
+            this.entradas = lista;
+            //this.entradas = EntradaVeiculoDB.selectByWhatsapp(this.txtPesquisarEntrada.getText());
             if(this.entradas != null && !this.entradas.isEmpty()){
                     this.lblTotalLista.setText(String.valueOf(this.entradas.size()));
                     preencheResultadoConsulta(iteratorLista);
@@ -796,7 +890,7 @@ public class FormPesquisaEntrada extends javax.swing.JInternalFrame {
                     JOptionPane.showMessageDialog(this, "Nenhum resultado encontrado");
                 }
         }
-        
+         this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_btnPesquisarEntradaActionPerformed
 
     private void cbFiltroPesquisaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cbFiltroPesquisaFocusGained
@@ -844,10 +938,14 @@ public class FormPesquisaEntrada extends javax.swing.JInternalFrame {
                 this.txtTelefoneEntrada.setText(entradas.get(i).getTelefone()); 
                 this.txtWhatsappEntrada.setText(entradas.get(i).getWhatsapp());
                 if( entradas.get(i).getId_municipio() != 0 && entradas.get(i).getId_municipio() != null){
-                    Municipio municipio;
-                    municipio = MunicipioDB.searchById(entradas.get(i).getId_municipio()); 
-                    Estado estado;
-                    estado = EstadoDB.searchById(municipio.getId_uf());                  
+                    Municipio municipio = new Municipio();
+                    Document doc = CrudMongoDB.searchByFieldValue("cidades","id",entradas.get(i).getId_municipio());
+                    municipio.convertToJavaObj(doc);
+                    //municipio = MunicipioDB.searchById(entradas.get(i).getId_municipio()); 
+                    Estado estado = new Estado();
+                    //estado = EstadoDB.searchById(municipio.getId_uf());  
+                    doc = CrudMongoDB.searchByFieldValue("estados", "id",municipio.getId_uf());
+                    estado.convertToJavaObj(doc);
                     this.cbUFEntrada.setSelectedItem(estado.getNome());
                     this.cbCidadeEntrada.setSelectedItem(municipio.getNome());
                 }else{

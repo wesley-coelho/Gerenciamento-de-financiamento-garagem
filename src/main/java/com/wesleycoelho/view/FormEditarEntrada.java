@@ -15,6 +15,7 @@ import com.wesleycoelho.controllers.jdbc.conn.MunicipioDB;
 import com.wesleycoelho.model.Estado;
 import com.wesleycoelho.model.Municipio;
 import com.wesleycoelho.model.PrintingEntradaVeiculo;
+import java.awt.Cursor;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.util.List;
@@ -519,6 +520,7 @@ public class FormEditarEntrada extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSalvarEntradaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarEntradaActionPerformed
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         if(this.entrada == null){ 
              JOptionPane.showMessageDialog(this, "Nenhum registro selecionado!", "Erro", JOptionPane.ERROR_MESSAGE);
              return;
@@ -552,8 +554,10 @@ public class FormEditarEntrada extends javax.swing.JInternalFrame {
         this.entrada.setUsuario(this.usuario.getUsuario());
         
         //EntradaVeiculoDB.Editar(this.entrada);
-        CrudMongoDB.replaceDocument("entrada_veiculo", this.entrada.getObjectId(), this.entrada.toDocument());
+        CrudMongoDB.replaceDocument("entrada_veiculo", this.entrada.getId(), this.entrada.toDocument());
+         this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         JOptionPane.showMessageDialog(this, "Alteração realizada com sucesso!");
+        
     }//GEN-LAST:event_btnSalvarEntradaActionPerformed
 
     private void btnImprimirEntradaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirEntradaActionPerformed
@@ -704,6 +708,7 @@ public class FormEditarEntrada extends javax.swing.JInternalFrame {
 
     private void btnPesquisarEntradaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarEntradaActionPerformed
         // TODO add your handling code here:
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         if( !this.txtPesquisarEntrada.getText().isEmpty()){
             Document doc = CrudMongoDB.searchByFieldValue("entrada_veiculo", "placa", txtPesquisarEntrada.getText());
           
@@ -746,7 +751,7 @@ public class FormEditarEntrada extends javax.swing.JInternalFrame {
                 }
             }
         }
-        
+         this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         
     }//GEN-LAST:event_btnPesquisarEntradaActionPerformed
 

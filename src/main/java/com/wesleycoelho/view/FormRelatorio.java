@@ -302,7 +302,8 @@ public class FormRelatorio extends javax.swing.JInternalFrame {
 
     private void btnFiltrarEntradaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFiltrarEntradaActionPerformed
          if( "Inadimplentes".equals(this.cbFiltroRelatorio.getSelectedItem().toString()) ) {
-             this.inadimplentes = RelatorioDB.buscaInadimplentes();
+             
+             //this.inadimplentes = RelatorioDB.buscaInadimplentes();
              if(this.inadimplentes != null ){
                  TableModel tbModel = new InadimplenteTableModel(this.inadimplentes);
                  this.tbRelatorio.setModel(tbModel);

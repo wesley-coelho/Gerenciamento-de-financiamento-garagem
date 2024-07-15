@@ -76,7 +76,7 @@ public class PrintingFichaFrenteFinanciamento implements Printable{
         g.drawString("Valor: " +financiamento.getValor_parcela(),30, 285);
         g.drawString("1ª parcela: " +ParcelamentoDB.getFirstParcela(financiamento.getId()).format(dtf),30, 305);
         g.drawString("Última parcela: "+ParcelamentoDB.getLastParcela(financiamento.getId()).format(dtf),350, 305);
-        g.drawString("Observação: "+financiamento.getOberservacao() ,30, 325);
+        g.drawString("Observação: "+financiamento.getObservacao() ,30, 325);
         
        
          

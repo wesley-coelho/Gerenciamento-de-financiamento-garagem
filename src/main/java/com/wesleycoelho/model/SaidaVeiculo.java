@@ -5,6 +5,10 @@
 package com.wesleycoelho.model;
 
 import java.sql.Date;
+import java.util.HashMap;
+import java.util.Map;
+import org.bson.Document;
+import org.bson.types.ObjectId;
 
 /**
  *
@@ -13,8 +17,12 @@ import java.sql.Date;
 public class SaidaVeiculo {
     
     Integer     id;
+    ObjectId    idMongo;
     Date        data_saida;
     String       usuario;
+    ObjectId     id_clienteMongo;
+    ObjectId     id_entradaMongo;
+    ObjectId     id_financiamentoMongo;
     Integer     id_cliente;
     Integer     id_entrada;
     Integer     id_financiamento;
@@ -22,6 +30,8 @@ public class SaidaVeiculo {
     public static boolean janelaListarSaidas = false;
     public static boolean janelaPesquisarSaida = false;
     EntradaVeiculo entrada;
+    
+    public SaidaVeiculo(){}
 
     public SaidaVeiculo(Date data_saida, String usuario, Integer id_cliente, Integer id_entrada, Integer id_financiamento) {
         this.data_saida = data_saida;
@@ -31,6 +41,15 @@ public class SaidaVeiculo {
         this.id_financiamento = id_financiamento;
     }
     
+    public SaidaVeiculo(Date data_saida, String usuario, ObjectId id_clienteMongo, ObjectId id_entradaMongo, ObjectId id_financiamentoMongo) {
+        this.data_saida = data_saida;
+        this.usuario = usuario;
+        this.id_clienteMongo = id_clienteMongo;
+        this.id_entradaMongo = id_entradaMongo;
+        this.id_financiamentoMongo = id_financiamentoMongo;
+    }
+   
+    
     public SaidaVeiculo(Integer id, Date data_saida, String usuario, Integer id_cliente, Integer id_entrada, Integer id_financiamento) {
         this.id = id;
         this.data_saida = data_saida;
@@ -38,6 +57,14 @@ public class SaidaVeiculo {
         this.id_cliente = id_cliente;
         this.id_entrada = id_entrada;
         this.id_financiamento = id_financiamento;
+    }
+    public SaidaVeiculo(Integer id, Date data_saida, String usuario, ObjectId id_clienteMongo, ObjectId id_entradaMongo, ObjectId id_financiamentoMongo) {
+        this.id = id;
+        this.data_saida = data_saida;
+        this.usuario = usuario;
+        this.id_clienteMongo = id_clienteMongo;
+        this.id_entradaMongo = id_entradaMongo;
+        this.id_financiamentoMongo = id_financiamentoMongo;
     }
     
     public SaidaVeiculo(Date data_saida, EntradaVeiculo entrada) {
@@ -69,6 +96,30 @@ public class SaidaVeiculo {
         this.usuario = usuario;
     }
 
+    public ObjectId getId_clienteMongo() {
+        return id_clienteMongo;
+    }
+
+    public void setId_clienteMongo(ObjectId id_clienteMongo) {
+        this.id_clienteMongo = id_clienteMongo;
+    }
+
+    public ObjectId getId_entradaMongo() {
+        return id_entradaMongo;
+    }
+
+    public void setId_entradaMongo(ObjectId id_entradaMongo) {
+        this.id_entradaMongo = id_entradaMongo;
+    }
+
+    public ObjectId getId_financiamentoMongo() {
+        return id_financiamentoMongo;
+    }
+
+    public void setId_financiamentoMongo(ObjectId id_financiamentoMongo) {
+        this.id_financiamentoMongo = id_financiamentoMongo;
+    }
+
     public Integer getId_cliente() {
         return id_cliente;
     }
@@ -77,7 +128,7 @@ public class SaidaVeiculo {
         this.id_cliente = id_cliente;
     }
 
-    public int getId_entrada() {
+    public Integer getId_entrada() {
         return id_entrada;
     }
 
@@ -92,13 +143,39 @@ public class SaidaVeiculo {
     public void setId_financiamento(Integer id_financiamento) {
         this.id_financiamento = id_financiamento;
     }
+    
+    
 
+   
     public EntradaVeiculo getEntrada() {
         return entrada;
     }
 
     public void setEntrada(EntradaVeiculo entrada) {
         this.entrada = entrada;
+    }
+    
+    public Document toDocument(){
+        Map<String, Object> map = new HashMap<>();
+        if( idMongo != null )map.put("_id", idMongo);
+        map.put("data_saida", data_saida);
+        map.put("usuario", usuario);
+        map.put("id_cliente", id_clienteMongo);
+        map.put("id_entrada", id_entradaMongo);
+        map.put("id_financiamento", id_financiamentoMongo);
+        
+        return new Document(map);
+    }
+    
+    public void convertToJavaObj(Document doc){
+       if(doc!= null){
+        idMongo = doc.getObjectId("_id");
+        data_saida = new java.sql.Date(doc.getDate("data_saida").getTime());
+        usuario = doc.getString("usuario");
+        id_clienteMongo = doc.getObjectId("id_cliente");
+        id_entradaMongo = doc.getObjectId("id_entrada");
+        id_financiamentoMongo = doc.getObjectId("id_financiamento");
+       }        
     }
     
     

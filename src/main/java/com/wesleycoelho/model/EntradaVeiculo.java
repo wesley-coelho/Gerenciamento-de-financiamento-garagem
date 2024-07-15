@@ -19,8 +19,8 @@ import org.bson.types.ObjectId;
  * @author Wesley
  */
 public class EntradaVeiculo {
-    ObjectId objectId;
-    Integer id;
+    ObjectId id;
+    Integer idPostgres;
     String nome_proprietario = "";
     Date data_entrada = null;
     String marca = "";
@@ -33,6 +33,7 @@ public class EntradaVeiculo {
     String telefone= "";
     String whatsapp = "";
     String ano = "" ;
+    Boolean disponivel = true;
     public static boolean janelaNovaEntrada = false;
     public static boolean janelaEditarEntrada = false; 
     public static boolean janelaListarEntrada = false;
@@ -45,7 +46,7 @@ public class EntradaVeiculo {
     }
      
      public EntradaVeiculo(
-             Integer    id, 
+             ObjectId    id, 
              String     nome_proprietario, 
              Date       data_entrada, 
              String     marca, 
@@ -62,6 +63,39 @@ public class EntradaVeiculo {
      
      ){
        this.id = id;
+       this.nome_proprietario = nome_proprietario;
+       this.data_entrada = data_entrada;
+       this.marca = marca;
+       this.modelo = modelo;
+       this.cor = cor;
+       this.placa = placa;
+       this.renavam = renavam;
+       this.chassi = chassi;
+       this.id_municipio = id_municipio;
+       this.usuario = usuario;
+       this.ano = ano;
+       this.telefone = telefone;
+       this.whatsapp = whatsapp;
+     }
+     
+          public EntradaVeiculo(
+             Integer    idPostgres, 
+             String     nome_proprietario, 
+             Date       data_entrada, 
+             String     marca, 
+             String     modelo, 
+             String     cor, 
+             String     placa,
+             String     renavam,
+             String     chassi,
+             Integer    id_municipio,
+             String     usuario,
+             String     ano,
+             String     telefone,
+             String     whatsapp
+     
+     ){
+       this.idPostgres = idPostgres;
        this.nome_proprietario = nome_proprietario;
        this.data_entrada = data_entrada;
        this.marca = marca;
@@ -166,24 +200,22 @@ public class EntradaVeiculo {
      }
      
 
-    public Integer getId() {
+    public ObjectId getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
 
-    public ObjectId getObjectId() {
-        return objectId;
+    public Integer getIdPostgres() {
+        return idPostgres;
     }
 
-    public void setObjectId(ObjectId objectId) {
-        this.objectId = objectId;
+    public void setIdPostgres(Integer idPostgres) {
+        this.idPostgres = idPostgres;
     }
     
-    
-   
     
 
     public String getNome_proprietario() {
@@ -297,11 +329,18 @@ public class EntradaVeiculo {
     public void setCidade(String cidade) {
         this.cidade = cidade;
     }
-    
-    
 
+    public Boolean getDisponivel() {
+        return disponivel;
+    }
+
+    public void setDisponivel(Boolean disponivel) {
+        this.disponivel = disponivel;
+    }
+         
     public Document toDocument(){
-        Map<String, Object> map = new HashMap<>();      
+        Map<String, Object> map = new HashMap<>();
+        if(id != null) map.put("_id", id);
         map.put("nome_proprietario", nome_proprietario);
         map.put("data_entrada", data_entrada);
         map.put("marca", marca);
@@ -314,13 +353,14 @@ public class EntradaVeiculo {
         map.put("ano", ano); 
         map.put("telefone", telefone); 
         map.put("whatsapp", whatsapp); 
+        map.put("disponivel", disponivel);
         
         return new Document(map);
     }
     
     public void convertToJavaObj(Document doc){
         if (doc != null){
-            this.objectId = doc.getObjectId("_id");
+            this.id = doc.getObjectId("_id");
             this.nome_proprietario = doc.getString("nome_proprietario");
             this.data_entrada = new java.sql.Date(doc.getDate("data_entrada").getTime());
             this.marca = doc.getString("marca");
@@ -333,6 +373,7 @@ public class EntradaVeiculo {
             this.ano = doc.getString("ano");
             this.telefone = doc.getString("telefone");
             this.whatsapp = doc.getString("whatsapp");
+            this.disponivel = doc.getBoolean("disponivel");
         }
     }
        

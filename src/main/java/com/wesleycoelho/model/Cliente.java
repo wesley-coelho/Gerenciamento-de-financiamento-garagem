@@ -4,6 +4,11 @@
  */
 package com.wesleycoelho.model;
 
+import java.util.HashMap;
+import java.util.Map;
+import org.bson.Document;
+import org.bson.types.ObjectId;
+
 /**
  *
  * @author Wesley
@@ -11,6 +16,7 @@ package com.wesleycoelho.model;
 public class Cliente {
     
     Integer     id;
+    ObjectId    idMongo;
     String      nome;
     String      cpf;
     String      rg;
@@ -66,6 +72,15 @@ public class Cliente {
         this.id = id;
     }
 
+    public ObjectId getIdMongo() {
+        return idMongo;
+    }
+
+    public void setIdMongo(ObjectId idMongo) {
+        this.idMongo = idMongo;
+    }
+    
+    
     public String getNome() {
         return nome;
     }
@@ -160,6 +175,44 @@ public class Cliente {
 
     public void setComplemento(String complemento) {
         this.complemento = complemento;
+    }
+    
+    public Document toDocument(){
+        Map<String, Object> map;
+        map = new HashMap<>();
+        if( idMongo != null ) map.put("_id", idMongo);
+        map.put("nome", nome);
+        map.put("cpf", cpf);
+        map.put("rg", rg);
+        map.put("cep", Cep);
+        map.put("endereco", endereco);
+        map.put("numero", numero);
+        map.put("bairro", bairro);
+        map.put("id_municipio", id_municipio);
+        map.put("usuario", usuario);
+        map.put("whatsapp", whatsapp);
+        map.put("telefone", telefone);
+        map.put("complemento", complemento);        
+        return new Document(map);        
+    }
+    
+    public void convertToJavaObj(Document doc){
+        if (doc != null){
+            this.idMongo = doc.getObjectId("_id");
+            this.nome = doc.getString("nome");
+            this.cpf = doc.getString("cpf");
+            this.rg = doc.getString("rg");
+            this.Cep = doc.getString("cep");
+            this.endereco = doc.getString("endereco");
+            this.numero = doc.getInteger("numero");
+            this.bairro = doc.getString("bairro");
+            this.id_municipio = doc.getInteger("id_municipio");
+            this.usuario = doc.getString("usuario");
+            this.whatsapp = doc.getString("whatsapp");
+            this.telefone = doc.getString("telefone");
+            this.complemento = doc.getString("complemento");
+            
+        }
     }
 
     @Override

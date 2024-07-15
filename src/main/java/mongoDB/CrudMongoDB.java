@@ -4,6 +4,7 @@
  */
 package mongoDB;
 
+import com.mongodb.MongoException;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
@@ -114,6 +115,15 @@ public class CrudMongoDB {
          
     }
     
-    
+    public static MongoDatabase getDatabase() {
+        try {
+            MongoClient client = ConnectionFactory.getMongoClient();
+            MongoDatabase database = client.getDatabase(DATABASE_NAME);
+            return database;
+        }catch( MongoException ex){
+        ex.printStackTrace();
+        }
+         return null;
+    }
     
 }

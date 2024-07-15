@@ -14,6 +14,7 @@ import com.wesleycoelho.model.PrintingEntradaVeiculo;
 import com.wesleycoelho.model.Validacao;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Cursor;
 import java.util.List;
 import java.awt.print.*;
 import javax.swing.JFormattedTextField;
@@ -514,7 +515,7 @@ public class FormNovaEntrada extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSalvarEntradaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarEntradaActionPerformed
-
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         boolean fields = Validacao.checkFieldsFormFinanciamento(new String[]{            
             this.txtPlacaEntrada.getText(),            
         });
@@ -568,7 +569,8 @@ public class FormNovaEntrada extends javax.swing.JInternalFrame {
                 }
         }catch( RuntimeException | PrinterException   ex ){
                 JOptionPane.showMessageDialog(rootPane, ex.getMessage());
-        } 
+        }
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         
     }//GEN-LAST:event_btnSalvarEntradaActionPerformed
 
