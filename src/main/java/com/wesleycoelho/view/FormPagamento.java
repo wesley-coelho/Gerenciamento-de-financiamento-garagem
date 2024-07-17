@@ -4,6 +4,7 @@
  */
 package com.wesleycoelho.view;
 
+import com.mongodb.client.model.Filters;
 import com.wesleycoelho.controllers.jdbc.conn.ClienteDB;
 import com.wesleycoelho.controllers.jdbc.conn.EntradaVeiculoDB;
 import com.wesleycoelho.controllers.jdbc.conn.FinanciamentoDB;
@@ -19,8 +20,12 @@ import java.awt.Cursor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.Filter;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import mongoDB.CrudMongoDB;
+import org.bson.Document;
+import org.bson.types.ObjectId;
 
 
 /**
@@ -30,7 +35,7 @@ import javax.swing.table.DefaultTableModel;
 public class FormPagamento extends javax.swing.JInternalFrame {
      
       Usuario user;
-      List<Cliente> clientes;
+      List<Cliente> clientes = new ArrayList<>();
       List<Cliente> clientesComFinanciamento = new ArrayList<>();
     /**
      * Creates new form FormPagamento
@@ -700,24 +705,41 @@ public class FormPagamento extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
           this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
           this.clientesComFinanciamento.clear();
+          this.clientes.clear();
        if( !this.txtPesquisarFinanciamento.getText().isBlank()){
            
            if( "NOME".equals(this.cbFiltroPesquisa.getSelectedItem().toString() )  ){
                //PESQUISAR FINANCIAMENTO POR NOME
-               this.clientes = ClienteDB.buscaClientePorNome(this.txtPesquisarFinanciamento.getText());
+               //db.products.find( { sku: { $regex: /789$/ } } )
+               List<Document> docs = CrudMongoDB.searchAll("cliente", Filters.regex("nome", this.txtPesquisarFinanciamento.getText()));
+               for( Document d: docs ){
+                   Cliente cliente = new Cliente();
+                   if( d!= null ) cliente.convertToJavaObj(d);
+                   this.clientes.add(cliente);
+               }
+               //this.clientes = ClienteDB.buscaClientePorNome(this.txtPesquisarFinanciamento.getText());
                if( Objects.nonNull(this.clientes) || this.clientes.size() != 0){ 
                     preencheTabelaTbClientesFinanciamento();
                 }else{
-                   JOptionPane.showMessageDialog(this, "Nenhum resultado encontrado");
+                   JOptionPane.showMessageDialog(null, "Nenhum resultado encontrado");
                     this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)); 
                }
            }else if( "FICHA".equals(this.cbFiltroPesquisa.getSelectedItem().toString()) ){
                 //PESQUISAR FINANCIAMENTO POR FICHA
-               this.clientes = ClienteDB.buscaClientePorNFichaFinanciamento(Integer.valueOf(this.txtPesquisarFinanciamento.getText()));
+                List<Document> financiamentoDocs = CrudMongoDB.searchAll("financiamento", Filters.eq("ficha", Integer.valueOf(this.txtPesquisarFinanciamento.getText())));
+                 
+                 
+               for( Document d: financiamentoDocs ){
+                   Cliente cliente = new Cliente();
+                   Document docCliente = CrudMongoDB.searchByFieldValue("cliente", "_id", d.getObjectId("id_cliente"));
+                   if( docCliente!= null ) cliente.convertToJavaObj(docCliente);
+                   this.clientes.add(cliente);
+               }
+               //this.clientes = ClienteDB.buscaClientePorNFichaFinanciamento(Integer.valueOf(this.txtPesquisarFinanciamento.getText()));
                if( Objects.nonNull(this.clientes) || this.clientes.size() != 0){ 
                     preencheTabelaTbClientesFinanciamento();
                 }else{
-                   JOptionPane.showMessageDialog(this, "Nenhum resultado encontrado");
+                   JOptionPane.showMessageDialog(null, "Nenhum resultado encontrado");
                     this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)); 
                }
            }
@@ -872,15 +894,18 @@ public class FormPagamento extends javax.swing.JInternalFrame {
         this.txtWhatsappFinanciamento.setText(this.clientesComFinanciamento.get(selectedIndexTableClientes).getWhatsapp());
         this.txtTelefoneFinanciamento.setText(this.clientesComFinanciamento.get(selectedIndexTableClientes).getTelefone());
         
-        Integer id_cliente = this.clientesComFinanciamento.get(selectedIndexTableClientes).getId();
-        
-        Integer id_entrada = SaidaVeiculoDB.buscaIdEntradaPorIdCliente(id_cliente);        
-       
-        Integer id_financiamento = SaidaVeiculoDB.buscaSaidaPorIdEntrada(id_entrada).getId_financiamento();
-        
-        EntradaVeiculo entrada = EntradaVeiculoDB.buscaEntradaPorId(id_entrada);
-        
-        Financiamento financiamento = FinanciamentoDB.buscaFinanciamentoPorIdSaida(id_financiamento);
+        //Integer id_cliente = this.clientesComFinanciamento.get(selectedIndexTableClientes).getId();
+        ObjectId id_cliente = this.clientesComFinanciamento.get(selectedIndexTableClientes).getIdMongo();
+        Financiamento financiamento = new Financiamento();
+        Document doc = CrudMongoDB.searchByFieldValue("financiamento", "id_cliente", id_cliente);
+        financiamento.convertToJavaObj(doc);
+        //Integer id_entrada = SaidaVeiculoDB.buscaIdEntradaPorIdCliente(id_cliente); 
+       EntradaVeiculo entrada = new EntradaVeiculo();
+       doc = CrudMongoDB.searchByFieldValue("entrada_veiculo", "_id", financiamento.getId_entradaMongo());
+       entrada.convertToJavaObj(doc);
+        //Integer id_financiamento = SaidaVeiculoDB.buscaSaidaPorIdEntrada(id_entrada).getId_financiamento();        
+        //EntradaVeiculo entrada = EntradaVeiculoDB.buscaEntradaPorId(id_entrada);        
+        //Financiamento financiamento = FinanciamentoDB.buscaFinanciamentoPorIdSaida(id_financiamento);
         
         this.txtMarcaEntrada.setText(entrada.getMarca());
         this.txtModeloEntrada.setText(entrada.getModelo());
@@ -894,7 +919,18 @@ public class FormPagamento extends javax.swing.JInternalFrame {
         this.cbDiaVencimentoFinanciamento.setSelectedItem(String.valueOf(financiamento.getDia_vencimento()));
         this.txtObsFinanciamento.setText(financiamento.getObservacao());
         
-        List<Parcelamento> parcelas = ParcelamentoDB.buscaParcelasPorIdFinanciamento(financiamento.getId());
+        //List<Parcelamento> parcelas = ParcelamentoDB.buscaParcelasPorIdFinanciamento(financiamento.getId());
+        List<Parcelamento> parcelas = new ArrayList<>();
+        List<Document> listaParcelasDoc = CrudMongoDB.searchAll("parcelamento", Filters.eq("id_financiamento", financiamento.getIdMongo()));
+        for(Document d:listaParcelasDoc){
+            Parcelamento p = new Parcelamento();
+            if( d != null ){
+                p.convertToJavaObj(d);
+                parcelas.add(p);
+             
+            }
+            
+        }
         if(!parcelas.isEmpty() ){    
             this.tbParcelasFinanciamento.setModel(new PagamentoTableModel(parcelas, financiamento));
         }
@@ -935,15 +971,16 @@ public class FormPagamento extends javax.swing.JInternalFrame {
                     tableModel = (DefaultTableModel) this.tbClientesFinanciamento.getModel();
                     tableModel.setNumRows(0);               
                     for(Cliente cliente: this.clientes ){
-                        int id_entrada;                        
-                        id_entrada = SaidaVeiculoDB.buscaIdEntradaPorIdCliente(cliente.getId()); 
-                        if(id_entrada != 0){
+                        //int id_entrada;                        
+                        //id_entrada = SaidaVeiculoDB.buscaIdEntradaPorIdCliente(cliente.getId());
+                        ObjectId id_entrada = CrudMongoDB.searchByFieldValue("saida_veiculo", "id_cliente", cliente.getIdMongo()).getObjectId("id_entrada");
+                        if(id_entrada != null){
                             clientesComFinanciamento.add(cliente);
                             Object[] colunas = new Object[9];
-                            colunas[0] = FinanciamentoDB.buscaNficha(cliente.getId());//ficha
+                            colunas[0] = CrudMongoDB.searchByFieldValue("financiamento", "id_cliente", cliente.getIdMongo()).getInteger("ficha");//FinanciamentoDB.buscaNficha(cliente.getId());//ficha
                             colunas[1] = cliente.getNome();//nome
                             colunas[2] = cliente.getCpf();//cpf
-                            colunas[3] = EntradaVeiculoDB.buscaEntradaPorId(id_entrada).getPlaca();  //placa                                      
+                            colunas[3] = CrudMongoDB.searchById("entrada_veiculo", id_entrada).getString("placa");//EntradaVeiculoDB.buscaEntradaPorId(id_entrada).getPlaca();  //placa                                      
                             tableModel.addRow(colunas);
                             this.tbClientesFinanciamento.repaint();
                         }

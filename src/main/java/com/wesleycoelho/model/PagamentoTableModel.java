@@ -14,6 +14,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
+import mongoDB.CrudMongoDB;
 
 /**
  *
@@ -60,9 +61,9 @@ public class PagamentoTableModel extends AbstractTableModel implements TableMode
         Parcelamento valueRow = parcelas.get(rowIndex);
         return switch (columnIndex) {
             case 0 -> rowIndex + 1;
-            case 1 -> valueRow.mes_ref.toLocalDate().format(dtf);
+            case 1 -> valueRow.getMes_ref().toLocalDate().format(dtf);
             case 2 -> financiamento.getValor_parcela();
-            case 3 -> valueRow.getValor_pagamento() == 0.0?null:valueRow.getValor_pagamento();
+            case 3 -> valueRow.getValor_pagamento();
             case 4 -> valueRow.getIsPago();
             case 5 -> valueRow.getData_pagamento() != null?valueRow.getData_pagamento().toLocalDate().format(dtf):valueRow.getData_pagamento();
             case 6 -> valueRow.getIsCanceled();
@@ -105,8 +106,9 @@ public class PagamentoTableModel extends AbstractTableModel implements TableMode
     public void setValueAt(Object aValue, int rowIndex, int columnIndex){  
         switch(columnIndex){
             case 3 -> {      
-                          parcelas.get(rowIndex).setValor_pagamento(Double.parseDouble(aValue.toString()));
-                          ParcelamentoDB.Pagamento(parcelas.get(rowIndex));
+                          parcelas.get(rowIndex).setValor_pagamento(Double.valueOf(aValue.toString()));
+                          //ParcelamentoDB.Pagamento(parcelas.get(rowIndex));
+                          CrudMongoDB.replaceDocument("parcelamento", parcelas.get(rowIndex).getIdMongo(), parcelas.get(rowIndex).toDocument());
                           fireTableDataChanged();   
                       }
             case 4 -> {
@@ -116,12 +118,14 @@ public class PagamentoTableModel extends AbstractTableModel implements TableMode
                         }else{
                              parcelas.get(rowIndex).setData_pagamento(null);
                         }
-                        ParcelamentoDB.Pagamento(parcelas.get(rowIndex));
+                        CrudMongoDB.replaceDocument("parcelamento", parcelas.get(rowIndex).getIdMongo(), parcelas.get(rowIndex).toDocument());
+                        //ParcelamentoDB.Pagamento(parcelas.get(rowIndex));
                         fireTableDataChanged();
                       }
             case 6 -> {
                         parcelas.get(rowIndex).setIsCanceled((Boolean)aValue);                        
-                        ParcelamentoDB.Pagamento(parcelas.get(rowIndex));
+                        CrudMongoDB.replaceDocument("parcelamento", parcelas.get(rowIndex).getIdMongo(), parcelas.get(rowIndex).toDocument());
+                        //ParcelamentoDB.Pagamento(parcelas.get(rowIndex));
                         fireTableDataChanged();
                       }
         }

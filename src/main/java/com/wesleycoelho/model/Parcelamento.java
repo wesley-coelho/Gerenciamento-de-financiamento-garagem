@@ -164,6 +164,26 @@ public class Parcelamento {
        map.put("iscanceled", isCanceled);       
        return new Document(map);
    }
+   
+   public void convertToJavaObj(Document doc){
+       if( doc != null ){
+           idMongo = doc.getObjectId("_id");
+           data_pagamento = doc.getDate("data_pagamento") != null ? new java.sql.Date(doc.getDate("data_pagamento").getTime()): null;
+           valor_pagamento = doc.getDouble("valor_pagamento");
+           id_financiamento = doc.getObjectId("id_financiamento");
+           mes_ref = doc.getDate("mes_ref") != null ? new java.sql.Date(doc.getDate("mes_ref").getTime()) : null;
+           ispago = doc.getBoolean("ispago");
+           isCanceled  = doc.getBoolean("iscanceled");
+       }
+       
+   }
+
+    @Override
+    public String toString() {
+        return "Parcelamento{" + "idMongo=" + idMongo + ", data_pagamento=" + data_pagamento + ", valor_pagamento=" + valor_pagamento + ", id_financiamento=" + id_financiamento + ", mes_ref=" + mes_ref + ", ispago=" + ispago + ", isCanceled=" + isCanceled + '}';
+    }
     
+   
+   
 }
 

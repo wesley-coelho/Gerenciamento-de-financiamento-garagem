@@ -3,6 +3,17 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JInternalFrame.java to edit this template
  */
 package com.wesleycoelho.view;
+import com.mongodb.client.AggregateIterable;
+import static com.mongodb.client.model.Accumulators.firstN;
+import com.mongodb.client.model.Aggregates;
+import static com.mongodb.client.model.Aggregates.count;
+import static com.mongodb.client.model.Aggregates.group;
+import static com.mongodb.client.model.Aggregates.match;
+import static com.mongodb.client.model.Aggregates.project;
+import com.mongodb.client.model.BsonField;
+import com.mongodb.client.model.Filters;
+import static com.mongodb.client.model.Projections.excludeId;
+import static com.mongodb.client.model.Projections.fields;
 import com.wesleycoelho.controllers.jdbc.conn.RelatorioDB;
 import com.wesleycoelho.model.Usuario;
 import com.wesleycoelho.model.Inadimplente;
@@ -13,18 +24,26 @@ import java.awt.print.PrinterJob;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import static java.util.Arrays.asList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.TableModel;
+import mongoDB.CrudMongoDB;
+import org.bson.BsonString;
+import org.bson.Document;
+import org.bson.conversions.Bson;
 /**
  *
  * @author Wesley
  */
 public class FormRelatorio extends javax.swing.JInternalFrame {
     Usuario usuario = new Usuario();
-    private List<Inadimplente> inadimplentes;
+    private List<Inadimplente> inadimplentes = new ArrayList<>();
     /**
      * Creates new form FormNovaEntrada
      */
@@ -303,8 +322,43 @@ public class FormRelatorio extends javax.swing.JInternalFrame {
     private void btnFiltrarEntradaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFiltrarEntradaActionPerformed
          if( "Inadimplentes".equals(this.cbFiltroRelatorio.getSelectedItem().toString()) ) {
              
-             //this.inadimplentes = RelatorioDB.buscaInadimplentes();
-             if(this.inadimplentes != null ){
+            // this.inadimplentes = RelatorioDB.buscaInadimplentes();
+            this.inadimplentes.clear();
+            Bson matchStage = match(Filters.and(
+                                    Filters.lte("mes_ref", new Date()), 
+                                    Filters.or(
+                                            Filters.eq("valor_pagamento", null), 
+                                            Filters.eq("valor_pagamento", 0)
+                                            ), 
+                                    Filters.eq("iscanceled", false)
+                                    )
+                                    
+                                );
+           
+            Bson projections = project(fields(excludeId()));
+            AggregateIterable<Document> docs = CrudMongoDB.getDatabase().getCollection("parcelamento").aggregate(asList(matchStage,  projections));
+            List<Document> lista = new ArrayList<>();
+            
+            for(Document doc : docs){
+                boolean itemEncontrado = false;
+                for(Document item : lista){
+                    if(item.getObjectId("id_financiamento").equals(doc.getObjectId("id_financiamento"))){
+                        itemEncontrado = true;
+                        break;
+                    }
+                }
+                if(itemEncontrado == false) lista.add(doc);
+            }         
+            System.out.println(lista);
+            if(!lista.isEmpty() ){
+                 for(Document doc:lista ){
+                 Inadimplente inadimplente = new Inadimplente();
+                    if(doc != null){
+                       inadimplente.convertToJavaObj(doc);
+                       this.inadimplentes.add(inadimplente);
+                    }
+                 }
+         
                  TableModel tbModel = new InadimplenteTableModel(this.inadimplentes);
                  this.tbRelatorio.setModel(tbModel);
                  
