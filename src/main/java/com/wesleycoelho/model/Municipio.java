@@ -53,10 +53,12 @@ public class Municipio {
     }
     
     public void convertToJavaObj(Document doc){
-        
-        id = doc.getInteger("id");
+        if( doc != null ){
+           id = doc.getInteger("id");
         cidade = doc.getString("name");
-        id_uf = doc.getInteger("state_id");
+        id_uf = doc.getInteger("state_id");  
+        }
+       
     }
     
 }

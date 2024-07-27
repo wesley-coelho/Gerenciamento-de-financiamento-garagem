@@ -212,5 +212,31 @@ public class SaidaVeiculoDB {
          return null;
      }
     
+     public static List<SaidaVeiculo> searchAll(){
+        String sql = "SELECT * FROM saida_veiculo";
+        Connection conn = ConnectionFactory.getConexao();
+        
+        try{
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            List<SaidaVeiculo> lista = new ArrayList<>();
+            while(rs.next() ){
+                lista.add( new SaidaVeiculo(
+                        rs.getInt("id"),
+                        rs.getDate("data_saida"),
+                        rs.getString("usuario"),
+                       rs.getInt("id_cliente"),
+                        rs.getInt("id_entrada"),
+                       rs.getInt("id_financiamento")
+                ));
+            }
+            ConnectionFactory.close(conn, st, rs);
+            return lista;
+        }catch(SQLException ex){
+             JOptionPane.showMessageDialog(null,ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE );
+        }
+        return null;
+    }
+    
 }
 

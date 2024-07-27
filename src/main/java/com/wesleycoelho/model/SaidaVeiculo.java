@@ -160,9 +160,9 @@ public class SaidaVeiculo {
         if( idMongo != null )map.put("_id", idMongo);
         map.put("data_saida", data_saida);
         map.put("usuario", usuario);
-        map.put("id_cliente", id_clienteMongo);
-        map.put("id_entrada", id_entradaMongo);
-        map.put("id_financiamento", id_financiamentoMongo);
+        map.put("_id_cliente", id_clienteMongo);
+        map.put("_id_entrada", id_entradaMongo);
+        map.put("_id_financiamento", id_financiamentoMongo);
         
         return new Document(map);
     }
@@ -170,11 +170,12 @@ public class SaidaVeiculo {
     public void convertToJavaObj(Document doc){
        if(doc!= null){
         idMongo = doc.getObjectId("_id");
-        data_saida = new java.sql.Date(doc.getDate("data_saida").getTime());
+        data_saida = doc.getDate("data_saida") == null ? null : new java.sql.Date(doc.getDate("data_saida").getTime());
         usuario = doc.getString("usuario");
-        id_clienteMongo = doc.getObjectId("id_cliente");
-        id_entradaMongo = doc.getObjectId("id_entrada");
-        id_financiamentoMongo = doc.getObjectId("id_financiamento");
+        id_clienteMongo = doc.getObjectId("_id_cliente");
+        id_entradaMongo = doc.getObjectId("_id_entrada");
+        id_financiamentoMongo = doc.getObjectId("_id_financiamento");
+      
        }        
     }
     

@@ -154,7 +154,32 @@ public class ParcelamentoDB {
     
     }
     
-   
+    public static List<Parcelamento> getParcelas(){
+        String sql = "SELECT * FROM parcelamento ";
+        Connection conn = ConnectionFactory.getConexao();
+         
+        try{
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            List<Parcelamento> parcelas = new ArrayList<>();
+            while( rs.next() ){
+                parcelas.add(new Parcelamento(
+                       rs.getInt("id"),
+                        rs.getDate("data_pagamento"),
+                        rs.getDouble("valor_pagamento"),
+                        rs.getInt("id_financiamento"),
+                        rs.getDate("mes_ref"),
+                        rs.getBoolean("ispago"),
+                        rs.getBoolean("iscanceled")
+                ));
+            }
+            ConnectionFactory.close(conn, st, rs);
+            return parcelas;
+        }catch(SQLException ex){
+            JOptionPane.showMessageDialog(null,ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE );
+        }
+        return null;
+    }
     
 }
 

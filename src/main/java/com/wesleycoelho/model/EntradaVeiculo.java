@@ -353,7 +353,7 @@ public class EntradaVeiculo {
         map.put("ano", ano); 
         map.put("telefone", telefone); 
         map.put("whatsapp", whatsapp); 
-        map.put("disponivel", disponivel);
+    
         
         return new Document(map);
     }
@@ -362,7 +362,7 @@ public class EntradaVeiculo {
         if (doc != null){
             this.id = doc.getObjectId("_id");
             this.nome_proprietario = doc.getString("nome_proprietario");
-            this.data_entrada = new java.sql.Date(doc.getDate("data_entrada").getTime());
+            this.data_entrada = doc.getDate("data_entrada") == null ? null : new java.sql.Date(doc.getDate("data_entrada").getTime());
             this.marca = doc.getString("marca");
             this.modelo = doc.getString("modelo");
             this.cor = doc.getString("cor");
@@ -373,7 +373,7 @@ public class EntradaVeiculo {
             this.ano = doc.getString("ano");
             this.telefone = doc.getString("telefone");
             this.whatsapp = doc.getString("whatsapp");
-            this.disponivel = doc.getBoolean("disponivel");
+            
         }
     }
        

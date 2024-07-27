@@ -394,8 +394,35 @@ public class FinanciamentoDB {
            }catch(SQLException ex){
                JOptionPane.showMessageDialog(null, ex.getMessage(), null, JOptionPane.ERROR_MESSAGE);
            }
-           
-          
       }
+     
+      public static List<Financiamento> getFinanciamentos(){  
+        Connection conn  = ConnectionFactory.getConexao();
+        String sql = "SELECT * FROM financiamento ";
+        
+        try{
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            List<Financiamento> lista = new ArrayList<>();
+            while(rs.next()){
+                lista.add(new Financiamento(
+                        rs.getInt("id"),
+                        rs.getDate("data_do_registro"),
+                        rs.getInt("ficha"),
+                        rs.getDouble("valor_parcela"),
+                        rs.getInt("num_parcelas"),
+                        rs.getInt("dia_vencimento"),
+                        rs.getInt("id_cliente"),
+                        rs.getString("observacao")
+                    )
+                );
+            }
+            ConnectionFactory.close(conn, st, rs);
+            return lista;
+        }catch(SQLException ex){
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
+        return null;
+    }  
 }
 

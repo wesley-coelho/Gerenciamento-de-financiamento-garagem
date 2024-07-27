@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.swing.table.DefaultTableModel;
 import mongoDB.CrudMongoDB;
 import org.bson.Document;
@@ -336,25 +337,35 @@ public class FormListarTodasSaida extends javax.swing.JInternalFrame {
                 s.convertToJavaObj(doc);
                 listaSaidas.add(s);
             }
-            DefaultTableModel tableModel = new DefaultTableModel();
+            
+            List<Document> docsEntrada = CrudMongoDB.searchAll("entrada_veiculo");
+            List<EntradaVeiculo> listaEntradas = new ArrayList<>();
+            for(Document doc:docsEntrada){
+                EntradaVeiculo e = new EntradaVeiculo();
+                e.convertToJavaObj(doc);
+                listaEntradas.add(e);
+            }
+            DefaultTableModel tableModel;
             tableModel = (DefaultTableModel) this.tbEntradasVeiculo.getModel();
             tableModel.setNumRows(0);
             for(SaidaVeiculo saida: listaSaidas ){
-                EntradaVeiculo e = new EntradaVeiculo();
-                Document d = CrudMongoDB.searchByFieldValue("entrada_veiculo", "_id", saida.getId_entradaMongo());
-                e.convertToJavaObj(d);
+                List<EntradaVeiculo> e ;
+                //aqui ta o problema
+                //Document d = CrudMongoDB.searchByFieldValue("entrada_veiculo", "_id", saida.getId_entradaMongo());
+                e = listaEntradas.stream().filter(x -> x.getId().compareTo(saida.getId_entradaMongo()) == 0).collect(Collectors.toList());
+                
                 Object[] colunas = new Object[11];
                 colunas[0] = saida.getData_saida();
-                colunas[1] = e.getNome_proprietario();
-                colunas[2] = e.getPlaca();
-                colunas[3] = e.getMarca();
-                colunas[4] = e.getModelo();
-                colunas[5] = e.getCor();
-                colunas[6] = e.getAno();
-                colunas[7] = e.getRenavam();
-                colunas[8] = e.getChassi();            
-                colunas[9] = e.getTelefone();
-                colunas[10] = e.getWhatsapp();
+                colunas[1] = e.getFirst().getNome_proprietario();
+                colunas[2] = e.getFirst().getPlaca();
+                colunas[3] = e.getFirst().getMarca();
+                colunas[4] = e.getFirst().getModelo();
+                colunas[5] = e.getFirst().getCor();
+                colunas[6] = e.getFirst().getAno();
+                colunas[7] = e.getFirst().getRenavam();
+                colunas[8] = e.getFirst().getChassi();            
+                colunas[9] = e.getFirst().getTelefone();
+                colunas[10] = e.getFirst().getWhatsapp();
                 tableModel.addRow(colunas);
             }    
         }

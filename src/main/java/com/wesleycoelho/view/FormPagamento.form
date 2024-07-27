@@ -149,7 +149,23 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnLimparFormularioEntradaActionPerformed"/>
           </Events>
         </Component>
+        <Component class="javax.swing.JButton" name="btnTransferData">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="transfer-&gt;"/>
+            <Property name="focusable" type="boolean" value="false"/>
+            <Property name="horizontalTextPosition" type="int" value="0"/>
+            <Property name="verticalTextPosition" type="int" value="3"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnTransferDataActionPerformed"/>
+          </Events>
+        </Component>
         <Component class="javax.swing.JToolBar$Separator" name="jSeparator1">
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblStatus">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="status"/>
+          </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btnPesquisarFinanciamento">
           <Properties>

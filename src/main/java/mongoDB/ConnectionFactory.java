@@ -31,10 +31,10 @@ public class ConnectionFactory {
                 .build();
         MongoClientSettings settings = MongoClientSettings.builder()
                 .applyConnectionString(new ConnectionString(uri))
-                .serverApi(serverApi)
+                .serverApi(serverApi)                
                 .build();
         // Create a new client and connect to the server
-        MongoClient mongoClient = MongoClients.create(settings);          
+        MongoClient mongoClient = MongoClients.create(settings);       
         return mongoClient; 
     }
     

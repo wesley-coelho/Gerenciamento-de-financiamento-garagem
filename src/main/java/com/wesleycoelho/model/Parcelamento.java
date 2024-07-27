@@ -153,12 +153,23 @@ public class Parcelamento {
         this.isCanceled = isCanceled;
     }
 
+    public Integer getId_financiamentoPostgres() {
+        return id_financiamentoPostgres;
+    }
+
+    public void setId_financiamentoPostgres(Integer id_financiamentoPostgres) {
+        this.id_financiamentoPostgres = id_financiamentoPostgres;
+    }
+    
+    
+
    public Document toDocument(){
        Map<String, Object> map = new HashMap<>();
        if( idMongo != null ) map.put("_id", idMongo);
        map.put("data_pagamento", data_pagamento);
        map.put("valor_pagamento", valor_pagamento);
-       map.put("id_financiamento", id_financiamento);
+       map.put("id_financiamento", id_financiamentoPostgres);
+       map.put("_id_financiamento", id_financiamento);
        map.put("mes_ref", mes_ref);
        map.put("ispago", ispago);
        map.put("iscanceled", isCanceled);       
@@ -170,7 +181,7 @@ public class Parcelamento {
            idMongo = doc.getObjectId("_id");
            data_pagamento = doc.getDate("data_pagamento") != null ? new java.sql.Date(doc.getDate("data_pagamento").getTime()): null;
            valor_pagamento = doc.getDouble("valor_pagamento");
-           id_financiamento = doc.getObjectId("id_financiamento");
+           id_financiamento = doc.getObjectId("_id_financiamento");
            mes_ref = doc.getDate("mes_ref") != null ? new java.sql.Date(doc.getDate("mes_ref").getTime()) : null;
            ispago = doc.getBoolean("ispago");
            isCanceled  = doc.getBoolean("iscanceled");

@@ -19,6 +19,7 @@ import com.wesleycoelho.model.Usuario;
 import com.wesleycoelho.model.Inadimplente;
 import com.wesleycoelho.model.InadimplenteTableModel;
 import com.wesleycoelho.model.PrintingRelInadimplente;
+import java.awt.Cursor;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.io.BufferedWriter;
@@ -31,12 +32,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.swing.JOptionPane;
 import javax.swing.table.TableModel;
 import mongoDB.CrudMongoDB;
 import org.bson.BsonString;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 /**
  *
  * @author Wesley
@@ -321,44 +324,85 @@ public class FormRelatorio extends javax.swing.JInternalFrame {
 
     private void btnFiltrarEntradaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFiltrarEntradaActionPerformed
          if( "Inadimplentes".equals(this.cbFiltroRelatorio.getSelectedItem().toString()) ) {
-             
-            // this.inadimplentes = RelatorioDB.buscaInadimplentes();
-            this.inadimplentes.clear();
-            Bson matchStage = match(Filters.and(
-                                    Filters.lte("mes_ref", new Date()), 
-                                    Filters.or(
-                                            Filters.eq("valor_pagamento", null), 
-                                            Filters.eq("valor_pagamento", 0)
-                                            ), 
-                                    Filters.eq("iscanceled", false)
-                                    )
-                                    
-                                );
-           
-            Bson projections = project(fields(excludeId()));
-            AggregateIterable<Document> docs = CrudMongoDB.getDatabase().getCollection("parcelamento").aggregate(asList(matchStage,  projections));
-            List<Document> lista = new ArrayList<>();
+             this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             
-            for(Document doc : docs){
-                boolean itemEncontrado = false;
-                for(Document item : lista){
-                    if(item.getObjectId("id_financiamento").equals(doc.getObjectId("id_financiamento"))){
-                        itemEncontrado = true;
+            //filtrando todas aas parcelas em atraso
+            List<Document> parcelasEmAtraso = CrudMongoDB.searchAll
+            ("parcelamento", Filters.and(
+                                Filters.lt("mes_ref", new Date()), 
+                                Filters.or(Filters.eq( "valor_pagameno", null ),
+                                           Filters.eq("valor_pagamento", 0)),
+                                Filters.eq("iscanceled", false)
+                              )
+            );
+           
+            //filtrando todos os _id_financiamento das parcelas em atraso sem repetir id
+            List<ObjectId> idFinanciamentosEmAtraso = new ArrayList<>(); //lista dos _id_financiamento sem item repetido
+            boolean found = false;       
+            for(Document d:parcelasEmAtraso ){
+               if( idFinanciamentosEmAtraso.isEmpty() )
+               {                
+                   idFinanciamentosEmAtraso.add(d.getObjectId("_id_financiamento"));
+                   continue;
+               }else{
+               
+                    for( ObjectId id : idFinanciamentosEmAtraso ){
+                         if( id.compareTo(d.getObjectId("_id_financiamento")) == 0 ){
+                            found = true;                           
+                            break;
+                         }                        
+                     }
+                }
+               
+               if( found == false ){ 
+                   idFinanciamentosEmAtraso.add(d.getObjectId("_id_financiamento"));
+               }              
+               
+               found = false;
+            }
+            
+            //buscando todos financiamentos registrad no banco Mongo
+            List<Document> todosFinanciamentos = CrudMongoDB.searchAll("financiamento");
+            //obtendo os docs dos financiamentos em atraso
+            List<Document> financiamentosEmAtrasoDocs = new ArrayList<>();
+            for( ObjectId id :  idFinanciamentosEmAtraso){
+                for( Document d:todosFinanciamentos){
+                    if( id.compareTo(d.getObjectId("_id")) == 0){
+                        financiamentosEmAtrasoDocs.add(d);
+                    }
+                }
+            }
+            
+            //buscando todos clientes registrados no banco Mongo
+            List<Document> todosClientes = CrudMongoDB.searchAll("cliente");
+            
+            //obtendo os docs dos clientes em atraso
+            List<Document> clientesEmAtrasoDocs = new ArrayList<>();
+            for( Document f :  financiamentosEmAtrasoDocs){
+                for( Document c :todosClientes){
+                    if( f.getObjectId("_id_cliente").compareTo(c.getObjectId("_id")) == 0 ){
+                        clientesEmAtrasoDocs.add(c);
+                    }
+                }
+            }
+            
+            for( Document d : financiamentosEmAtrasoDocs ){
+                Inadimplente  cliente = new Inadimplente();
+                this.inadimplentes.add(cliente);
+                cliente.setNficha(d.getInteger("ficha"));
+                for( Document doc :  clientesEmAtrasoDocs){
+                    if( doc.getObjectId("_id").compareTo(d.getObjectId("_id_cliente")) == 0 ){
+                        cliente.setNome(doc.getString("nome"));
+                        cliente.setTelefone(doc.getString("telefone"));
+                        cliente.setWhatsapp(doc.getString("whatsapp"));
                         break;
                     }
                 }
-                if(itemEncontrado == false) lista.add(doc);
-            }         
-            System.out.println(lista);
-            if(!lista.isEmpty() ){
-                 for(Document doc:lista ){
-                 Inadimplente inadimplente = new Inadimplente();
-                    if(doc != null){
-                       inadimplente.convertToJavaObj(doc);
-                       this.inadimplentes.add(inadimplente);
-                    }
-                 }
-         
+                
+            }
+                   
+            if(!this.inadimplentes.isEmpty() ){
+                 
                  TableModel tbModel = new InadimplenteTableModel(this.inadimplentes);
                  this.tbRelatorio.setModel(tbModel);
                  
@@ -382,10 +426,13 @@ public class FormRelatorio extends javax.swing.JInternalFrame {
                          }
                          bw.newLine();
                      }
+                     this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                  } catch (IOException ex) {
+                       this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                      Logger.getLogger(FormRelatorio.class.getName()).log(Level.SEVERE, null, ex);
                  }
-             }    
+             }
+           this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
          }  
     }//GEN-LAST:event_btnFiltrarEntradaActionPerformed
 

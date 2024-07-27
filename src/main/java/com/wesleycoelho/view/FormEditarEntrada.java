@@ -283,7 +283,7 @@ public class FormEditarEntrada extends javax.swing.JInternalFrame {
             }
         });
 
-        cbCidadeEntrada.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Ribeirão Preto" }));
+        cbCidadeEntrada.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Ribeirao Preto" }));
         cbCidadeEntrada.setAutoscrolls(true);
         cbCidadeEntrada.setDoubleBuffered(true);
         cbCidadeEntrada.addAncestorListener(new javax.swing.event.AncestorListener() {

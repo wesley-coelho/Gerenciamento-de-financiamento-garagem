@@ -4,6 +4,7 @@
  */
 package com.wesleycoelho.view;
 
+import com.wesleycoelho.controllers.jdbc.conn.ConnectionFactory;
 import com.wesleycoelho.model.EntradaVeiculo;
 import com.wesleycoelho.model.Financiamento;
 import com.wesleycoelho.model.Parcelamento;
@@ -12,6 +13,12 @@ import com.wesleycoelho.model.SaidaVeiculo;
 import com.wesleycoelho.model.Usuario;
 import java.awt.Color;
 import java.awt.Cursor;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 
 
@@ -104,7 +111,7 @@ public class FormDesktop extends javax.swing.JFrame {
         );
         DesktopLayout.setVerticalGroup(
             DesktopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 608, Short.MAX_VALUE)
+            .addGap(0, 601, Short.MAX_VALUE)
         );
 
         pnlLateral.setBackground(new java.awt.Color(0, 102, 204));
@@ -767,7 +774,7 @@ public class FormDesktop extends javax.swing.JFrame {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 1006, Short.MAX_VALUE)
             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel3Layout.createSequentialGroup()
                     .addComponent(lblStatus, javax.swing.GroupLayout.DEFAULT_SIZE, 1000, Short.MAX_VALUE)
@@ -775,12 +782,12 @@ public class FormDesktop extends javax.swing.JFrame {
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 25, Short.MAX_VALUE)
             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel3Layout.createSequentialGroup()
                     .addGap(3, 3, 3)
-                    .addComponent(lblStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(lblStatus)
+                    .addContainerGap(22, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -805,7 +812,7 @@ public class FormDesktop extends javax.swing.JFrame {
                     .addComponent(pnlLateral, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(Desktop))
                 .addGap(0, 0, 0)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -1188,7 +1195,7 @@ public class FormDesktop extends javax.swing.JFrame {
         //abrir internal frame
         
         if(Financiamento.janelaNovoFinanciamento == false ){
-            frmNovoFinanciamento = new FormNovoFinanciamento(this.usuario);
+            frmNovoFinanciamento = new FormNovoFinanciamento(this.usuario, this.lblStatus);
             this.Desktop.add(frmNovoFinanciamento);
             frmNovoFinanciamento.setVisible(true);
             frmNovoFinanciamento.toFront();

@@ -4,22 +4,24 @@
  */
 package com.wesleycoelho.view;
 import com.mongodb.MongoException;
+import static com.mongodb.client.model.Aggregates.lookup;
+import static com.mongodb.client.model.Aggregates.match;
+import static com.mongodb.client.model.Aggregates.project;
 import com.mongodb.client.model.Filters;
+import static com.mongodb.client.model.Filters.expr;
+import static com.mongodb.client.model.Projections.exclude;
+import static com.mongodb.client.model.Projections.excludeId;
+import static com.mongodb.client.model.Projections.fields;
+import com.mongodb.client.model.Variable;
 import com.mongodb.client.result.InsertOneResult;
-import com.wesleycoelho.controllers.jdbc.conn.ClienteDB;
-import com.wesleycoelho.controllers.jdbc.conn.EstadoDB;
+import com.wesleycoelho.controllers.jdbc.conn.ConnectionFactory;
 import com.wesleycoelho.controllers.jdbc.conn.FinanciamentoDB;
 import com.wesleycoelho.model.EntradaVeiculo;
 import com.wesleycoelho.model.Usuario;
 import javax.swing.JOptionPane;
-import com.wesleycoelho.controllers.jdbc.conn.MunicipioDB;
-import com.wesleycoelho.controllers.jdbc.conn.ParcelamentoDB;
-import com.wesleycoelho.controllers.jdbc.conn.SaidaVeiculoDB;
 import com.wesleycoelho.model.Cliente;
 import com.wesleycoelho.model.DaoException;
-import com.wesleycoelho.model.Estado;
 import com.wesleycoelho.model.Financiamento;
-import com.wesleycoelho.model.Municipio;
 import com.wesleycoelho.model.Parcelamento;
 import com.wesleycoelho.model.PrintingFichaFrenteFinanciamento;
 import com.wesleycoelho.model.PrintingFichaVersoFinanciamento;
@@ -30,16 +32,27 @@ import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
+
 import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+
+import static java.util.Arrays.asList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.swing.JFormattedTextField;
+import javax.swing.JLabel;
 import javax.swing.JTextField;
 import mongoDB.CrudMongoDB;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
 
@@ -54,11 +67,13 @@ import org.bson.types.ObjectId;
 public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
     Usuario usuario = new Usuario();
     EntradaVeiculo entrada = new EntradaVeiculo();
+    JLabel lblStatus;
     /**
      * Creates new form FormNovaEntrada
      */
-    public FormNovoFinanciamento(Usuario user) {
+    public FormNovoFinanciamento(Usuario user, JLabel status) {
         this.usuario = user;
+        this.lblStatus = status;
         initComponents();
     }
 
@@ -76,7 +91,9 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
         btnImprimirEntrada = new javax.swing.JButton();
         btnExcluirEntrada = new javax.swing.JButton();
         btnLimparFormularioEntrada = new javax.swing.JButton();
+        btnUploadData = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JToolBar.Separator();
+        lblProgresso = new javax.swing.JLabel();
         jLabel22 = new javax.swing.JLabel();
         txtPesquisarPlaca = new javax.swing.JTextField();
         btnPesquisarEntrada = new javax.swing.JButton();
@@ -118,6 +135,7 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
         jLabel27 = new javax.swing.JLabel();
         txtFicha = new javax.swing.JFormattedTextField();
         dataVencimentoPrimeiraParcela = new com.toedter.calendar.JDateChooser();
+        chkBoxVendaAvista = new javax.swing.JCheckBox();
         panelDadosVeiculo = new javax.swing.JPanel();
         jLabel16 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
@@ -133,6 +151,12 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
         txtPlacaEntrada = new javax.swing.JTextField();
         cbAnoEntrada = new javax.swing.JComboBox<>();
         cbCorEntrada = new javax.swing.JComboBox<>();
+        jLabel13 = new javax.swing.JLabel();
+        txtProprietarioEntrada = new javax.swing.JTextField();
+        jLabel14 = new javax.swing.JLabel();
+        txtTelefoneEntrada = new javax.swing.JFormattedTextField();
+        jLabel29 = new javax.swing.JLabel();
+        txtWhatsappEntrada = new javax.swing.JFormattedTextField();
 
         setClosable(true);
         setIconifiable(true);
@@ -227,7 +251,21 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
             }
         });
         jToolBar1.add(btnLimparFormularioEntrada);
+
+        btnUploadData.setText("transfer ->");
+        btnUploadData.setFocusable(false);
+        btnUploadData.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnUploadData.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnUploadData.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUploadDataActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(btnUploadData);
         jToolBar1.add(jSeparator1);
+
+        lblProgresso.setText("status");
+        jToolBar1.add(lblProgresso);
 
         jLabel22.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel22.setText("PLACA:");
@@ -270,7 +308,7 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
         jToolBar1.add(btnPesquisarEntrada);
 
         panelDadosCliente.setBackground(new java.awt.Color(243, 245, 251));
-        panelDadosCliente.setBorder(javax.swing.BorderFactory.createTitledBorder("Cliente"));
+        panelDadosCliente.setBorder(javax.swing.BorderFactory.createTitledBorder("Saída"));
 
         jLabel1.setText("*NOME:");
 
@@ -366,7 +404,7 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
 
         jLabel9.setText("UF:");
 
-        cbCidadeFinanciamento.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Ribeirão Preto" }));
+        cbCidadeFinanciamento.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Ribeirao Preto" }));
         cbCidadeFinanciamento.addAncestorListener(new javax.swing.event.AncestorListener() {
             public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
                 cbCidadeFinanciamentoAncestorAdded(evt);
@@ -566,11 +604,11 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
                     .addComponent(txtWhatsappFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtTelefoneFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel26))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
 
         panelDadosFinanciamento.setBackground(new java.awt.Color(243, 245, 251));
-        panelDadosFinanciamento.setBorder(javax.swing.BorderFactory.createTitledBorder("Financiamento"));
+        panelDadosFinanciamento.setBorder(javax.swing.BorderFactory.createTitledBorder("Venda"));
 
         jLabel10.setText("DATA:");
 
@@ -626,70 +664,81 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
 
         dataVencimentoPrimeiraParcela.setDateFormatString("dd'/'MM'/'yyyy");
 
+        chkBoxVendaAvista.setText("À vista");
+
         javax.swing.GroupLayout panelDadosFinanciamentoLayout = new javax.swing.GroupLayout(panelDadosFinanciamento);
         panelDadosFinanciamento.setLayout(panelDadosFinanciamentoLayout);
         panelDadosFinanciamentoLayout.setHorizontalGroup(
             panelDadosFinanciamentoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelDadosFinanciamentoLayout.createSequentialGroup()
+            .addGroup(panelDadosFinanciamentoLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelDadosFinanciamentoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelDadosFinanciamentoLayout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelDadosFinanciamentoLayout.createSequentialGroup()
+                        .addGap(6, 6, 6)
                         .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(txtObsFinanciamento))
                     .addGroup(panelDadosFinanciamentoLayout.createSequentialGroup()
                         .addGroup(panelDadosFinanciamentoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panelDadosFinanciamentoLayout.createSequentialGroup()
-                                .addComponent(jLabel27, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(panelDadosFinanciamentoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(panelDadosFinanciamentoLayout.createSequentialGroup()
+                                        .addComponent(jLabel27, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(txtFicha, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(dtFinanciamento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(panelDadosFinanciamentoLayout.createSequentialGroup()
+                                        .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(dataVencimentoPrimeiraParcela, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                                 .addGap(18, 18, 18)
-                                .addComponent(txtFicha, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(dataVencimentoPrimeiraParcela, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(panelDadosFinanciamentoLayout.createSequentialGroup()
-                                .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(cbQtdParcelasFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(txtValParcelaFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(dtFinanciamento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addContainerGap())))
+                                .addGroup(panelDadosFinanciamentoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(panelDadosFinanciamentoLayout.createSequentialGroup()
+                                        .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(cbQtdParcelasFinanciamento, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addGroup(panelDadosFinanciamentoLayout.createSequentialGroup()
+                                        .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(txtValParcelaFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(chkBoxVendaAvista))
+                        .addGap(0, 60, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         panelDadosFinanciamentoLayout.setVerticalGroup(
             panelDadosFinanciamentoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelDadosFinanciamentoLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panelDadosFinanciamentoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelDadosFinanciamentoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel27)
-                        .addComponent(txtFicha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel15))
-                    .addComponent(dataVencimentoPrimeiraParcela, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addGap(12, 12, 12)
+                .addComponent(chkBoxVendaAvista)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelDadosFinanciamentoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(panelDadosFinanciamentoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(panelDadosFinanciamentoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel27)
+                            .addComponent(txtFicha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel10))
+                        .addComponent(dtFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbQtdParcelasFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel11))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelDadosFinanciamentoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel15)
+                    .addComponent(dataVencimentoPrimeiraParcela, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(panelDadosFinanciamentoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel11)
-                        .addComponent(cbQtdParcelasFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(txtValParcelaFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel12)
-                        .addComponent(jLabel10))
-                    .addComponent(dtFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                        .addComponent(jLabel12)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelDadosFinanciamentoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtObsFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel24))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         panelDadosVeiculo.setBackground(new java.awt.Color(243, 245, 251));
-        panelDadosVeiculo.setBorder(javax.swing.BorderFactory.createTitledBorder("Veículo"));
+        panelDadosVeiculo.setBorder(javax.swing.BorderFactory.createTitledBorder("Entrada"));
 
         jLabel16.setText("MARCA:");
 
@@ -704,16 +753,6 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
         jLabel21.setText("ANO:");
 
         jLabel23.setText("COR:");
-
-        txtModeloEntrada.setEditable(false);
-
-        txtMarcaEntrada.setEditable(false);
-
-        txtRenavamEntrada.setEditable(false);
-
-        txtChassiEntrada.setEditable(false);
-
-        txtPlacaEntrada.setEditable(false);
 
         cbAnoEntrada.addAncestorListener(new javax.swing.event.AncestorListener() {
             public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
@@ -732,6 +771,30 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
             }
         });
 
+        jLabel13.setText("PROPRIETÁRIO:");
+
+        txtProprietarioEntrada.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtProprietarioEntradaKeyReleased(evt);
+            }
+        });
+
+        jLabel14.setText("TELEFONE:");
+
+        try {
+            txtTelefoneEntrada.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("(##) ##### ####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+
+        jLabel29.setText("WHATSAPP:");
+
+        try {
+            txtWhatsappEntrada.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("(##) ##### ####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+
         javax.swing.GroupLayout panelDadosVeiculoLayout = new javax.swing.GroupLayout(panelDadosVeiculo);
         panelDadosVeiculo.setLayout(panelDadosVeiculoLayout);
         panelDadosVeiculoLayout.setHorizontalGroup(
@@ -739,6 +802,19 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
             .addGroup(panelDadosVeiculoLayout.createSequentialGroup()
                 .addGap(23, 23, 23)
                 .addGroup(panelDadosVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelDadosVeiculoLayout.createSequentialGroup()
+                        .addGroup(panelDadosVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(panelDadosVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelDadosVeiculoLayout.createSequentialGroup()
+                                .addComponent(txtTelefoneEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel29, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtWhatsappEntrada))
+                            .addComponent(txtProprietarioEntrada)))
                     .addGroup(panelDadosVeiculoLayout.createSequentialGroup()
                         .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -773,7 +849,7 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
         panelDadosVeiculoLayout.setVerticalGroup(
             panelDadosVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelDadosVeiculoLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
                 .addGroup(panelDadosVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel16)
                     .addComponent(txtMarcaEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -799,7 +875,19 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
                     .addComponent(jLabel23)
                     .addComponent(cbAnoEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cbCorEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(31, 31, 31))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelDadosVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel13)
+                    .addComponent(txtProprietarioEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelDadosVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelDadosVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel29)
+                        .addComponent(txtWhatsappEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelDadosVeiculoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel14)
+                        .addComponent(txtTelefoneEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -810,9 +898,9 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panelDadosFinanciamento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panelDadosCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panelDadosVeiculo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(panelDadosVeiculo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(panelDadosFinanciamento, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(panelDadosCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -820,13 +908,14 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelDadosVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(panelDadosVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelDadosCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
                 .addComponent(panelDadosFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelDadosCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        panelDadosVeiculo.getAccessibleContext().setAccessibleName("Veiculo");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -842,8 +931,9 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
             this.dataVencimentoPrimeiraParcela.getDate().toString()
         };
 
-        if( !Validacao.checkFieldsFormFinanciamento(fields)){
+        if( !this.chkBoxVendaAvista.isSelected() && !Validacao.checkFieldsFormFinanciamento(fields)){
            JOptionPane.showMessageDialog(this,"preencha todos os campos *Obrigatórios");
+           this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
            return;
         }
 
@@ -894,21 +984,23 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
         
         //int id_financiamento = FinanciamentoDB.save(financiamento);
         result = CrudMongoDB.add("financiamento", financiamento.toDocument());
-        CrudMongoDB.SearchAndUpdateOne("entrada_veiculo", this.entrada.getId(), Filters.eq("disponivel", false));
+        //CrudMongoDB.SearchAndUpdateOne("entrada_veiculo", this.entrada.getId(), Filters.eq("disponivel", false));
         ObjectId id_financiamento = result.getInsertedId().asObjectId().getValue();
         if( id_financiamento == null ) throw new DaoException("Erro ao acessar a tabela financiamento");
-        //registrar as parcelas          
-        int numParcelas = financiamento.getNum_parcelas();        
-        LocalDate vencPrimeiraParcelaLocalDate = LocalDate.parse(sdf.format(vencPrimeiraParcela), DateTimeFormatter.ISO_DATE);
-        java.sql.Date  dataVencParcela;
-        Parcelamento parcela;
-        for( int i = 0; i < numParcelas; i++){
-           dataVencParcela = Date.valueOf(vencPrimeiraParcelaLocalDate.plusMonths(i).withDayOfMonth(financiamento.getDia_vencimento()));
-           parcela = new Parcelamento(null,null, id_financiamento,dataVencParcela, false, false);
-           ObjectId id_parcela = CrudMongoDB.add("parcelamento", parcela.toDocument()).getInsertedId().asObjectId().getValue();
-           //int id_parcela = ParcelamentoDB.save(parcela);
-            if( id_parcela == null ) throw new DaoException("Erro ao acessar a tabela parcelamento");
-        }                    
+        if( !this.chkBoxVendaAvista.isSelected() ){
+            //registrar as parcelas          
+            int numParcelas = financiamento.getNum_parcelas();        
+            LocalDate vencPrimeiraParcelaLocalDate = LocalDate.parse(sdf.format(vencPrimeiraParcela), DateTimeFormatter.ISO_DATE);
+            java.sql.Date  dataVencParcela;
+            Parcelamento parcela;
+            for( int i = 0; i < numParcelas; i++){
+               dataVencParcela = Date.valueOf(vencPrimeiraParcelaLocalDate.plusMonths(i).withDayOfMonth(financiamento.getDia_vencimento()));
+               parcela = new Parcelamento(null,null, id_financiamento,dataVencParcela, false, false);
+               ObjectId id_parcela = CrudMongoDB.add("parcelamento", parcela.toDocument()).getInsertedId().asObjectId().getValue();
+               //int id_parcela = ParcelamentoDB.save(parcela);
+                if( id_parcela == null ) throw new DaoException("Erro ao acessar a tabela parcelamento");
+            }   
+        }              
                     
         //realizar a saída do veiculo
         SaidaVeiculo saida = 
@@ -1187,9 +1279,22 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
     private void btnPesquisarEntradaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarEntradaActionPerformed
          this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         //this.entrada = EntradaVeiculoDB.procuraVeiculoDisponivelPorPlaca(this.txtPesquisarPlaca.getText());
-         Document doc = CrudMongoDB.getDatabase().getCollection("entrada_veiculo").find(Filters.and(Filters.eq("disponivel", true), Filters.eq("placa", this.txtPesquisarPlaca.getText()))).first();
+        List<Document> entradas = CrudMongoDB.searchAll("entrada_veiculo", Filters.ne("placa", null));
+        
+        List<Document> saidas = CrudMongoDB.searchAll("saida_veiculo");
+        List<Document> resultEntradas = entradas.stream().filter(x -> x.getString("placa").equals(this.txtPesquisarPlaca.getText()) ).collect(Collectors.toList());
+       
+        List<Document> result = new ArrayList<>();
+        for(Document d : resultEntradas ){
+            List<Document> encontrado = saidas.stream().filter(x -> x.getObjectId("_id_entrada").compareTo(d.getObjectId("_id")) == 0).collect(Collectors.toList());  
+            
+            if( encontrado.isEmpty() ) result.add(d);
+        }
+        
+        Document doc = CrudMongoDB.getDatabase().getCollection("entrada_veiculo").find(Filters.eq("placa", this.txtPesquisarPlaca.getText())).first();
          
-        if(doc != null){
+        
+        if(!result.isEmpty()){
                    this.entrada.convertToJavaObj(doc);
                    this.txtMarcaEntrada.setText(this.entrada.getMarca());
                    this.txtModeloEntrada.setText(this.entrada.getModelo());
@@ -1197,7 +1302,10 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
                    this.txtChassiEntrada.setText(this.entrada.getChassi());
                    this.txtPlacaEntrada.setText(this.entrada.getPlaca());
                    this.cbAnoEntrada.setSelectedItem(this.entrada.getAno());
-                   this.cbCorEntrada.setSelectedItem(this.entrada.getCor());                   
+                   this.cbCorEntrada.setSelectedItem(this.entrada.getCor());
+                   this.txtProprietarioEntrada.setText(this.entrada.getNome_proprietario()); 
+                   this.txtTelefoneEntrada.setText(this.entrada.getTelefone()); 
+                   this.txtWhatsappEntrada.setText(this.entrada.getWhatsapp()); 
                 }else{ 
                    this.txtMarcaEntrada.setText("");
                    this.txtModeloEntrada.setText("");
@@ -1333,6 +1441,32 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
         this.txtComplementoFinanciamento.setText(this.txtComplementoFinanciamento.getText().toUpperCase());
     }//GEN-LAST:event_txtComplementoFinanciamentoKeyReleased
 
+    private void btnUploadDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUploadDataActionPerformed
+         this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+         
+          List<Financiamento> lista = FinanciamentoDB.getFinanciamentos();
+          for( Financiamento f : lista ){          
+                 this.lblProgresso.setText(lista.indexOf(f) + " de " + lista.size());
+                 this.lblProgresso.repaint();
+                 int id_cliente = f.getId_cliente();
+                 ObjectId id_clienteMongo = CrudMongoDB.searchByFieldValue("cliente", "id", id_cliente).getObjectId("_id");
+                 int id_financiamento = f.getId();
+                 int id_entrada = CrudMongoDB.searchByFieldValue("saida_veiculo", "id_financiamento", id_financiamento).getInteger("id_entrada");
+                 ObjectId id_entradaMongo = CrudMongoDB.searchByFieldValue("entrada_veiculo", "id", id_entrada).getObjectId("_id");
+                 f.setId_clienteMongo(id_clienteMongo);
+                 f.setId_entradaMongo(id_entradaMongo);
+                 CrudMongoDB.add("financiamento", f.toDocument());
+                 JOptionPane.showMessageDialog(null, lista.indexOf(f));             
+          }         
+          this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+         
+    }//GEN-LAST:event_btnUploadDataActionPerformed
+
+    private void txtProprietarioEntradaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtProprietarioEntradaKeyReleased
+        // TODO add your handling code here:
+        this.txtProprietarioEntrada.setText(this.txtProprietarioEntrada.getText().toUpperCase());
+    }//GEN-LAST:event_txtProprietarioEntradaKeyReleased
+
     private void limparCamposTipoTextFieldEformattedTextField(Container container){
         Component[]  componentes =  container.getComponents(); 
         for(Component c : componentes){
@@ -1349,17 +1483,21 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnLimparFormularioEntrada;
     private javax.swing.JButton btnPesquisarEntrada;
     private javax.swing.JButton btnSalvarFinanciamento;
+    private javax.swing.JButton btnUploadData;
     private javax.swing.JComboBox<String> cbAnoEntrada;
     private javax.swing.JComboBox<String> cbCidadeFinanciamento;
     private javax.swing.JComboBox<String> cbCorEntrada;
     private javax.swing.JComboBox<String> cbQtdParcelasFinanciamento;
     private javax.swing.JComboBox<String> cbUFFinanciamento;
+    private javax.swing.JCheckBox chkBoxVendaAvista;
     private com.toedter.calendar.JDateChooser dataVencimentoPrimeiraParcela;
     private com.toedter.calendar.JDateChooser dtFinanciamento;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
@@ -1375,6 +1513,7 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel28;
+    private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -1384,6 +1523,7 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JToolBar jToolBar1;
+    private javax.swing.JLabel lblProgresso;
     private javax.swing.JPanel panelDadosCliente;
     private javax.swing.JPanel panelDadosFinanciamento;
     private javax.swing.JPanel panelDadosVeiculo;
@@ -1401,10 +1541,13 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
     private javax.swing.JTextField txtObsFinanciamento;
     private javax.swing.JTextField txtPesquisarPlaca;
     private javax.swing.JTextField txtPlacaEntrada;
+    private javax.swing.JTextField txtProprietarioEntrada;
     private javax.swing.JTextField txtRenavamEntrada;
     private javax.swing.JFormattedTextField txtRgFinanciamento;
+    private javax.swing.JFormattedTextField txtTelefoneEntrada;
     private javax.swing.JFormattedTextField txtTelefoneFinanciamento;
     private javax.swing.JFormattedTextField txtValParcelaFinanciamento;
+    private javax.swing.JFormattedTextField txtWhatsappEntrada;
     private javax.swing.JFormattedTextField txtWhatsappFinanciamento;
     // End of variables declaration//GEN-END:variables
 }

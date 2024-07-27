@@ -19,6 +19,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import javax.swing.table.DefaultTableModel;
 import mongoDB.CrudMongoDB;
 import org.bson.Document;
@@ -292,6 +294,10 @@ public class FormListarTodosFinanciamento extends javax.swing.JInternalFrame {
                     this.listaFinanciamento.add(f);
                 }
             }
+            
+            List<Document> clientes = CrudMongoDB.searchAll("cliente");
+           
+            List<Document> entradas = CrudMongoDB.searchAll("entrada_veiculo");
             //this.listaFinanciamento = FinanciamentoDB.selectAll();
             if( this.listaFinanciamento != null){
                 DefaultTableModel tableModel;
@@ -308,13 +314,15 @@ public class FormListarTodosFinanciamento extends javax.swing.JInternalFrame {
                 headers[6] = "Vencimento (dia)";
                 headers[7] = "Observação";
                 tableModel.setColumnIdentifiers(headers);
-                for(Financiamento f: listaFinanciamento ){
-                    
+                for(Financiamento f: this.listaFinanciamento ){
+               
+                    List<Document> resCliente = clientes.stream().filter(x -> x.getObjectId("_id").compareTo(f.getId_clienteMongo()) == 0).collect(Collectors.toList());
+                    List<Document> resEntrada = entradas.stream().filter(x -> x.getObjectId("_id").compareTo(f.getId_entradaMongo()) == 0).collect(Collectors.toList());
                     Object[] colunas = new Object[8];             
                     colunas[0] = f.getFicha();
-                    colunas[1] = f.getData_registro().toLocalDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-                    colunas[2] = CrudMongoDB.searchByFieldValue("cliente", "_id", f.getId_clienteMongo()).getString("nome");
-                    colunas[3] = CrudMongoDB.searchByFieldValue("entrada_veiculo", "_id", f.getId_entradaMongo()).getString("placa");                   
+                    colunas[1] = f.getData_registro() == null ? null : f.getData_registro().toLocalDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                    colunas[2] =  resCliente.getFirst().getString("nome");
+                    colunas[3] = resEntrada.getFirst().getString("placa");                   
                     colunas[4] = f.getValor_parcela();
                     colunas[5] = f.getNum_parcelas();
                     colunas[6] = f.getDia_vencimento();

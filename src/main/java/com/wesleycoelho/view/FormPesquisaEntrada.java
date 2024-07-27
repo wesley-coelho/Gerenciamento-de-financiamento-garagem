@@ -937,7 +937,8 @@ public class FormPesquisaEntrada extends javax.swing.JInternalFrame {
                 this.txtProprietarioEntrada.setText(entradas.get(i).getNome_proprietario());
                 this.txtTelefoneEntrada.setText(entradas.get(i).getTelefone()); 
                 this.txtWhatsappEntrada.setText(entradas.get(i).getWhatsapp());
-                if( entradas.get(i).getId_municipio() != 0 && entradas.get(i).getId_municipio() != null){
+              
+               try{                  
                     Municipio municipio = new Municipio();
                     Document doc = CrudMongoDB.searchByFieldValue("cidades","id",entradas.get(i).getId_municipio());
                     municipio.convertToJavaObj(doc);
@@ -948,7 +949,7 @@ public class FormPesquisaEntrada extends javax.swing.JInternalFrame {
                     estado.convertToJavaObj(doc);
                     this.cbUFEntrada.setSelectedItem(estado.getNome());
                     this.cbCidadeEntrada.setSelectedItem(municipio.getNome());
-                }else{
+                }catch( NullPointerException ex ){
                     this.cbUFEntrada.setSelectedItem("");
                     this.cbCidadeEntrada.setSelectedItem("");
                 }

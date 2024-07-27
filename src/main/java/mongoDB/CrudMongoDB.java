@@ -10,6 +10,7 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.InsertManyResult;
 import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.client.result.UpdateResult;
 import java.util.ArrayList;
@@ -30,6 +31,14 @@ public class CrudMongoDB {
         try (MongoClient client = ConnectionFactory.getMongoClient()) {
             MongoDatabase database = client.getDatabase(DATABASE_NAME);
             return database.getCollection(collectionName).insertOne(doc);
+        }
+         
+    }
+    
+    public static InsertManyResult addMany(String collectionName, List<Document> docs){
+        try (MongoClient client = ConnectionFactory.getMongoClient()) {
+            MongoDatabase database = client.getDatabase(DATABASE_NAME);
+            return database.getCollection(collectionName).insertMany(docs);
         }
          
     }
@@ -62,7 +71,7 @@ public class CrudMongoDB {
          
     }
      
-     public static List<Document> searchAll(String collectionName, Bson customFilter){
+     public static List<Document> searchAll(String collectionName, Bson customFilter) {
         try (MongoClient client = ConnectionFactory.getMongoClient()) {
             MongoDatabase database = client.getDatabase(DATABASE_NAME);
             List<Document> lista = new ArrayList<>();
@@ -88,7 +97,7 @@ public class CrudMongoDB {
     
     }
     
-    public static UpdateResult SearchAndUpdateOne(String collectionName, ObjectId id, Bson fieldToUpdate){
+    public static UpdateResult SearchAndUpdateOne(String collectionName, ObjectId id, Bson fieldToUpdate) {
         try (MongoClient client = ConnectionFactory.getMongoClient()) {
             MongoDatabase database = client.getDatabase(DATABASE_NAME);
             Bson doc =  database.getCollection(collectionName).find().filter(Filters.eq("_id", id)).first();
@@ -99,7 +108,7 @@ public class CrudMongoDB {
         }         
     }
     
-    public static Document searchByFieldValue(String collectionName, String field, Object value){
+    public static Document searchByFieldValue(String collectionName, String field, Object value) {
         try (MongoClient client = ConnectionFactory.getMongoClient()) {
             MongoDatabase database = client.getDatabase(DATABASE_NAME);
             return database.getCollection(collectionName).find().filter(Filters.eq(field, value)).first();
@@ -107,7 +116,7 @@ public class CrudMongoDB {
          
     }
     
-    public static Document autenticaUsuario(String collectionName, String user, String password){
+    public static Document autenticaUsuario(String collectionName, String user, String password) {
         try (MongoClient client = ConnectionFactory.getMongoClient()) {
             MongoDatabase database = client.getDatabase(DATABASE_NAME);
             return database.getCollection(collectionName).find().filter(Filters.and(Filters.eq("usuario", user), Filters.eq("senha", password))).first();
@@ -115,7 +124,7 @@ public class CrudMongoDB {
          
     }
     
-    public static MongoDatabase getDatabase() {
+    public static MongoDatabase getDatabase(){
         try {
             MongoClient client = ConnectionFactory.getMongoClient();
             MongoDatabase database = client.getDatabase(DATABASE_NAME);

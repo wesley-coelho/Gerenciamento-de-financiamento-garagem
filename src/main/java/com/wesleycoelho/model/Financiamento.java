@@ -238,9 +238,10 @@ public class Financiamento {
     public Document toDocument(){
         Map<String, Object> map = new HashMap<>();
         if( idMongo != null ) map.put("_id", idMongo);
+        map.put("id", id);
         map.put("ficha", ficha);
-        map.put("id_cliente", id_clienteMongo);
-        map.put("id_entrada", id_entradaMongo);
+        map.put("_id_cliente", id_clienteMongo);
+        map.put("_id_entrada", id_entradaMongo);
         map.put("data_registro", data_registro);
         map.put("valor_parcela", valor_parcela);
         map.put("num_parcelas", num_parcelas);
@@ -251,15 +252,17 @@ public class Financiamento {
     }
     
     public void convertToJavaObj(Document doc){
-        idMongo = doc.getObjectId("_id");
-        ficha = doc.getInteger("ficha");
-        id_clienteMongo = doc.getObjectId("id_cliente");
-        id_entradaMongo = doc.getObjectId("id_entrada");
-        data_registro = new java.sql.Date(doc.getDate("data_registro").getTime());
-        valor_parcela = doc.getDouble("valor_parcela");
-        num_parcelas = doc.getInteger("num_parcelas");
-        dia_vencimento = doc.getInteger("dia_vencimento");
-        observacao = doc.getString("observacao");
+        if(doc != null){
+            idMongo = doc.getObjectId("_id");
+            ficha = doc.getInteger("ficha");
+            id_clienteMongo = doc.getObjectId("_id_cliente");
+            id_entradaMongo = doc.getObjectId("_id_entrada");
+            data_registro = doc.getDate("data_registro") == null?null: new java.sql.Date(doc.getDate("data_registro").getTime());
+            valor_parcela = doc.getDouble("valor_parcela");
+            num_parcelas = doc.getInteger("num_parcelas");
+            dia_vencimento = doc.getInteger("dia_vencimento");
+            observacao = doc.getString("observacao");
+        }
         
     }
     

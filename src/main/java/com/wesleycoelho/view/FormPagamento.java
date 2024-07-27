@@ -5,11 +5,8 @@
 package com.wesleycoelho.view;
 
 import com.mongodb.client.model.Filters;
-import com.wesleycoelho.controllers.jdbc.conn.ClienteDB;
-import com.wesleycoelho.controllers.jdbc.conn.EntradaVeiculoDB;
 import com.wesleycoelho.controllers.jdbc.conn.FinanciamentoDB;
 import com.wesleycoelho.controllers.jdbc.conn.ParcelamentoDB;
-import com.wesleycoelho.controllers.jdbc.conn.SaidaVeiculoDB;
 import com.wesleycoelho.model.Cliente;
 import com.wesleycoelho.model.EntradaVeiculo;
 import com.wesleycoelho.model.Financiamento;
@@ -20,7 +17,8 @@ import java.awt.Cursor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.logging.Filter;
+import java.util.stream.Collectors;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import mongoDB.CrudMongoDB;
@@ -37,11 +35,13 @@ public class FormPagamento extends javax.swing.JInternalFrame {
       Usuario user;
       List<Cliente> clientes = new ArrayList<>();
       List<Cliente> clientesComFinanciamento = new ArrayList<>();
+      
     /**
      * Creates new form FormPagamento
      */
     public FormPagamento(Usuario usuario) {
         this.user = usuario;
+        
         initComponents();
       
     }
@@ -60,7 +60,9 @@ public class FormPagamento extends javax.swing.JInternalFrame {
         btnImprimirEntrada = new javax.swing.JButton();
         btnExcluirEntrada = new javax.swing.JButton();
         btnLimparFormularioEntrada = new javax.swing.JButton();
+        btnTransferData = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JToolBar.Separator();
+        lblStatus = new javax.swing.JLabel();
         btnPesquisarFinanciamento = new javax.swing.JButton();
         txtPesquisarFinanciamento = new javax.swing.JTextField();
         jLabel17 = new javax.swing.JLabel();
@@ -194,7 +196,21 @@ public class FormPagamento extends javax.swing.JInternalFrame {
             }
         });
         jToolBar1.add(btnLimparFormularioEntrada);
+
+        btnTransferData.setText("transfer->");
+        btnTransferData.setFocusable(false);
+        btnTransferData.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnTransferData.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnTransferData.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTransferDataActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(btnTransferData);
         jToolBar1.add(jSeparator1);
+
+        lblStatus.setText("status");
+        jToolBar1.add(lblStatus);
 
         btnPesquisarFinanciamento.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons8-search-16.png"))); // NOI18N
         btnPesquisarFinanciamento.setFocusable(false);
@@ -731,7 +747,7 @@ public class FormPagamento extends javax.swing.JInternalFrame {
                  
                for( Document d: financiamentoDocs ){
                    Cliente cliente = new Cliente();
-                   Document docCliente = CrudMongoDB.searchByFieldValue("cliente", "_id", d.getObjectId("id_cliente"));
+                   Document docCliente = CrudMongoDB.searchByFieldValue("cliente", "_id", d.getObjectId("_id_cliente"));
                    if( docCliente!= null ) cliente.convertToJavaObj(docCliente);
                    this.clientes.add(cliente);
                }
@@ -897,8 +913,10 @@ public class FormPagamento extends javax.swing.JInternalFrame {
         //Integer id_cliente = this.clientesComFinanciamento.get(selectedIndexTableClientes).getId();
         ObjectId id_cliente = this.clientesComFinanciamento.get(selectedIndexTableClientes).getIdMongo();
         Financiamento financiamento = new Financiamento();
-        Document doc = CrudMongoDB.searchByFieldValue("financiamento", "id_cliente", id_cliente);
+        Document doc = CrudMongoDB.searchByFieldValue("financiamento", "_id_cliente", id_cliente);
+       
         financiamento.convertToJavaObj(doc);
+        
         //Integer id_entrada = SaidaVeiculoDB.buscaIdEntradaPorIdCliente(id_cliente); 
        EntradaVeiculo entrada = new EntradaVeiculo();
        doc = CrudMongoDB.searchByFieldValue("entrada_veiculo", "_id", financiamento.getId_entradaMongo());
@@ -921,7 +939,8 @@ public class FormPagamento extends javax.swing.JInternalFrame {
         
         //List<Parcelamento> parcelas = ParcelamentoDB.buscaParcelasPorIdFinanciamento(financiamento.getId());
         List<Parcelamento> parcelas = new ArrayList<>();
-        List<Document> listaParcelasDoc = CrudMongoDB.searchAll("parcelamento", Filters.eq("id_financiamento", financiamento.getIdMongo()));
+        List<Document> listaParcelasDoc = CrudMongoDB.searchAll("parcelamento", Filters.eq("_id_financiamento", financiamento.getIdMongo()));
+        
         for(Document d:listaParcelasDoc){
             Parcelamento p = new Parcelamento();
             if( d != null ){
@@ -966,6 +985,22 @@ public class FormPagamento extends javax.swing.JInternalFrame {
      
     }//GEN-LAST:event_tbParcelasFinanciamentoKeyReleased
 
+    private void btnTransferDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTransferDataActionPerformed
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+          List<Parcelamento> lista = ParcelamentoDB.getParcelas();
+          List<Document> financiamentos = CrudMongoDB.searchAll("financiamento");
+          List<Document> docs = new ArrayList<>();
+          for( Parcelamento p : lista ){
+              int id_financiamento = p.getId_financiamentoPostgres();
+              List<Document> result = financiamentos.stream().filter(x -> x.getInteger("id") == id_financiamento).collect(Collectors.toList());
+              p.setId_financiamento(result.getFirst().getObjectId("_id"));
+              docs.add(p.toDocument());            
+          }
+          CrudMongoDB.addMany("parcelamento", docs);
+          
+          this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_btnTransferDataActionPerformed
+
     private void preencheTabelaTbClientesFinanciamento(){
         DefaultTableModel tableModel;
                     tableModel = (DefaultTableModel) this.tbClientesFinanciamento.getModel();
@@ -973,11 +1008,11 @@ public class FormPagamento extends javax.swing.JInternalFrame {
                     for(Cliente cliente: this.clientes ){
                         //int id_entrada;                        
                         //id_entrada = SaidaVeiculoDB.buscaIdEntradaPorIdCliente(cliente.getId());
-                        ObjectId id_entrada = CrudMongoDB.searchByFieldValue("saida_veiculo", "id_cliente", cliente.getIdMongo()).getObjectId("id_entrada");
+                        ObjectId id_entrada = CrudMongoDB.searchByFieldValue("saida_veiculo", "_id_cliente", cliente.getIdMongo()).getObjectId("_id_entrada");
                         if(id_entrada != null){
                             clientesComFinanciamento.add(cliente);
                             Object[] colunas = new Object[9];
-                            colunas[0] = CrudMongoDB.searchByFieldValue("financiamento", "id_cliente", cliente.getIdMongo()).getInteger("ficha");//FinanciamentoDB.buscaNficha(cliente.getId());//ficha
+                            colunas[0] = CrudMongoDB.searchByFieldValue("financiamento", "_id_cliente", cliente.getIdMongo()).getInteger("ficha");//FinanciamentoDB.buscaNficha(cliente.getId());//ficha
                             colunas[1] = cliente.getNome();//nome
                             colunas[2] = cliente.getCpf();//cpf
                             colunas[3] = CrudMongoDB.searchById("entrada_veiculo", id_entrada).getString("placa");//EntradaVeiculoDB.buscaEntradaPorId(id_entrada).getPlaca();  //placa                                      
@@ -994,6 +1029,7 @@ public class FormPagamento extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnLimparFormularioEntrada;
     private javax.swing.JButton btnPesquisarFinanciamento;
     private javax.swing.JButton btnSalvarEntrada;
+    private javax.swing.JButton btnTransferData;
     private javax.swing.JComboBox<String> cbAnoCarro;
     private javax.swing.JComboBox<String> cbCorEntrada;
     private javax.swing.JComboBox<String> cbDiaVencimentoFinanciamento;
@@ -1022,6 +1058,7 @@ public class FormPagamento extends javax.swing.JInternalFrame {
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar jToolBar1;
+    private javax.swing.JLabel lblStatus;
     private javax.swing.JTable tbClientesFinanciamento;
     private javax.swing.JTable tbParcelasFinanciamento;
     private javax.swing.JTextField txtCPFFinanciamento;

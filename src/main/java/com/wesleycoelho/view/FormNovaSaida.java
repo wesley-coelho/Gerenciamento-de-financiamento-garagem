@@ -20,8 +20,11 @@ import com.wesleycoelho.model.Municipio;
 import com.wesleycoelho.model.SaidaVeiculo;
 import java.awt.Cursor;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import mongoDB.CrudMongoDB;
 import org.bson.Document;
 
@@ -56,6 +59,7 @@ public class FormNovaSaida extends javax.swing.JInternalFrame {
         btnImprimirEntrada = new javax.swing.JButton();
         btnExcluirEntrada = new javax.swing.JButton();
         btnLimparFormularioEntrada = new javax.swing.JButton();
+        btnTransfer = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JToolBar.Separator();
         btnPesquisarSaida = new javax.swing.JButton();
         txtPesquisarEntrada = new javax.swing.JTextField();
@@ -187,6 +191,17 @@ public class FormNovaSaida extends javax.swing.JInternalFrame {
             }
         });
         jToolBar1.add(btnLimparFormularioEntrada);
+
+        btnTransfer.setText("transfer ->");
+        btnTransfer.setFocusable(false);
+        btnTransfer.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnTransfer.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnTransfer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTransferActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(btnTransfer);
         jToolBar1.add(jSeparator1);
 
         btnPesquisarSaida.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons8-search-16.png"))); // NOI18N
@@ -669,6 +684,24 @@ public class FormNovaSaida extends javax.swing.JInternalFrame {
         this.txtPesquisarEntrada.setText(this.txtPesquisarEntrada.getText().toUpperCase());
     }//GEN-LAST:event_txtPesquisarEntradaKeyReleased
 
+    private void btnTransferActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTransferActionPerformed
+       this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        List<SaidaVeiculo> saidas = SaidaVeiculoDB.searchAll();
+        List<Document> financiamentos = CrudMongoDB.searchAll("financiamento");
+        List<Document> saidasDoc = new ArrayList<>();
+        for(SaidaVeiculo s : saidas){
+            List<Document> result = financiamentos.stream().filter(x -> x.getInteger("id").compareTo(s.getId_financiamento()) == 0).collect(Collectors.toList());
+            SaidaVeiculo saida = new SaidaVeiculo();
+            s.setId_financiamentoMongo(result.getFirst().getObjectId("_id"));
+            s.setId_clienteMongo(result.getFirst().getObjectId("_id_cliente"));
+            s.setId_entradaMongo(result.getFirst().getObjectId("_id_entrada"));
+            saidasDoc.add(s.toDocument());          
+        }
+        CrudMongoDB.addMany("saida_veiculo", saidasDoc);
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        
+    }//GEN-LAST:event_btnTransferActionPerformed
+
     private void preencheResultadoConsulta(){
         
                 this.txtMarcaEntrada.setText(entrada.getMarca());
@@ -716,6 +749,7 @@ public class FormNovaSaida extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnLimparFormularioEntrada;
     private javax.swing.JButton btnPesquisarSaida;
     private javax.swing.JButton btnSalvarSaida;
+    private javax.swing.JButton btnTransfer;
     private javax.swing.JComboBox<String> cbAnoEntrada;
     private javax.swing.JComboBox<String> cbCidadeEntrada;
     private javax.swing.JComboBox<String> cbCorEntrada;
