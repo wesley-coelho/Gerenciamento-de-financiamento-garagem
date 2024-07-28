@@ -193,6 +193,7 @@ public class FormNovaSaida extends javax.swing.JInternalFrame {
         jToolBar1.add(btnLimparFormularioEntrada);
 
         btnTransfer.setText("transfer ->");
+        btnTransfer.setEnabled(false);
         btnTransfer.setFocusable(false);
         btnTransfer.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnTransfer.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -697,20 +698,20 @@ public class FormNovaSaida extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txtPesquisarEntradaKeyReleased
 
     private void btnTransferActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTransferActionPerformed
-       this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        List<SaidaVeiculo> saidas = SaidaVeiculoDB.searchAll();
-        List<Document> financiamentos = CrudMongoDB.searchAll("financiamento");
-        List<Document> saidasDoc = new ArrayList<>();
-        for(SaidaVeiculo s : saidas){
-            List<Document> result = financiamentos.stream().filter(x -> x.getInteger("id").compareTo(s.getId_financiamento()) == 0).collect(Collectors.toList());
-            SaidaVeiculo saida = new SaidaVeiculo();
-            s.setId_financiamentoMongo(result.getFirst().getObjectId("_id"));
-            s.setId_clienteMongo(result.getFirst().getObjectId("_id_cliente"));
-            s.setId_entradaMongo(result.getFirst().getObjectId("_id_entrada"));
-            saidasDoc.add(s.toDocument());          
-        }
-        CrudMongoDB.addMany("saida_veiculo", saidasDoc);
-        this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+//       this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+//        List<SaidaVeiculo> saidas = SaidaVeiculoDB.searchAll();
+//        List<Document> financiamentos = CrudMongoDB.searchAll("financiamento");
+//        List<Document> saidasDoc = new ArrayList<>();
+//        for(SaidaVeiculo s : saidas){
+//            List<Document> result = financiamentos.stream().filter(x -> x.getInteger("id").compareTo(s.getId_financiamento()) == 0).collect(Collectors.toList());
+//            SaidaVeiculo saida = new SaidaVeiculo();
+//            s.setId_financiamentoMongo(result.getFirst().getObjectId("_id"));
+//            s.setId_clienteMongo(result.getFirst().getObjectId("_id_cliente"));
+//            s.setId_entradaMongo(result.getFirst().getObjectId("_id_entrada"));
+//            saidasDoc.add(s.toDocument());          
+//        }
+//        CrudMongoDB.addMany("saida_veiculo", saidasDoc);
+//        this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         
     }//GEN-LAST:event_btnTransferActionPerformed
 

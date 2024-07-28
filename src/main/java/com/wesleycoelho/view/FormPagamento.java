@@ -198,6 +198,7 @@ public class FormPagamento extends javax.swing.JInternalFrame {
         jToolBar1.add(btnLimparFormularioEntrada);
 
         btnTransferData.setText("transfer->");
+        btnTransferData.setEnabled(false);
         btnTransferData.setFocusable(false);
         btnTransferData.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnTransferData.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -986,19 +987,19 @@ public class FormPagamento extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_tbParcelasFinanciamentoKeyReleased
 
     private void btnTransferDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTransferDataActionPerformed
-        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-          List<Parcelamento> lista = ParcelamentoDB.getParcelas();
-          List<Document> financiamentos = CrudMongoDB.searchAll("financiamento");
-          List<Document> docs = new ArrayList<>();
-          for( Parcelamento p : lista ){
-              int id_financiamento = p.getId_financiamentoPostgres();
-              List<Document> result = financiamentos.stream().filter(x -> x.getInteger("id") == id_financiamento).collect(Collectors.toList());
-              p.setId_financiamento(result.getFirst().getObjectId("_id"));
-              docs.add(p.toDocument());            
-          }
-          CrudMongoDB.addMany("parcelamento", docs);
-          
-          this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+//        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+//          List<Parcelamento> lista = ParcelamentoDB.getParcelas();
+//          List<Document> financiamentos = CrudMongoDB.searchAll("financiamento");
+//          List<Document> docs = new ArrayList<>();
+//          for( Parcelamento p : lista ){
+//              int id_financiamento = p.getId_financiamentoPostgres();
+//              List<Document> result = financiamentos.stream().filter(x -> x.getInteger("id") == id_financiamento).collect(Collectors.toList());
+//              p.setId_financiamento(result.getFirst().getObjectId("_id"));
+//              docs.add(p.toDocument());            
+//          }
+//          CrudMongoDB.addMany("parcelamento", docs);
+//          
+//          this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_btnTransferDataActionPerformed
 
     private void preencheTabelaTbClientesFinanciamento(){

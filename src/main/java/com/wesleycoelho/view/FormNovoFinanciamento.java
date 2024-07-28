@@ -253,6 +253,7 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
         jToolBar1.add(btnLimparFormularioEntrada);
 
         btnUploadData.setText("transfer ->");
+        btnUploadData.setEnabled(false);
         btnUploadData.setFocusable(false);
         btnUploadData.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnUploadData.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -265,6 +266,7 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
         jToolBar1.add(jSeparator1);
 
         lblProgresso.setText("status");
+        lblProgresso.setEnabled(false);
         jToolBar1.add(lblProgresso);
 
         jLabel22.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -1444,33 +1446,33 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txtComplementoFinanciamentoKeyReleased
 
     private void btnUploadDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUploadDataActionPerformed
-         this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-         
-          List<Financiamento> financPostgres = FinanciamentoDB.getFinanciamentos();
-          List<Document> clientesMongo = CrudMongoDB.searchAll("cliente");
-          List<Document> saidasMongo = CrudMongoDB.searchAll("saida_veiculo");
-          List<Document> entradasMongo = CrudMongoDB.searchAll("entrada_veiculo");
-          List<Document> financiamentosMongo = new ArrayList<>();
-          for( Financiamento f : financPostgres ){          
-                 //this.lblProgresso.setText(lista.indexOf(f) + " de " + lista.size());
-                 //this.lblProgresso.repaint();
-                 int id_cliente = f.getId_cliente();
-                 List<Document> idClienteMongo = clientesMongo.stream().filter(x -> x.getInteger("id") == id_cliente).collect(Collectors.toList());
-                 //List<Document> idClienteMongo = CrudMongoDB.searchByFieldValue("cliente", "id", id_cliente).getObjectId("_id");
-                 int id_financiamento = f.getId();
-                 //int id_entrada = CrudMongoDB.searchByFieldValue("saida_veiculo", "id_financiamento", id_financiamento).getInteger("id_entrada");
-                 int id_entrada = saidasMongo.stream().filter(x -> x.getInteger("id_financiamento") == id_financiamento ).collect(Collectors.toList()).getFirst().getInteger("id_entrada");
-                 ObjectId id_entradaMongo = entradasMongo.stream().filter(x -> x.getInteger("id") ==id_entrada ).collect(Collectors.toList()).getFirst().getObjectId("_id");
-                //ObjectId id_entradaMongo = CrudMongoDB.searchByFieldValue("entrada_veiculo", "id", id_entrada).getObjectId("_id");
-                 f.setId_clienteMongo(idClienteMongo.getFirst().getObjectId("_id"));
-                 f.setId_entradaMongo(id_entradaMongo);
-                 financiamentosMongo.add(f.toDocument());
-                 //CrudMongoDB.add("financiamento", f.toDocument());
-                 //JOptionPane.showMessageDialog(null, lista.indexOf(f));             
-          }  
-          
-          CrudMongoDB.addMany("financiamento", financiamentosMongo);
-          this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+//         this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+//         
+//          List<Financiamento> financPostgres = FinanciamentoDB.getFinanciamentos();
+//          List<Document> clientesMongo = CrudMongoDB.searchAll("cliente");
+//          List<Document> saidasMongo = CrudMongoDB.searchAll("saida_veiculo");
+//          List<Document> entradasMongo = CrudMongoDB.searchAll("entrada_veiculo");
+//          List<Document> financiamentosMongo = new ArrayList<>();
+//          for( Financiamento f : financPostgres ){          
+//                 //this.lblProgresso.setText(lista.indexOf(f) + " de " + lista.size());
+//                 //this.lblProgresso.repaint();
+//                 int id_cliente = f.getId_cliente();
+//                 List<Document> idClienteMongo = clientesMongo.stream().filter(x -> x.getInteger("id") == id_cliente).collect(Collectors.toList());
+//                 //List<Document> idClienteMongo = CrudMongoDB.searchByFieldValue("cliente", "id", id_cliente).getObjectId("_id");
+//                 int id_financiamento = f.getId();
+//                 //int id_entrada = CrudMongoDB.searchByFieldValue("saida_veiculo", "id_financiamento", id_financiamento).getInteger("id_entrada");
+//                 int id_entrada = saidasMongo.stream().filter(x -> x.getInteger("id_financiamento") == id_financiamento ).collect(Collectors.toList()).getFirst().getInteger("id_entrada");
+//                 ObjectId id_entradaMongo = entradasMongo.stream().filter(x -> x.getInteger("id") ==id_entrada ).collect(Collectors.toList()).getFirst().getObjectId("_id");
+//                //ObjectId id_entradaMongo = CrudMongoDB.searchByFieldValue("entrada_veiculo", "id", id_entrada).getObjectId("_id");
+//                 f.setId_clienteMongo(idClienteMongo.getFirst().getObjectId("_id"));
+//                 f.setId_entradaMongo(id_entradaMongo);
+//                 financiamentosMongo.add(f.toDocument());
+//                 //CrudMongoDB.add("financiamento", f.toDocument());
+//                 //JOptionPane.showMessageDialog(null, lista.indexOf(f));             
+//          }  
+//          
+//          CrudMongoDB.addMany("financiamento", financiamentosMongo);
+//          this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
          
     }//GEN-LAST:event_btnUploadDataActionPerformed
 
