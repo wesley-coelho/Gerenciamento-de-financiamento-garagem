@@ -171,20 +171,9 @@
         <Component class="javax.swing.JComboBox" name="cbFiltroPesquisa">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="13">
+              <StringArray count="2">
                 <StringItem index="0" value="PLACA"/>
-                <StringItem index="1" value="NOME PROPRIETARIO"/>
-                <StringItem index="2" value="MARCA"/>
-                <StringItem index="3" value="MODELO"/>
-                <StringItem index="4" value="CHASSI"/>
-                <StringItem index="5" value="DATA"/>
-                <StringItem index="6" value="RENAVAM"/>
-                <StringItem index="7" value="ANO"/>
-                <StringItem index="8" value="COR"/>
-                <StringItem index="9" value="CIDADE"/>
-                <StringItem index="10" value="TELEFONE"/>
-                <StringItem index="11" value="WHATSAPP"/>
-                <StringItem index="12" value=" "/>
+                <StringItem index="1" value=""/>
               </StringArray>
             </Property>
             <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">

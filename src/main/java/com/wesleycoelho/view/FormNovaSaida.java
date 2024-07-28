@@ -526,7 +526,7 @@ public class FormNovaSaida extends javax.swing.JInternalFrame {
         this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         if( this.entrada != null){
             SaidaVeiculo saida = new SaidaVeiculo(
-               new java.sql.Date(Date.from(Instant.now()).getTime())     ,
+                    new Date() ,
                     this.usuario.getUsuario(),
                     null,
                     entrada.getId(),
@@ -660,11 +660,23 @@ public class FormNovaSaida extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_cbUFEntradaComponentAdded
 
     private void btnPesquisarSaidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarSaidaActionPerformed
-        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        Document doc = CrudMongoDB.search("entrada_veiculo", Filters.and(Filters.eq("placa", this.txtPesquisarEntrada.getText()), Filters.eq("disponivel", true)));
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));        
+         
+        List<Document> entradas = CrudMongoDB.searchAll("entrada_veiculo", Filters.ne("placa", null));
         
+        List<Document> saidas = CrudMongoDB.searchAll("saida_veiculo");
+        List<Document> resultEntradas = entradas.stream().filter(x -> x.getString("placa").equals(this.txtPesquisarEntrada.getText()) ).collect(Collectors.toList());
+       
+        List<Document> result = new ArrayList<>();
+        for(Document d : resultEntradas ){
+            List<Document> encontrado = saidas.stream().filter(x -> x.getObjectId("_id_entrada").compareTo(d.getObjectId("_id")) == 0).collect(Collectors.toList());  
+            
+            if( encontrado.isEmpty() ) result.add(d);
+        }
+        
+        Document doc = CrudMongoDB.getDatabase().getCollection("entrada_veiculo").find(Filters.eq("placa", this.txtPesquisarEntrada.getText())).first();
         //this.entrada = EntradaVeiculoDB.checaDisponibilidadeVeiculoPorPlaca(this.txtPesquisarEntrada.getText());
-            if(doc != null){ 
+            if(!result.isEmpty()){ 
                 this.entrada.convertToJavaObj(doc);
                     //preenche formulario saída veiculo
                     preencheResultadoConsulta();                   

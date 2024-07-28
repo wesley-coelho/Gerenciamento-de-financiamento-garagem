@@ -19,6 +19,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import javax.swing.table.DefaultTableModel;
@@ -183,10 +185,7 @@ public class FormListarTodosFinanciamento extends javax.swing.JInternalFrame {
 
         tbFinanciamento.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {},
-                {},
-                {},
-                {}
+
             },
             new String [] {
 
@@ -228,8 +227,8 @@ public class FormListarTodosFinanciamento extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnSalvarFinanciamentoActionPerformed
 
     private void btnImprimirFinanciamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirFinanciamentoActionPerformed
-        
-        if( this.tbFinanciamento.getModel().getRowCount() > 0 ){
+      
+        if( this.tbFinanciamento.getRowCount() > 0 ){
             try {
 
                 PrinterJob job = PrinterJob.getPrinterJob();
@@ -237,7 +236,8 @@ public class FormListarTodosFinanciamento extends javax.swing.JInternalFrame {
                 boolean doPrint = job.printDialog();
                 if (doPrint) job.print();
             } catch (PrinterException | IndexOutOfBoundsException ex) {
-                JOptionPane.showMessageDialog(rootPane,"Error: " + ex.getMessage());
+                Logger.getLogger(FormListarTodosFinanciamento.class.getName()).log(Level.SEVERE, null, ex);
+                //JOptionPane.showMessageDialog(rootPane,"Error: " + ex.getMessage());
             }
         }
     }//GEN-LAST:event_btnImprimirFinanciamentoActionPerformed

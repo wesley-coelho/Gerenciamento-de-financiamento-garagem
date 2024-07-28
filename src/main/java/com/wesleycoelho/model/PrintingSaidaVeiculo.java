@@ -12,16 +12,19 @@ import java.awt.print.Printable;
 import static java.awt.print.Printable.NO_SUCH_PAGE;
 import static java.awt.print.Printable.PAGE_EXISTS;
 import java.awt.print.PrinterException;
+import mongoDB.CrudMongoDB;
+import org.bson.Document;
 
 /**
  *
  * @author Wesley
  */
 public class PrintingSaidaVeiculo implements Printable{
-    private EntradaVeiculo veiculo;
+    private EntradaVeiculo veiculo = new EntradaVeiculo();
     
-    public PrintingSaidaVeiculo(EntradaVeiculo veiculo){
-        this.veiculo = veiculo;
+    public PrintingSaidaVeiculo(SaidaVeiculo saida){
+        Document doc = CrudMongoDB.searchById("entrada_veiculo", saida.getId_entradaMongo());
+        veiculo.convertToJavaObj(doc);
     }
     
     @Override
@@ -51,9 +54,7 @@ public class PrintingSaidaVeiculo implements Printable{
         g.drawString("Whatsapp: " + veiculo.whatsapp, 30, 210);
         g.drawString("Data: " + veiculo.data_entrada, 30, 230);
         if(veiculo.getId_municipio()!= null)
-        g.drawString("Cidade: " + MunicipioDB.buscaCidadePorId(veiculo.getId_municipio()).getNome(), 30, 250);
-        else
-        g.drawString("Cidade: " + veiculo.getCidade(), 30, 250);   
+        g.drawString("Cidade: " + CrudMongoDB.searchByFieldValue("cidades","id_municipio", veiculo.getId_municipio()), 30, 250);        
 
         // tell the caller that this page is part
         // of the printed document

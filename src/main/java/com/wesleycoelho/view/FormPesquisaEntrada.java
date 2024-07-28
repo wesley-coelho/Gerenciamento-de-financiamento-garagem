@@ -236,7 +236,7 @@ public class FormPesquisaEntrada extends javax.swing.JInternalFrame {
         jLabel17.setText("     ");
         jToolBar1.add(jLabel17);
 
-        cbFiltroPesquisa.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "PLACA", "NOME PROPRIETARIO", "MARCA", "MODELO", "CHASSI", "DATA", "RENAVAM", "ANO", "COR", "CIDADE", "TELEFONE", "WHATSAPP", " " }));
+        cbFiltroPesquisa.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "PLACA", "" }));
         cbFiltroPesquisa.setMaximumSize(new java.awt.Dimension(300, 22));
         cbFiltroPesquisa.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -921,7 +921,7 @@ public class FormPesquisaEntrada extends javax.swing.JInternalFrame {
 
     private void txtPesquisarEntradaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPesquisarEntradaKeyReleased
         // TODO add your handling code here:
-        //this.txtPesquisarEntrada.setText(this.txtPesquisarEntrada.getText().toUpperCase());
+        this.txtPesquisarEntrada.setText(this.txtPesquisarEntrada.getText().toUpperCase());
     }//GEN-LAST:event_txtPesquisarEntradaKeyReleased
 
     private void preencheResultadoConsulta(int i){

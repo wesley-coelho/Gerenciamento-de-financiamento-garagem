@@ -12,6 +12,7 @@ import java.awt.print.Printable;
 import static java.awt.print.Printable.NO_SUCH_PAGE;
 import static java.awt.print.Printable.PAGE_EXISTS;
 import java.awt.print.PrinterException;
+import java.text.SimpleDateFormat;
 
 /**
  *
@@ -19,6 +20,7 @@ import java.awt.print.PrinterException;
  */
 public class PrintingEntradaVeiculo implements Printable{
     private EntradaVeiculo veiculo;
+    private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     
     public PrintingEntradaVeiculo(EntradaVeiculo veiculo){
         this.veiculo = veiculo;
@@ -49,7 +51,7 @@ public class PrintingEntradaVeiculo implements Printable{
         g.drawString("Nome: " + veiculo.nome_proprietario, 30, 170);
         g.drawString("Telefone: " + veiculo.telefone, 30, 190);
         g.drawString("Whatsapp: " + veiculo.whatsapp, 30, 210);
-        g.drawString("Data: " + veiculo.data_entrada, 30, 230);
+        g.drawString("Data: " + sdf.format(veiculo.data_entrada), 30, 230);
        if(veiculo.getId_municipio()!= null && veiculo.getId_municipio() != 0)
         g.drawString("Cidade: " + MunicipioDB.buscaCidadePorId(veiculo.getId_municipio()).getNome(), 30, 250);
         else

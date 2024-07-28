@@ -890,7 +890,7 @@ public class FormEditarFinanciamento extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnSalvarFinanciamentoActionPerformed
 
     private void btnImprimirFinanciamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirFinanciamentoActionPerformed
-      if( this.entrada != null ){ 
+      if( this.entrada.getId() != null ){ 
             PrinterJob job = PrinterJob.getPrinterJob();
             job.setPrintable(new PrintingFichaFrenteFinanciamento(this.financiamento));
             boolean doPrint = job.printDialog();

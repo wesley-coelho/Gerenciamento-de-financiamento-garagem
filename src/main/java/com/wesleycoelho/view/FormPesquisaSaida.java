@@ -581,15 +581,17 @@ public class FormPesquisaSaida extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnSalvarEntradaActionPerformed
 
     private void btnImprimirEntradaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirEntradaActionPerformed
+        
         try{ 
             PrinterJob job = PrinterJob.getPrinterJob();
-                        job.setPrintable(new PrintingSaidaVeiculo(saidas.get(iteratorLista).getEntrada()));
+           
+                        job.setPrintable(new PrintingSaidaVeiculo(this.saidas.get(this.iteratorLista)));
                         boolean doPrint = job.printDialog();
                             if (doPrint) job.print();
-        }catch(PrinterException e){
+        }catch(PrinterException | NullPointerException e){
             JOptionPane.showMessageDialog(rootPane, e.getMessage());
-        }catch(NullPointerException e){
-            JOptionPane.showMessageDialog(rootPane, "Nenhum registro slecionado para imprimir!");
+        }catch(IndexOutOfBoundsException  ex){
+             JOptionPane.showMessageDialog(null, "Pesquise por uma saida primeiro!");
         }
     }//GEN-LAST:event_btnImprimirEntradaActionPerformed
 
@@ -716,10 +718,11 @@ public class FormPesquisaSaida extends javax.swing.JInternalFrame {
     if(this.cbFiltroPesquisa.getSelectedItem().toString() == "PLACA" ){
             
              List<Document> docEntradas = CrudMongoDB.searchAll("entrada_veiculo", Filters.eq("placa", this.txtPesquisarEntrada.getText().toUpperCase()));
+             
              List<Document> docSaidas = new ArrayList<>();
              for(Document doc : docEntradas){
                  Document d;
-                 d = CrudMongoDB.searchByFieldValue("saida_veiculo","id_entrada", doc.getObjectId("_id") );
+                 d = CrudMongoDB.searchByFieldValue("saida_veiculo","_id_entrada", doc.getObjectId("_id") );
                  if( d != null)docSaidas.add(d);
              }
              for( Document d : docSaidas ){
@@ -729,7 +732,7 @@ public class FormPesquisaSaida extends javax.swing.JInternalFrame {
                      this.saidas.add(s);
                  }
              }
-            //this.saidas = SaidaVeiculoDB.selectByPlaca(this.txtPesquisarEntrada.getText().toUpperCase());
+            
             if(this.saidas != null && !this.saidas.isEmpty()){
                     this.lblTotalLista.setText(String.valueOf(this.saidas.size()));
                     preencheResultadoConsulta(iteratorLista);
@@ -769,13 +772,13 @@ public class FormPesquisaSaida extends javax.swing.JInternalFrame {
 
     private void txtPesquisarEntradaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPesquisarEntradaKeyReleased
         // TODO add your handling code here:
-        //this.txtPesquisarEntrada.setText(this.txtPesquisarEntrada.getText().toUpperCase());
+        this.txtPesquisarEntrada.setText(this.txtPesquisarEntrada.getText().toUpperCase());
     }//GEN-LAST:event_txtPesquisarEntradaKeyReleased
 
     private void preencheResultadoConsulta(int i){
         this.lblAtualResult.setText(String.valueOf(i + 1));
                 EntradaVeiculo entrada = new EntradaVeiculo();
-                Document doc = CrudMongoDB.searchByFieldValue("entrada_veiculo", "_id", saidas.get(i).getId_entradaMongo());
+                Document doc = CrudMongoDB.searchByFieldValue("entrada_veiculo", "_id", this.saidas.get(i).getId_entradaMongo());
                 entrada.convertToJavaObj(doc);
                 this.txtMarcaEntrada.setText(entrada.getMarca());
                 this.txtModeloEntrada.setText(entrada.getModelo());
@@ -790,12 +793,10 @@ public class FormPesquisaSaida extends javax.swing.JInternalFrame {
                 this.txtWhatsappEntrada.setText(entrada.getWhatsapp());
                 Municipio municipio = new Municipio();
                 doc = CrudMongoDB.searchByFieldValue("cidades", "id", entrada.getId_municipio());
-                municipio.convertToJavaObj(doc);
-                //municipio = MunicipioDB.searchById(saidas.get(i).getEntrada().getId_municipio()); 
+                municipio.convertToJavaObj(doc);                
                 Estado estado = new Estado();
                 doc = CrudMongoDB.searchByFieldValue("estados", "id", municipio.getId_uf());
-                estado.convertToJavaObj(doc);
-                //estado = EstadoDB.searchById(municipio.getId_uf());                  
+                estado.convertToJavaObj(doc);                                
                 this.cbUFEntrada.setSelectedItem(estado.getNome());
                 this.cbCidadeEntrada.setSelectedItem(municipio.getNome());
     }

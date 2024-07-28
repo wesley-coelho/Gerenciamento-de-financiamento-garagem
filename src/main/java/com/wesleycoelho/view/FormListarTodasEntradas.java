@@ -20,8 +20,10 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,8 +40,9 @@ import org.bson.Document;
  */
 public class FormListarTodasEntradas extends javax.swing.JInternalFrame {
     private Usuario usuario = new Usuario();
-    private List<EntradaVeiculo> listaEntradas;
-    private List<Document>       listaEntradasDoc;
+    private List<EntradaVeiculo> listaEntradas = new ArrayList<>();
+    private List<Document>       listaEntradasDoc = new ArrayList<>();;
+    private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     /**
      * Creates new form FormNovaEntrada
      */
@@ -297,8 +300,10 @@ public class FormListarTodasEntradas extends javax.swing.JInternalFrame {
             job.setPrintable(new PrintingEntradaVeiculo(entrada));
             boolean doPrint = job.printDialog();
             if (doPrint) job.print();
-        } catch (PrinterException | IndexOutOfBoundsException ex) {
-            JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+        } catch (PrinterException e ) {
+            JOptionPane.showMessageDialog(null, "Falha ao imprimir");
+        }catch(IndexOutOfBoundsException ex){
+            JOptionPane.showMessageDialog(null, "Selecione 1 item da lista");
         }
     }//GEN-LAST:event_btnImprimirEntradaActionPerformed
 
@@ -348,19 +353,24 @@ public class FormListarTodasEntradas extends javax.swing.JInternalFrame {
             
             //this.listaEntradas = EntradaVeiculoDB.selectAll();
             this.listaEntradasDoc = CrudMongoDB.searchAll("entrada_veiculo");
+            for(Document d : listaEntradasDoc ){
+                EntradaVeiculo e = new EntradaVeiculo();
+                e.convertToJavaObj(d);
+                this.listaEntradas.add(e);
+            }
             DefaultTableModel tableModel = new DefaultTableModel();
             tableModel = (DefaultTableModel) this.tbEntradasVeiculo.getModel();
             tableModel.setNumRows(0);
             for(Document entrada: listaEntradasDoc ){
                 Object[] colunas = new Object[12];
               
-                colunas[0] = entrada.getDate("data_entrada") == null ? null : new java.sql.Date(entrada.getDate("data_entrada").getTime()).toLocalDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                colunas[0] = entrada.getDate("data_entrada") == null ? null : sdf.format(entrada.getDate("data_entrada"));
                 colunas[1] = entrada.getString("nome_proprietario");
                 colunas[2] = entrada.getString("placa");
                 colunas[3] = entrada.getString("marca");
                 colunas[4] = entrada.getString("modelo");
                 colunas[5] = entrada.getString("cor");
-                colunas[6] = entrada.getString("ano");
+                colunas[6] = entrada.getString("ano_veiculo");
                 colunas[7] = entrada.getString("renavam");
                 colunas[8] = entrada.getString("chassi");
                 colunas[9] = entrada.getInteger("id_municipio") == null ? null : CrudMongoDB.searchByFieldValue("cidades", "id", entrada.getInteger("id_municipio")).getString("name");
@@ -381,19 +391,24 @@ public class FormListarTodasEntradas extends javax.swing.JInternalFrame {
                 List<Document> result = this.listaEntradasDoc.stream().filter(x -> x.getObjectId("_id").compareTo(doc.getObjectId("_id_entrada")) == 0 ).collect(Collectors.toList());
                 this.listaEntradasDoc.removeAll(result);
             }
-            //listaEntradas = EntradaVeiculoDB.selectAllAvaliable();            
+            //listaEntradas = EntradaVeiculoDB.selectAllAvaliable(); 
+            for(Document d : listaEntradasDoc ){
+                EntradaVeiculo e = new EntradaVeiculo();
+                e.convertToJavaObj(d);
+                this.listaEntradas.add(e);
+            }
             DefaultTableModel tableModel = new DefaultTableModel();
             tableModel = (DefaultTableModel) this.tbEntradasVeiculo.getModel();
             tableModel.setNumRows(0);
             for(Document entrada:  this.listaEntradasDoc ){ 
                 Object[] colunas = new Object[12];
-                colunas[0] = entrada.getDate("data_entrada");
+                colunas[0] = entrada.getDate("data_entrada") == null ? null :sdf.format(entrada.getDate("data_entrada"));
                 colunas[1] = entrada.getString("nome_proprietario");
                 colunas[2] = entrada.getString("placa");
                 colunas[3] = entrada.getString("marca");
                 colunas[4] = entrada.getString("modelo");
                 colunas[5] = entrada.getString("cor");
-                colunas[6] = entrada.getString("ano");
+                colunas[6] = entrada.getString("ano_veiculo");
                 colunas[7] = entrada.getString("renavam");
                 colunas[8] = entrada.getString("chassi");
                 colunas[9] = entrada.getInteger("id_municipio") == null ? null : CrudMongoDB.searchByFieldValue("cidades", "id", entrada.getInteger("id_municipio")).getString("name");

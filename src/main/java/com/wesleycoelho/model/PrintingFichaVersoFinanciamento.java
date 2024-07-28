@@ -4,6 +4,7 @@
  */
 package com.wesleycoelho.model;
 
+import com.mongodb.client.model.Filters;
 import com.wesleycoelho.controllers.jdbc.conn.ParcelamentoDB;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -13,21 +14,26 @@ import java.awt.print.Printable;
 import static java.awt.print.Printable.NO_SUCH_PAGE;
 import static java.awt.print.Printable.PAGE_EXISTS;
 import java.awt.print.PrinterException;
+import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import mongoDB.CrudMongoDB;
+import org.bson.Document;
 
 /**
  *
  * @author Wesley
  */
 public class PrintingFichaVersoFinanciamento implements Printable{
-    private final List<Parcelamento> parcelas;
-    private final Financiamento financiamento;
-    private final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private List<Document> parcelas = new ArrayList<>();
+    private final Financiamento financiamento;    
+    private final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     
     public PrintingFichaVersoFinanciamento(Financiamento f){
-        this.parcelas = ParcelamentoDB.buscaParcelasPorIdFinanciamento(f.getId()); 
-        this.financiamento = f;
+        parcelas = CrudMongoDB.searchAll("parcelamento", Filters.eq("_id_financiamento", f.getIdMongo()), "mes_ref");
+              
+        financiamento = f;
     }
     
     @Override
@@ -47,7 +53,7 @@ public class PrintingFichaVersoFinanciamento implements Printable{
                offsetY = 0;
             }                          
             offsetY+=20;
-            g.drawString((i+1)+" " +parcelas.get(i).getMes_ref().toLocalDate().format(dtf),30+offsetX, 60+offsetY);  
+            g.drawString((i+1)+" " + sdf.format(parcelas.get(i).getDate("mes_ref")),30+offsetX, 60+offsetY);  
         }
         return PAGE_EXISTS;
     }

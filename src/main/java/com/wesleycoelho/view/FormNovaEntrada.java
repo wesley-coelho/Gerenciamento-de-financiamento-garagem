@@ -529,7 +529,7 @@ public class FormNovaEntrada extends javax.swing.JInternalFrame {
             entradaVeiculo.setNome_proprietario(this.txtProprietarioEntrada.getText());
             entradaVeiculo.setTelefone(this.txtTelefoneEntrada.getText());
             entradaVeiculo.setWhatsapp(this.txtWhatsappEntrada.getText());             
-            entradaVeiculo.setData_entrada(new java.sql.Date(this.txtDataEntrada.getDate().getTime()));
+            entradaVeiculo.setData_entrada(this.txtDataEntrada.getDate());
             entradaVeiculo.setMarca(this.txtMarcaEntrada.getText());
             entradaVeiculo.setModelo(this.txtModeloEntrada.getText());
             entradaVeiculo.setRenavam(this.txtRenavamEntrada.getText());
@@ -540,16 +540,6 @@ public class FormNovaEntrada extends javax.swing.JInternalFrame {
             nome_Uf = this.cbUFEntrada.getSelectedItem().toString();
             id_Uf = CrudMongoDB.searchByFieldValue("estados", "nome", nome_Uf).getInteger("id");
             entradaVeiculo.setId_municipio(CrudMongoDB.search("cidades", Filters.and(Filters.eq("state_id", id_Uf), Filters.eq("name", nomeMunicipio))).getInteger("id"));
-            /*List<Estado> estados = EstadoDB.searchByName(nome_Uf);
-            id_Uf = estados.getFirst().getId();              
-            String sql = "SELECT * FROM municipio WHERE cidade = '"+nomeMunicipio+"' AND id_uf = "+id_Uf+";";
-            Connection conn = ConnectionFactory.getConexao();
-                    Statement stmt = conn.createStatement();
-                    ResultSet resultSet = stmt.executeQuery(sql);            
-                    while(resultSet.next()){               
-                       entradaVeiculo.setId_municipio(resultSet.getInt("id"));
-                        }
-                    ConnectionFactory.close(conn, stmt, resultSet);*/
             entradaVeiculo.setAno(this.cbAnoEntrada.getSelectedItem().toString());
             entradaVeiculo.setUsuario(this.usuario.getUsuario());  
             InsertOneResult result = CrudMongoDB.add("entrada_veiculo", entradaVeiculo.toDocument());

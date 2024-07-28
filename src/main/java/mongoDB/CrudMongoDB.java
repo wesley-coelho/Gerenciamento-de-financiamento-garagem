@@ -7,8 +7,10 @@ package mongoDB;
 import com.mongodb.MongoException;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Sorts;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.InsertManyResult;
 import com.mongodb.client.result.InsertOneResult;
@@ -60,7 +62,6 @@ public class CrudMongoDB {
     }
     
     
-    
      public static List<Document> searchAll(String collectionName){
         try (MongoClient client = ConnectionFactory.getMongoClient()) {
             MongoDatabase database = client.getDatabase(DATABASE_NAME);
@@ -71,16 +72,27 @@ public class CrudMongoDB {
          
     }
      
-     public static List<Document> searchAll(String collectionName, Bson customFilter) {
+      public static List<Document> searchAll(String collectionName, Bson customFilter, String field){
         try (MongoClient client = ConnectionFactory.getMongoClient()) {
             MongoDatabase database = client.getDatabase(DATABASE_NAME);
-            List<Document> lista = new ArrayList<>();
-            FindIterable<Document> iterator = database.getCollection(collectionName).find().filter(customFilter);
+            FindIterable<Document> iterator = database.getCollection(collectionName).find().filter(customFilter).sort(Sorts.ascending(field));
+            List<Document> lista =  new ArrayList<>();
             return iterator.into(lista);
         }
          
     }
-    
+      
+      public static List<Document> searchAll(String collectionName, Bson customFilter){
+        try (MongoClient client = ConnectionFactory.getMongoClient()) {
+            MongoDatabase database = client.getDatabase(DATABASE_NAME);
+            FindIterable<Document> iterator = database.getCollection(collectionName).find().filter(customFilter);
+            List<Document> lista =  new ArrayList<>();
+            return iterator.into(lista);
+        }
+         
+    }
+     
+         
     public static Document searchById(String collectionName, ObjectId id){
         try (MongoClient client = ConnectionFactory.getMongoClient()) {
             MongoDatabase database = client.getDatabase(DATABASE_NAME);

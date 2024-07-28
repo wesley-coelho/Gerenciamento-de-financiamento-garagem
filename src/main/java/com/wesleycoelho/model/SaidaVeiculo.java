@@ -4,7 +4,8 @@
  */
 package com.wesleycoelho.model;
 
-import java.sql.Date;
+
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import org.bson.Document;
@@ -170,7 +171,7 @@ public class SaidaVeiculo {
     public void convertToJavaObj(Document doc){
        if(doc!= null){
         idMongo = doc.getObjectId("_id");
-        data_saida = doc.getDate("data_saida") == null ? null : new java.sql.Date(doc.getDate("data_saida").getTime());
+        data_saida = doc.getDate("data_saida") == null ? null : doc.getDate("data_saida");
         usuario = doc.getString("usuario");
         id_clienteMongo = doc.getObjectId("_id_cliente");
         id_entradaMongo = doc.getObjectId("_id_entrada");

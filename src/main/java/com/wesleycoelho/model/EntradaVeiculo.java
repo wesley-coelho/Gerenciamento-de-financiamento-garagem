@@ -8,7 +8,9 @@ package com.wesleycoelho.model;
  *
  * @author Wesley
  */
-import java.sql.Date;
+
+
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import org.bson.Document;
@@ -350,7 +352,7 @@ public class EntradaVeiculo {
         map.put("renavam", renavam); 
         map.put("chassi", chassi); 
         map.put("id_municipio", id_municipio); 
-        map.put("ano", ano); 
+        map.put("ano_veiculo", ano); 
         map.put("telefone", telefone); 
         map.put("whatsapp", whatsapp); 
     
@@ -362,7 +364,7 @@ public class EntradaVeiculo {
         if (doc != null){
             this.id = doc.getObjectId("_id");
             this.nome_proprietario = doc.getString("nome_proprietario");
-            this.data_entrada = doc.getDate("data_entrada") == null ? null : new java.sql.Date(doc.getDate("data_entrada").getTime());
+            this.data_entrada = doc.getDate("data_entrada") == null ? null : doc.getDate("data_entrada");
             this.marca = doc.getString("marca");
             this.modelo = doc.getString("modelo");
             this.cor = doc.getString("cor");
@@ -370,7 +372,7 @@ public class EntradaVeiculo {
             this.renavam = doc.getString("renavam");
             this.chassi = doc.getString("chassi");
             this.id_municipio = doc.getInteger("id_municipio");
-            this.ano = doc.getString("ano");
+            this.ano = doc.getString("ano_veiculo");
             this.telefone = doc.getString("telefone");
             this.whatsapp = doc.getString("whatsapp");
             

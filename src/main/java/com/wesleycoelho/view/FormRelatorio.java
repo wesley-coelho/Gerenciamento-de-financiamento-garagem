@@ -279,7 +279,7 @@ public class FormRelatorio extends javax.swing.JInternalFrame {
 
     private void btnImprimirEntradaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirEntradaActionPerformed
         try{
-            if(this.inadimplentes == null) throw new NullPointerException("Nenhum registro para imprimir");
+            if(this.inadimplentes.isEmpty()) throw new NullPointerException("Nenhum registro para imprimir");
             PrinterJob job = PrinterJob.getPrinterJob();
             job.setPrintable(new PrintingRelInadimplente(this.inadimplentes ));
             boolean doPrint = job.printDialog();

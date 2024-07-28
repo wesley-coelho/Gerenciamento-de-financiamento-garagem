@@ -7,7 +7,6 @@ package com.wesleycoelho.view;
 import com.wesleycoelho.controllers.jdbc.conn.ConnectionFactory;
 import com.wesleycoelho.controllers.jdbc.conn.EntradaVeiculoDB;
 import com.wesleycoelho.controllers.jdbc.conn.EstadoDB;
-import com.wesleycoelho.controllers.jdbc.conn.SaidaVeiculoDB;
 import com.wesleycoelho.model.EntradaVeiculo;
 import com.wesleycoelho.model.Usuario;
 import javax.swing.JOptionPane;
@@ -18,6 +17,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -35,6 +35,7 @@ import org.bson.Document;
  */
 public class FormListarTodasSaida extends javax.swing.JInternalFrame {
     Usuario usuario = new Usuario();
+    private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     /**
      * Creates new form FormNovaEntrada
      */
@@ -66,6 +67,7 @@ public class FormListarTodasSaida extends javax.swing.JInternalFrame {
         setClosable(true);
         setIconifiable(true);
         setMaximizable(true);
+        setResizable(true);
         setTitle("TODOS VEÍCULOS QUE SAÍRAM");
         setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/icons8-add-car-16_1.png"))); // NOI18N
         try {
@@ -355,7 +357,7 @@ public class FormListarTodasSaida extends javax.swing.JInternalFrame {
                 e = listaEntradas.stream().filter(x -> x.getId().compareTo(saida.getId_entradaMongo()) == 0).collect(Collectors.toList());
                 
                 Object[] colunas = new Object[11];
-                colunas[0] = saida.getData_saida();
+                colunas[0] = saida.getData_saida() == null ? null : sdf.format(saida.getData_saida());
                 colunas[1] = e.getFirst().getNome_proprietario();
                 colunas[2] = e.getFirst().getPlaca();
                 colunas[3] = e.getFirst().getMarca();

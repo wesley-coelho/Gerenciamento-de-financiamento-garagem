@@ -254,12 +254,13 @@ public class FormPesquisaFinanciamento extends javax.swing.JInternalFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap(15, Short.MAX_VALUE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel30)
-                    .addComponent(txtFicha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(cbQtdParcelasFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel11)))
+                        .addComponent(jLabel11))
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel30)
+                        .addComponent(txtFicha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -371,7 +372,7 @@ public class FormPesquisaFinanciamento extends javax.swing.JInternalFrame {
         jLabel17.setText("     ");
         jToolBar1.add(jLabel17);
 
-        cbFiltroPesquisa.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Ficha", "Nome do cliente", "Observação", "Dia do vencimento", " " }));
+        cbFiltroPesquisa.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Ficha", " " }));
         cbFiltroPesquisa.setMaximumSize(new java.awt.Dimension(300, 22));
         cbFiltroPesquisa.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -929,25 +930,22 @@ public class FormPesquisaFinanciamento extends javax.swing.JInternalFrame {
 
     private void btnImprimirEntradaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirEntradaActionPerformed
         try{
-            if(financiamentos.get(iteratorLista) == null) throw new NullPointerException("Nenhum financiamento para imprimir");
+            if(financiamentos.isEmpty()) throw new NullPointerException("Nenhum financiamento para imprimir");
             PrinterJob job = PrinterJob.getPrinterJob();
             job.setPrintable(new PrintingFichaFrenteFinanciamento(financiamentos.get(iteratorLista)));
             boolean doPrint = job.printDialog();
                 if (doPrint) job.print();            
-        }catch (PrinterException | NullPointerException ex) {
-                JOptionPane.showMessageDialog(rootPane, ex.getMessage() );
-            }
+        
         int imprimirFichaVerso = JOptionPane.showConfirmDialog(rootPane, "Deja impirmir o verso da ficha?");
                 if( imprimirFichaVerso == 0  ){
-                    PrinterJob job = PrinterJob.getPrinterJob();
+                    PrinterJob job2 = PrinterJob.getPrinterJob();
                     job.setPrintable(new PrintingFichaVersoFinanciamento(financiamentos.get(iteratorLista)));
-                    boolean doPrint = job.printDialog();
-                        if (doPrint) try {
-                            job.print();
-                    } catch (PrinterException ex) {
-                        Logger.getLogger(FormNovoFinanciamento.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                    boolean doPrint2 = job2.printDialog();
+                        if (doPrint2) job.print();                   
                 }
+         }catch (PrinterException | NullPointerException ex) {
+                JOptionPane.showMessageDialog(null, ex.getMessage() );
+            }
                    
     }//GEN-LAST:event_btnImprimirEntradaActionPerformed
 
@@ -1029,29 +1027,6 @@ public class FormPesquisaFinanciamento extends javax.swing.JInternalFrame {
                     JOptionPane.showMessageDialog(this, "Nenhum registro encontrado!");
                      this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                     return;
-                }
-            }else if( this.cbFiltroPesquisa.getSelectedItem().toString() == "Nome do cliente" ){
-               //buscar pelo nome do cliente 
-               financiamentos = FinanciamentoDB.buscaPorNome(this.txtPesquisarFinanciamento.getText());
-                if( financiamentos != null && financiamentos.size() > 0){
-                     this.lblTotalLista.setText(String.valueOf(financiamentos.size()));
-                    atualizaListaFinanciamento(this.iteratorLista);                    
-                }else{
-                    JOptionPane.showMessageDialog(this, "Nenhum registro encontrado!");
-                     this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-                      return;
-                }
-               
-            }else if( this.cbFiltroPesquisa.getSelectedItem().toString() == "Observação" ){
-               //buscar pelo que esta no campo observacao
-               financiamentos = FinanciamentoDB.buscaPorObs(this.txtPesquisarFinanciamento.getText());
-                if( financiamentos != null && financiamentos.size() > 0){
-                     this.lblTotalLista.setText(String.valueOf(financiamentos.size()));
-                    atualizaListaFinanciamento(this.iteratorLista);                    
-                }else{
-                    JOptionPane.showMessageDialog(this, "Nenhum registro encontrado!");
-                     this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-                      return;
                 }
             }
         }
