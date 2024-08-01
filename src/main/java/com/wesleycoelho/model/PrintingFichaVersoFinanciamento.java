@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 import mongoDB.CrudMongoDB;
 import org.bson.Document;
 
@@ -32,7 +33,7 @@ public class PrintingFichaVersoFinanciamento implements Printable{
     
     public PrintingFichaVersoFinanciamento(Financiamento f){
         parcelas = CrudMongoDB.searchAll("parcelamento", Filters.eq("_id_financiamento", f.getIdMongo()), "mes_ref");
-              
+         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
         financiamento = f;
     }
     

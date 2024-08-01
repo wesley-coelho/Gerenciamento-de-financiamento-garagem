@@ -18,7 +18,9 @@ import static java.awt.print.Printable.NO_SUCH_PAGE;
 import static java.awt.print.Printable.PAGE_EXISTS;
 import java.awt.print.PrinterException;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
 import java.util.List;
+import java.util.TimeZone;
 import mongoDB.CrudMongoDB;
 import org.bson.Document;
 
@@ -31,7 +33,7 @@ public class PrintingFichaFrenteFinanciamento implements Printable{
     private Document cliente = new Document();
     private Document entrada = new Document();
     private final Financiamento financiamento;
-    private final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    private  SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     
     public PrintingFichaFrenteFinanciamento(Financiamento f){
         
@@ -80,12 +82,14 @@ public class PrintingFichaFrenteFinanciamento implements Printable{
         g.drawString("Qtd. parcelas: "+financiamento.getNum_parcelas() ,350, 265);
         g.drawString("Valor: " +financiamento.getValor_parcela(),30, 285);
         if(!parcelas.isEmpty()  ){
+            sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
          g.drawString("1ª parcela: " + sdf.format(parcelas.getFirst().getDate("mes_ref")),30, 305);   
         }else{
            g.drawString("1ª parcela: --",30, 305);  
         }
         
         if(!parcelas.isEmpty()){
+            sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
             g.drawString("Última parcela: "+ sdf.format(parcelas.getLast().getDate("mes_ref")),350, 305);
         }else{
             g.drawString("Última parcela: --",350, 305);

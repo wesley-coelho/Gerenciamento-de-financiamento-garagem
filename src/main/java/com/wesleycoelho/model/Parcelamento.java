@@ -4,11 +4,15 @@
  */
 package com.wesleycoelho.model;
 
-import java.sql.Date;
+
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
@@ -19,17 +23,17 @@ import org.bson.types.ObjectId;
 public class Parcelamento {
     Integer id;
     ObjectId idMongo;
-    Date data_pagamento;
+    LocalDate data_pagamento;
     Double valor_pagamento;
     ObjectId id_financiamento;
     Integer id_financiamentoPostgres;
-    Date mes_ref;
+    LocalDate mes_ref;
     Boolean ispago;
     Boolean isCanceled;
     public static boolean janelaPagamento = false;
     
 
-    public Parcelamento(ObjectId idMongo, Date data_pagamento, Double valor_pagamento, ObjectId id_financiamento, Date mes_ref) {
+    public Parcelamento(ObjectId idMongo, LocalDate data_pagamento, Double valor_pagamento, ObjectId id_financiamento, LocalDate mes_ref) {
         this.idMongo = idMongo;
         this.data_pagamento =data_pagamento;
         this.valor_pagamento = valor_pagamento;
@@ -37,7 +41,7 @@ public class Parcelamento {
         this.mes_ref = mes_ref;
     }
 
-    public Parcelamento(Date data_pagamento, Double valor_pagamento, ObjectId id_financiamento, Date mes_ref, Boolean ispago, Boolean isCanceled) {
+    public Parcelamento(LocalDate data_pagamento, Double valor_pagamento, ObjectId id_financiamento, LocalDate mes_ref, Boolean ispago, Boolean isCanceled) {
         this.data_pagamento = data_pagamento;
         this.valor_pagamento = valor_pagamento;
         this.id_financiamento = id_financiamento;
@@ -46,7 +50,7 @@ public class Parcelamento {
         this.isCanceled = isCanceled;
     }
 
-    public Parcelamento(ObjectId idMongo, Date data_pagamento, Double valor_pagamento, ObjectId id_financiamento, Date mes_ref, Boolean ispago, Boolean isCanceled) {
+    public Parcelamento(ObjectId idMongo, LocalDate data_pagamento, Double valor_pagamento, ObjectId id_financiamento, LocalDate mes_ref, Boolean ispago, Boolean isCanceled) {
         this.idMongo = idMongo;
         this.data_pagamento = data_pagamento;
         this.valor_pagamento = valor_pagamento;
@@ -56,7 +60,7 @@ public class Parcelamento {
         this.isCanceled = isCanceled;
     }
     
-    public Parcelamento(Integer id, Date data_pagamento, Double valor_pagamento, Integer id_financiamentoPostgres, Date mes_ref, Boolean ispago, Boolean isCanceled) {
+    public Parcelamento(Integer id, LocalDate data_pagamento, Double valor_pagamento, Integer id_financiamentoPostgres, LocalDate mes_ref, Boolean ispago, Boolean isCanceled) {
         this.id = id;
         this.data_pagamento = data_pagamento;
         this.valor_pagamento = valor_pagamento;
@@ -98,15 +102,13 @@ public class Parcelamento {
     
     
 
-    public Date getData_pagamento() {
+    public LocalDate getData_pagamento() {
         return data_pagamento;
     }
 
-    public void setData_pagamento(String data_pagamento) {
+    public void setData_pagamento(LocalDate data_pagamento) {
         if( data_pagamento != null ){
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            LocalDate data = LocalDate.parse(data_pagamento, dtf);
-            this.data_pagamento = java.sql.Date.valueOf(data);
+            this.data_pagamento = data_pagamento;
         }else{
             this.data_pagamento = null;
         }
@@ -129,11 +131,11 @@ public class Parcelamento {
         this.id_financiamento = id_financiamento;
     }
 
-    public Date getMes_ref() {
+    public LocalDate getMes_ref() {
         return mes_ref;
     }
 
-    public void setMes_ref(Date mes_ref) {
+    public void setMes_ref(LocalDate mes_ref) {
         this.mes_ref = mes_ref;
     }
 
@@ -179,10 +181,10 @@ public class Parcelamento {
    public void convertToJavaObj(Document doc){
        if( doc != null ){
            idMongo = doc.getObjectId("_id");
-           data_pagamento = doc.getDate("data_pagamento") != null ? new java.sql.Date(doc.getDate("data_pagamento").getTime()): null;
+           data_pagamento = doc.getDate("data_pagamento") != null ? LocalDate.ofInstant(doc.getDate("data_pagamento").toInstant(), TimeZone.getTimeZone("GMT").toZoneId()) : null;
            valor_pagamento = doc.getDouble("valor_pagamento");
            id_financiamento = doc.getObjectId("_id_financiamento");
-           mes_ref = doc.getDate("mes_ref") != null ? new java.sql.Date(doc.getDate("mes_ref").getTime()) : null;
+           mes_ref = doc.getDate("mes_ref") != null ? LocalDate.ofInstant(doc.getDate("mes_ref").toInstant(),TimeZone.getTimeZone("GMT").toZoneId())  : null;
            ispago = doc.getBoolean("ispago");
            isCanceled  = doc.getBoolean("iscanceled");
        }

@@ -321,7 +321,7 @@ public class FormListarTodosFinanciamento extends javax.swing.JInternalFrame {
                     Object[] colunas = new Object[8];             
                     colunas[0] = f.getFicha();
                     colunas[1] = f.getData_registro() == null ? null : f.getData_registro().toLocalDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-                    colunas[2] =  resCliente.getFirst().getString("nome");
+                    colunas[2] = resCliente.getFirst().getString("nome");
                     colunas[3] = resEntrada.getFirst().getString("placa");                   
                     colunas[4] = f.getValor_parcela();
                     colunas[5] = f.getNum_parcelas();

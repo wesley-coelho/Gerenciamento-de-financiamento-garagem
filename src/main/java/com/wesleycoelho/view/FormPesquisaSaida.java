@@ -642,24 +642,13 @@ public class FormPesquisaSaida extends javax.swing.JInternalFrame {
 
     private void cbCidadeEntradaAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_cbCidadeEntradaAncestorAdded
         // TODO add your handling code here:
-        List<Municipio> municipios;
-        
-        municipios = MunicipioDB.selectAllByState("São Paulo");
-        for(Municipio municipio: municipios){
-            this.cbCidadeEntrada.addItem(municipio.getNome());
-        }
+       
      
     }//GEN-LAST:event_cbCidadeEntradaAncestorAdded
 
     private void cbUFEntradaAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_cbUFEntradaAncestorAdded
         // TODO add your handling code here:
-        List<Estado> estados;
-        
-        estados = EstadoDB.selectAll();
-        
-      for(Estado estado: estados){
-           this.cbUFEntrada.addItem(estado.getNome());
-      }
+       
     }//GEN-LAST:event_cbUFEntradaAncestorAdded
 
     private void cbCorEntradaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cbCorEntradaKeyTyped
@@ -690,22 +679,12 @@ public class FormPesquisaSaida extends javax.swing.JInternalFrame {
 
     private void cbUFEntradaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbUFEntradaItemStateChanged
         // TODO add your handling code here:
-        List<Municipio> municipios;        
-        municipios = MunicipioDB.selectAllByState(cbUFEntrada.getSelectedItem().toString());
-        this.cbCidadeEntrada.removeAllItems();
-        for(Municipio municipio: municipios){
-            this.cbCidadeEntrada.addItem(municipio.getNome());
-        }
+       
     }//GEN-LAST:event_cbUFEntradaItemStateChanged
 
     private void cbUFEntradaComponentAdded(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_cbUFEntradaComponentAdded
         // TODO add your handling code here:
-        List<Municipio> municipios;        
-        municipios = MunicipioDB.selectAllByState(cbUFEntrada.getSelectedItem().toString());
-        this.cbCidadeEntrada.removeAllItems();
-        for(Municipio municipio: municipios){
-            this.cbCidadeEntrada.addItem(municipio.getNome());
-        }
+        
     }//GEN-LAST:event_cbUFEntradaComponentAdded
 
     private void txtPesquisarEntradaMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtPesquisarEntradaMouseEntered

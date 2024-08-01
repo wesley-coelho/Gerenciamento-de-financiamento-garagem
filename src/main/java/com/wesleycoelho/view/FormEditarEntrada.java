@@ -679,7 +679,6 @@ public class FormEditarEntrada extends javax.swing.JInternalFrame {
     private void cbUFEntradaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbUFEntradaItemStateChanged
         // TODO add your handling code here:
        //List<municipio> municipios;
-    
         List<Document> municipios;
         String state_name = this.cbUFEntrada.getSelectedItem().toString();
         Integer state_id = CrudMongoDB.searchByFieldValue("estados", "nome", state_name).getInteger("id");

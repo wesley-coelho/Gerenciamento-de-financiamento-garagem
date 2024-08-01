@@ -3,15 +3,18 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JInternalFrame.java to edit this template
  */
 package com.wesleycoelho.view;
-import com.mongodb.MongoException;
+
+import com.mongodb.TransactionOptions;
+import com.mongodb.WriteConcern;
+import com.mongodb.client.ClientSession;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.TransactionBody;
 import com.mongodb.client.model.Filters;
-import com.wesleycoelho.controllers.jdbc.conn.EstadoDB;
-import com.wesleycoelho.controllers.jdbc.conn.FinanciamentoDB;
+
 import com.wesleycoelho.model.EntradaVeiculo;
 import com.wesleycoelho.model.Usuario;
 import javax.swing.JOptionPane;
-import com.wesleycoelho.controllers.jdbc.conn.MunicipioDB;
-import com.wesleycoelho.controllers.jdbc.conn.ParcelamentoDB;
+
 import com.wesleycoelho.model.Cliente;
 import com.wesleycoelho.model.DaoException;
 import com.wesleycoelho.model.Estado;
@@ -25,9 +28,11 @@ import java.awt.Cursor;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.util.List;
+
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import mongoDB.ConnectionFactory;
 import mongoDB.CrudMongoDB;
 import org.bson.Document;
 
@@ -878,8 +883,30 @@ public class FormEditarFinanciamento extends javax.swing.JInternalFrame {
                    //arcelamentoDB.atualizaDiaVencimento(intervaloDias, this.financiamento.getId());                 
                     this.financiamento.setDia_vencimento(Integer.valueOf(this.cbDiaVencimentoFinanciamento.getSelectedItem().toString()));                 
                 }
-                CrudMongoDB.replaceDocument("cliente", this.cliente.getIdMongo(), this.cliente.toDocument());
-                CrudMongoDB.replaceDocument("financiamento", this.financiamento.getIdMongo(), this.financiamento.toDocument());
+                
+                MongoClient client = ConnectionFactory.getMongoClient(); 
+                final ClientSession clientSession = client.startSession();
+                TransactionOptions txnOptions = TransactionOptions.builder().build();
+                TransactionBody txnBody = new TransactionBody<String>() {
+                    public String execute() {
+                        CrudMongoDB.replaceDocument("cliente", cliente.getIdMongo(), cliente.toDocument());
+                        CrudMongoDB.replaceDocument("financiamento", financiamento.getIdMongo(), financiamento.toDocument());
+                        /*
+                           Important:: You must pass the session to the operations.
+                         */                        
+                        return "Atualizado com sucesso!";
+                    }
+                };
+                try {
+                    
+                    clientSession.withTransaction(txnBody, txnOptions);
+                } catch (RuntimeException e) {
+                    JOptionPane.showMessageDialog(null, e.getMessage());
+                } finally {
+                    clientSession.close();
+                }
+               
+                
                 //FinanciamentoDB.update(this.financiamento, this.financiamento.getCliente());
                 JOptionPane.showMessageDialog(null, "Registro atualizado!","Update", JOptionPane.INFORMATION_MESSAGE);
             }catch(NullPointerException e){
@@ -1171,43 +1198,50 @@ public class FormEditarFinanciamento extends javax.swing.JInternalFrame {
 
     private void cbCidadeFinanciamentoAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_cbCidadeFinanciamentoAncestorAdded
         // TODO add your handling code here:
-        List<Municipio> municipios;
-
-        municipios = MunicipioDB.selectAllByState("São Paulo");
-        for(Municipio municipio: municipios){
-            this.cbCidadeFinanciamento.addItem(municipio.getNome());
+        List<Document> municipios;
+        Integer state_id_Sao_Paulo = CrudMongoDB.searchByFieldValue("estados", "nome", "São Paulo").getInteger("id");
+        municipios = CrudMongoDB.searchAll("cidades", Filters.eq("state_id", state_id_Sao_Paulo));
+     
+        for(Document municipio: municipios){
+            this.cbCidadeFinanciamento.addItem(municipio.getString("name"));
         }
     }//GEN-LAST:event_cbCidadeFinanciamentoAncestorAdded
 
     private void cbUFFinanciamentoComponentAdded(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_cbUFFinanciamentoComponentAdded
         // TODO add your handling code here:
-        List<Municipio> municipios;
-        municipios = MunicipioDB.selectAllByState(cbUFFinanciamento.getSelectedItem().toString());
+        List<Document> municipios;
+        String state_name = cbUFFinanciamento.getSelectedItem().toString();
+        Integer state_id = CrudMongoDB.searchByFieldValue("estados", "nome", state_name).getInteger("id");
+        municipios = CrudMongoDB.searchAll("cidades", Filters.eq("state_id", state_id));
+        //municipios = MunicipioDB.selectAllByState();
         this.cbCidadeFinanciamento.removeAllItems();
-        for(Municipio municipio: municipios){
-            this.cbCidadeFinanciamento.addItem(municipio.getNome());
+        for(Document municipio: municipios){
+            this.cbCidadeFinanciamento.addItem(municipio.getString("name"));
         }
     }//GEN-LAST:event_cbUFFinanciamentoComponentAdded
 
     private void cbUFFinanciamentoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbUFFinanciamentoItemStateChanged
         // TODO add your handling code here:
-        List<Municipio> municipios;
-        municipios = MunicipioDB.selectAllByState(cbUFFinanciamento.getSelectedItem().toString());
+          List<Document> municipios;
+        String state_name = this.cbUFFinanciamento.getSelectedItem().toString();
+        Integer state_id = CrudMongoDB.searchByFieldValue("estados", "nome", state_name).getInteger("id");
+        municipios = CrudMongoDB.searchAll("cidades", Filters.eq("state_id", state_id));
+        //municipios = MunicipioDB.selectAllByState();
         this.cbCidadeFinanciamento.removeAllItems();
-        for(Municipio municipio: municipios){
-            this.cbCidadeFinanciamento.addItem(municipio.getNome());
+        for(Document municipio: municipios){
+            this.cbCidadeFinanciamento.addItem(municipio.getString("name"));
         }
     }//GEN-LAST:event_cbUFFinanciamentoItemStateChanged
 
     private void cbUFFinanciamentoAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_cbUFFinanciamentoAncestorAdded
         // TODO add your handling code here:
-        List<Estado> estados;
+    List<Document> estados;
+        estados = CrudMongoDB.searchAll("estados");
+        //estados = EstadoDB.selectAll();
 
-        estados = EstadoDB.selectAll();
-
-        for(Estado estado: estados){
-            this.cbUFFinanciamento.addItem(estado.getNome());
-        }
+        for(Document estado: estados){    
+            this.cbUFFinanciamento.addItem(estado.getString("nome"));
+        }      
     }//GEN-LAST:event_cbUFFinanciamentoAncestorAdded
 
     private void txtRgFinanciamentoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtRgFinanciamentoKeyPressed

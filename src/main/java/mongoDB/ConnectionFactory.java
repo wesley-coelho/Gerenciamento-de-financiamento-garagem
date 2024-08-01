@@ -37,7 +37,7 @@ public class ConnectionFactory {
         MongoClient mongoClient = MongoClients.create(settings);       
         return mongoClient; 
     }
-    
+  
     private static Properties loadProperties(){
         //try (FileInputStream fs = new FileInputStream("C:\\Program Files\\JavaApplicationGaragem\\properties\\db.properties")){
         try (FileInputStream fs = new FileInputStream("C:\\Users\\Wesley\\Documents\\NetBeansProjects\\properties\\db.properties")){ 

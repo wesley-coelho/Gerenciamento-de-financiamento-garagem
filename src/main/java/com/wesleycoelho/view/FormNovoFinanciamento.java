@@ -13,6 +13,7 @@ import static com.mongodb.client.model.Projections.exclude;
 import static com.mongodb.client.model.Projections.excludeId;
 import static com.mongodb.client.model.Projections.fields;
 import com.mongodb.client.model.Variable;
+import com.mongodb.client.result.InsertManyResult;
 import com.mongodb.client.result.InsertOneResult;
 import com.wesleycoelho.controllers.jdbc.conn.ConnectionFactory;
 import com.wesleycoelho.controllers.jdbc.conn.FinanciamentoDB;
@@ -39,6 +40,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
@@ -68,6 +70,7 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
     Usuario usuario = new Usuario();
     EntradaVeiculo entrada = new EntradaVeiculo();
     JLabel lblStatus;
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     /**
      * Creates new form FormNovaEntrada
      */
@@ -934,9 +937,8 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
         };
 
         if( !this.chkBoxVendaAvista.isSelected() && !Validacao.checkFieldsFormFinanciamento(fields)){
-           JOptionPane.showMessageDialog(this,"preencha todos os campos *Obrigatórios");
            this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-           return;
+           throw new MongoException("preencha todos os campos *Obrigatórios");   
         }
 
         //int id_uf = EstadoDB.searchIdStateByName(this.cbUFFinanciamento.getSelectedItem().toString());
@@ -966,11 +968,8 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
         ObjectId id_cliente = result.getInsertedId().asObjectId().getValue();
         //int id_cliente = ClienteDB.save(cliente);
         if( id_cliente == null ) throw new DaoException("Erro ao acessar a tabela cliente");
-        //manipulando data com Date e Calendar para obter o dia do mes e setar a data de vencmento da primeira parcela
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        Calendar cal = Calendar.getInstance();        
-        java.util.Date vencPrimeiraParcela = new java.util.Date(this.dataVencimentoPrimeiraParcela.getDate().getTime());
-        cal.setTime(vencPrimeiraParcela);
+        //manipulando data com Date e Calendar para obter o dia do mes e setar a data de vencmento da primeira parcela              
+        LocalDate vencPrimeiraParcela = LocalDate.parse(sdf.format(this.dataVencimentoPrimeiraParcela.getDate()));       
       
         // inserir financiamento                
         Financiamento financiamento = new Financiamento(                        
@@ -978,7 +977,7 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
             "".equals(this.txtFicha.getText())?null:Integer.valueOf(this.txtFicha.getText()),
             "".equals(this.txtValParcelaFinanciamento.getText())?null:Double.valueOf(this.txtValParcelaFinanciamento.getText().replace(",", ".")),            
             "".equals(this.cbQtdParcelasFinanciamento.getSelectedItem().toString())?null:Integer.valueOf(this.cbQtdParcelasFinanciamento.getSelectedItem().toString()),
-            "".equals(this.dataVencimentoPrimeiraParcela.getDate().toString())?null: cal.get(Calendar.DAY_OF_MONTH),
+            "".equals(this.dataVencimentoPrimeiraParcela.getDate().toString())?null: vencPrimeiraParcela.getDayOfMonth(),
             "".equals(this.txtObsFinanciamento.getText())?null:this.txtObsFinanciamento.getText(),
             id_cliente,
             this.entrada.getId()
@@ -992,22 +991,25 @@ public class FormNovoFinanciamento extends javax.swing.JInternalFrame {
         if( !this.chkBoxVendaAvista.isSelected() ){
             //registrar as parcelas          
             int numParcelas = financiamento.getNum_parcelas();        
-            LocalDate vencPrimeiraParcelaLocalDate = LocalDate.parse(sdf.format(vencPrimeiraParcela), DateTimeFormatter.ISO_DATE);
-            java.sql.Date  dataVencParcela;
+            
+            LocalDate  dataVencParcela;
             Parcelamento parcela;
-            for( int i = 0; i < numParcelas; i++){
-               dataVencParcela = Date.valueOf(vencPrimeiraParcelaLocalDate.plusMonths(i).withDayOfMonth(financiamento.getDia_vencimento()));
-               parcela = new Parcelamento(null,null, id_financiamento,dataVencParcela, false, false);
-               ObjectId id_parcela = CrudMongoDB.add("parcelamento", parcela.toDocument()).getInsertedId().asObjectId().getValue();
-               //int id_parcela = ParcelamentoDB.save(parcela);
-                if( id_parcela == null ) throw new DaoException("Erro ao acessar a tabela parcelamento");
-            }   
+            List<Document> parcelas = new ArrayList<>();
+            
+            for( int i = 0; i < numParcelas; i++){                
+               dataVencParcela = vencPrimeiraParcela.plusMonths(i);
+               parcela = new Parcelamento(null,null, id_financiamento,dataVencParcela, false, false);          
+               parcelas.add(parcela.toDocument());             
+            } 
+            InsertManyResult res = CrudMongoDB.addMany("parcelamento", parcelas);
+            if( res.wasAcknowledged() == false ) 
+                throw new MongoException("Falha ao gerar parcelas");
         }              
                     
         //realizar a saída do veiculo
         SaidaVeiculo saida = 
             new SaidaVeiculo(
-                new java.sql.Date(dtFinanciamento.getDate().getTime()), 
+                dtFinanciamento.getDate(), 
                 usuario.getUsuario(), 
                 id_cliente, 
                 entrada.getId(), 

@@ -634,24 +634,25 @@ public class FormPesquisaEntrada extends javax.swing.JInternalFrame {
 
     private void cbCidadeEntradaAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_cbCidadeEntradaAncestorAdded
         // TODO add your handling code here:
-        List<Municipio> municipios;
-        
-        municipios = MunicipioDB.selectAllByState("São Paulo");
-        for(Municipio municipio: municipios){
-            this.cbCidadeEntrada.addItem(municipio.getNome());
+        List<Document> municipios;
+        Integer state_id_Sao_Paulo = CrudMongoDB.searchByFieldValue("estados", "nome", "São Paulo").getInteger("id");
+        municipios = CrudMongoDB.searchAll("cidades", Filters.eq("state_id", state_id_Sao_Paulo));
+     
+        for(Document municipio: municipios){
+            this.cbCidadeEntrada.addItem(municipio.getString("name"));
         }
      
     }//GEN-LAST:event_cbCidadeEntradaAncestorAdded
 
     private void cbUFEntradaAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_cbUFEntradaAncestorAdded
         // TODO add your handling code here:
-        List<Estado> estados;
-        
-        estados = EstadoDB.selectAll();
-        
-      for(Estado estado: estados){
-           this.cbUFEntrada.addItem(estado.getNome());
-      }
+         List<Document> estados;
+        estados = CrudMongoDB.searchAll("estados");
+        //estados = EstadoDB.selectAll();
+
+        for(Document estado: estados){    
+            this.cbUFEntrada.addItem(estado.getString("nome"));
+        }
     }//GEN-LAST:event_cbUFEntradaAncestorAdded
 
     private void cbCorEntradaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cbCorEntradaKeyTyped
@@ -682,21 +683,27 @@ public class FormPesquisaEntrada extends javax.swing.JInternalFrame {
 
     private void cbUFEntradaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbUFEntradaItemStateChanged
         // TODO add your handling code here:
-        List<Municipio> municipios;        
-        municipios = MunicipioDB.selectAllByState(cbUFEntrada.getSelectedItem().toString());
+        List<Document> municipios;
+        String state_name = this.cbUFEntrada.getSelectedItem().toString();
+        Integer state_id = CrudMongoDB.searchByFieldValue("estados", "nome", state_name).getInteger("id");
+        municipios = CrudMongoDB.searchAll("cidades", Filters.eq("state_id", state_id));
+        //municipios = MunicipioDB.selectAllByState();
         this.cbCidadeEntrada.removeAllItems();
-        for(Municipio municipio: municipios){
-            this.cbCidadeEntrada.addItem(municipio.getNome());
+        for(Document municipio: municipios){
+            this.cbCidadeEntrada.addItem(municipio.getString("name"));
         }
     }//GEN-LAST:event_cbUFEntradaItemStateChanged
 
     private void cbUFEntradaComponentAdded(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_cbUFEntradaComponentAdded
         // TODO add your handling code here:
-        List<Municipio> municipios;        
-        municipios = MunicipioDB.selectAllByState(cbUFEntrada.getSelectedItem().toString());
+        List<Document> municipios;
+        String state_name = cbUFEntrada.getSelectedItem().toString();
+        Integer state_id = CrudMongoDB.searchByFieldValue("estados", "nome", state_name).getInteger("id");
+        municipios = CrudMongoDB.searchAll("cidades", Filters.eq("state_id", state_id));
+        //municipios = MunicipioDB.selectAllByState();
         this.cbCidadeEntrada.removeAllItems();
-        for(Municipio municipio: municipios){
-            this.cbCidadeEntrada.addItem(municipio.getNome());
+        for(Document municipio: municipios){
+            this.cbCidadeEntrada.addItem(municipio.getString("name"));
         }
     }//GEN-LAST:event_cbUFEntradaComponentAdded
 

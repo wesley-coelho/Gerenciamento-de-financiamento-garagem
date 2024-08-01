@@ -4,14 +4,11 @@
  */
 package com.wesleycoelho.model;
 
-import com.wesleycoelho.controllers.jdbc.conn.ParcelamentoDB;
-import java.sql.Date;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import javax.swing.JOptionPane;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
+
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 import mongoDB.CrudMongoDB;
@@ -30,6 +27,7 @@ public class PagamentoTableModel extends AbstractTableModel implements TableMode
     public PagamentoTableModel(List<Parcelamento> parcelas, Financiamento financiamento){
         this.parcelas = parcelas;
         this.financiamento = financiamento;
+        
     }
     
     @Override
@@ -61,11 +59,11 @@ public class PagamentoTableModel extends AbstractTableModel implements TableMode
         Parcelamento valueRow = parcelas.get(rowIndex);
         return switch (columnIndex) {
             case 0 -> rowIndex + 1;
-            case 1 -> valueRow.getMes_ref().toLocalDate().format(dtf);
+            case 1 -> dtf.format(valueRow.getMes_ref());
             case 2 -> financiamento.getValor_parcela();
             case 3 -> valueRow.getValor_pagamento();
             case 4 -> valueRow.getIsPago();
-            case 5 -> valueRow.getData_pagamento() != null?valueRow.getData_pagamento().toLocalDate().format(dtf):valueRow.getData_pagamento();
+            case 5 -> valueRow.getData_pagamento() != null? valueRow.getData_pagamento().toString() :valueRow.getData_pagamento();
             case 6 -> valueRow.getIsCanceled();
             default -> "Erro";
         };
@@ -114,7 +112,7 @@ public class PagamentoTableModel extends AbstractTableModel implements TableMode
             case 4 -> {
                         parcelas.get(rowIndex).setIsPago((Boolean)aValue);
                         if( (Boolean)aValue) {
-                            parcelas.get(rowIndex).setData_pagamento(LocalDate.now().format(dtf));
+                            parcelas.get(rowIndex).setData_pagamento(LocalDate.now());
                         }else{
                              parcelas.get(rowIndex).setData_pagamento(null);
                         }

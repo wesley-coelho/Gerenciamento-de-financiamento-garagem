@@ -940,7 +940,7 @@ public class FormPagamento extends javax.swing.JInternalFrame {
         
         //List<Parcelamento> parcelas = ParcelamentoDB.buscaParcelasPorIdFinanciamento(financiamento.getId());
         List<Parcelamento> parcelas = new ArrayList<>();
-        List<Document> listaParcelasDoc = CrudMongoDB.searchAll("parcelamento", Filters.eq("_id_financiamento", financiamento.getIdMongo()));
+        List<Document> listaParcelasDoc = CrudMongoDB.searchAll("parcelamento", Filters.eq("_id_financiamento", financiamento.getIdMongo()), "mes_ref");
         
         for(Document d:listaParcelasDoc){
             Parcelamento p = new Parcelamento();

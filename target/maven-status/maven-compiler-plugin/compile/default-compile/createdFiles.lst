@@ -57,6 +57,7 @@ com\wesleycoelho\view\FormListarTodasSaida$8.class
 com\wesleycoelho\view\FormLogin$6.class
 com\wesleycoelho\view\FormPesquisaEntrada$17.class
 com\wesleycoelho\view\FormPesquisaSaida$9.class
+com\wesleycoelho\view\FormEditarFinanciamento$39.class
 com\wesleycoelho\model\Validacao.class
 com\wesleycoelho\view\FormPesquisaFinanciamento$37.class
 com\wesleycoelho\view\FormNovoFinanciamento$2.class
