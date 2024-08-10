@@ -4,19 +4,9 @@
  */
 package com.wesleycoelho.view;
 import com.mongodb.MongoException;
-import static com.mongodb.client.model.Aggregates.lookup;
-import static com.mongodb.client.model.Aggregates.match;
-import static com.mongodb.client.model.Aggregates.project;
 import com.mongodb.client.model.Filters;
-import static com.mongodb.client.model.Filters.expr;
-import static com.mongodb.client.model.Projections.exclude;
-import static com.mongodb.client.model.Projections.excludeId;
-import static com.mongodb.client.model.Projections.fields;
-import com.mongodb.client.model.Variable;
 import com.mongodb.client.result.InsertManyResult;
 import com.mongodb.client.result.InsertOneResult;
-import com.wesleycoelho.controllers.jdbc.conn.ConnectionFactory;
-import com.wesleycoelho.controllers.jdbc.conn.FinanciamentoDB;
 import com.wesleycoelho.model.EntradaVeiculo;
 import com.wesleycoelho.model.Usuario;
 import javax.swing.JOptionPane;
@@ -33,28 +23,16 @@ import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
-
-import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-
-import static java.util.Arrays.asList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import mongoDB.CrudMongoDB;
 import org.bson.Document;
-import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
 

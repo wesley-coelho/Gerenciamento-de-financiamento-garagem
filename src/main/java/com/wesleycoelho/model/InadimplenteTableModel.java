@@ -62,7 +62,7 @@ public class InadimplenteTableModel extends AbstractTableModel implements TableM
     
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex){
-        return false;
+        return true;
     }
 }
 

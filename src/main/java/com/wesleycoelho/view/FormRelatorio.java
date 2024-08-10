@@ -15,6 +15,7 @@ import com.mongodb.client.model.Filters;
 import static com.mongodb.client.model.Projections.excludeId;
 import static com.mongodb.client.model.Projections.fields;
 import com.wesleycoelho.controllers.jdbc.conn.RelatorioDB;
+import com.wesleycoelho.model.Cliente;
 import com.wesleycoelho.model.Usuario;
 import com.wesleycoelho.model.Inadimplente;
 import com.wesleycoelho.model.InadimplenteTableModel;
@@ -28,8 +29,11 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import static java.util.Arrays.asList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -213,16 +217,9 @@ public class FormRelatorio extends javax.swing.JInternalFrame {
             Class[] types = new Class [] {
                 java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false
-            };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
-            }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
             }
         });
         tbRelatorio.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
@@ -324,8 +321,8 @@ public class FormRelatorio extends javax.swing.JInternalFrame {
 
     private void btnFiltrarEntradaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFiltrarEntradaActionPerformed
          if( "Inadimplentes".equals(this.cbFiltroRelatorio.getSelectedItem().toString()) ) {
-             this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            
+             this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)); 
+             /* 
             //filtrando todas aas parcelas em atraso
             List<Document> parcelasEmAtraso = CrudMongoDB.searchAll
             ("parcelamento", Filters.and(
@@ -400,7 +397,49 @@ public class FormRelatorio extends javax.swing.JInternalFrame {
                 }
                 
             }
-                   
+                */
+             
+             List<Document> parcelas = CrudMongoDB.searchAll("parcelamento", 
+                     Filters.and(
+                             Filters.lt("mes_ref", new Date()), Filters.eq("ispago", false), Filters.eq("iscanceled", false))
+                              );
+             Map<ObjectId, Document>   mapParcelas = new HashMap<>();
+             for(Document doc : parcelas ){
+                 Document d = mapParcelas.get(doc.getObjectId("_id_financiamento"));
+                 if(d == null){
+                     mapParcelas.put(doc.getObjectId("_id_financiamento"), doc);                                     
+                 }  
+             }  
+             
+             List<Document> financiamentos = CrudMongoDB.searchAll("financiamento");
+             List<Document> clientes = CrudMongoDB.searchAll("cliente");
+             List<Document> listFinanciamentoAtraso = new ArrayList<>();
+             for(Document p : mapParcelas.values()){                
+                 listFinanciamentoAtraso.add(financiamentos.stream().filter(x -> x.getObjectId("_id").compareTo(p.getObjectId("_id_financiamento"))==0).collect(Collectors.toList()).getFirst());
+                  
+             }
+             
+             List<Document> listaClientesAtraso = new ArrayList<>();
+             for(Document f : listFinanciamentoAtraso){
+                 listaClientesAtraso.add(clientes.stream().filter(x -> x.getObjectId("_id").compareTo(f.getObjectId("_id_cliente")) == 0).collect(Collectors.toList()).getFirst());  
+             }
+
+             for(Document f :  listFinanciamentoAtraso){
+                 Document cliente = listaClientesAtraso.stream().filter(x -> x.getObjectId("_id").compareTo(f.getObjectId("_id_cliente"))==0).collect(Collectors.toList()).getFirst();
+                 Inadimplente i = new Inadimplente();
+                 i.setNficha(f.getInteger("ficha"));
+                 i.setNome(cliente.getString("nome"));
+                 i.setTelefone(cliente.getString("telefone"));
+                 i.setWhatsapp(cliente.getString("whatsapp"));
+                 this.inadimplentes.add(i);
+             } 
+             
+             Collections.sort(this.inadimplentes);
+             for(Inadimplente i : this.inadimplentes ){
+                System.out.println(i);
+             }
+             
+             
             if(!this.inadimplentes.isEmpty() ){
                  
                  TableModel tbModel = new InadimplenteTableModel(this.inadimplentes);
@@ -410,8 +449,8 @@ public class FormRelatorio extends javax.swing.JInternalFrame {
                  String[][] dadosInadimpentes = new String[this.inadimplentes.size()][3];
                  
                  
-                //String path = "C:\\Program Files\\JavaApplicationGaragem\\inadimplentes.csv";
-                 String path = "C:\\Users\\Wesley\\Desktop\\inadimplentes.csv";
+                String path = "C:\\Program Files\\JavaApplicationGaragem\\inadimplentes.csv";
+                // String path = "C:\\Users\\Wesley\\Desktop\\inadimplentes.csv";
                  try( BufferedWriter bw = new BufferedWriter(new FileWriter(path) )){
                      bw.write("Nome;Telefone1;Telefone2");
                      bw.newLine();

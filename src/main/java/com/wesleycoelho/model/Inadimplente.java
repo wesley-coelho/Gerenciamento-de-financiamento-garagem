@@ -4,13 +4,14 @@
  */
 package com.wesleycoelho.model;
 
+import org.bson.Document;
 import org.bson.types.ObjectId;
 
 /**
  *
  * @author Wesley
  */
-public class Inadimplente {   
+public class Inadimplente implements Comparable<Inadimplente>{   
   private ObjectId id;
   private Integer nficha;
   private String nome; 
@@ -67,6 +68,17 @@ public class Inadimplente {
 
     public void setWhatsapp(String whatsapp) {
         this.whatsapp = whatsapp;
+    }
+
+    @Override
+    public String toString() {
+        return "Inadimplente{" + "nficha=" + nficha + ", nome=" + nome + ", telefone=" + telefone + ", whatsapp=" + whatsapp + '}';
+    }    
+    
+    
+    @Override
+    public int compareTo(Inadimplente o) {
+        return this.getNficha().compareTo(o.getNficha());
     }
     
 }

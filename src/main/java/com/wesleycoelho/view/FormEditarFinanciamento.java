@@ -95,6 +95,16 @@ public class FormEditarFinanciamento extends javax.swing.JInternalFrame {
         txtPlacaEntrada = new javax.swing.JTextField();
         cbAnoEntrada = new javax.swing.JComboBox<>();
         cbCorEntrada = new javax.swing.JComboBox<>();
+        txtProprietarioEntradaF = new javax.swing.JTextField();
+        jLabel22 = new javax.swing.JLabel();
+        jLabel30 = new javax.swing.JLabel();
+        txtTelefoneEntradaF = new javax.swing.JFormattedTextField();
+        jLabel31 = new javax.swing.JLabel();
+        txtWhatsappEntradaF = new javax.swing.JFormattedTextField();
+        jLabel13 = new javax.swing.JLabel();
+        cbCidadeEntrada = new javax.swing.JComboBox<>();
+        jLabel29 = new javax.swing.JLabel();
+        cbUFEntrada = new javax.swing.JComboBox<>();
         jPanel5 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         txtNomeFinanciamento = new javax.swing.JTextField();
@@ -294,18 +304,7 @@ public class FormEditarFinanciamento extends javax.swing.JInternalFrame {
 
         jLabel23.setText("COR:");
 
-        txtModeloEntrada.setEnabled(false);
-
-        txtMarcaEntrada.setEnabled(false);
-
-        txtRenavamEntrada.setEnabled(false);
-
-        txtChassiEntrada.setEnabled(false);
-
-        txtPlacaEntrada.setEnabled(false);
-
         cbAnoEntrada.setEditable(true);
-        cbAnoEntrada.setEnabled(false);
         cbAnoEntrada.addAncestorListener(new javax.swing.event.AncestorListener() {
             public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
                 cbAnoEntradaAncestorAdded(evt);
@@ -318,10 +317,73 @@ public class FormEditarFinanciamento extends javax.swing.JInternalFrame {
 
         cbCorEntrada.setEditable(true);
         cbCorEntrada.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Verde", "Amarelo", "Preto", "Cinza", "Azul", "Branco", "Chumbo", "Prata", "Vinho", "Bege", "Vermelho", " " }));
-        cbCorEntrada.setEnabled(false);
         cbCorEntrada.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 cbCorEntradaKeyTyped(evt);
+            }
+        });
+
+        txtProprietarioEntradaF.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtProprietarioEntradaFKeyReleased(evt);
+            }
+        });
+
+        jLabel22.setText("PROPRIETÁRIO:");
+
+        jLabel30.setText("TELEFONE:");
+
+        try {
+            txtTelefoneEntradaF.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("(##) ##### ####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+
+        jLabel31.setText("WHATSAPP:");
+
+        try {
+            txtWhatsappEntradaF.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("(##) ##### ####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+
+        jLabel13.setText("CIDADE:");
+
+        cbCidadeEntrada.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Ribeirao Preto" }));
+        cbCidadeEntrada.setAutoscrolls(true);
+        cbCidadeEntrada.setDoubleBuffered(true);
+        cbCidadeEntrada.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                cbCidadeEntradaAncestorAdded(evt);
+            }
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
+
+        jLabel29.setText("UF:");
+
+        cbUFEntrada.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "São Paulo" }));
+        cbUFEntrada.setAutoscrolls(true);
+        cbUFEntrada.setDoubleBuffered(true);
+        cbUFEntrada.addContainerListener(new java.awt.event.ContainerAdapter() {
+            public void componentAdded(java.awt.event.ContainerEvent evt) {
+                cbUFEntradaComponentAdded(evt);
+            }
+        });
+        cbUFEntrada.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbUFEntradaItemStateChanged(evt);
+            }
+        });
+        cbUFEntrada.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                cbUFEntradaAncestorAdded(evt);
+            }
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
             }
         });
 
@@ -330,69 +392,109 @@ public class FormEditarFinanciamento extends javax.swing.JInternalFrame {
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
-                .addGap(23, 23, 23)
+                .addContainerGap()
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtPlacaEntrada))
-                    .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtChassiEntrada))
-                    .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtRenavamEntrada))
-                    .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtModeloEntrada))
-                    .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtMarcaEntrada))
-                    .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cbAnoEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel7Layout.createSequentialGroup()
+                                .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(35, 35, 35)
+                                .addComponent(txtMarcaEntrada))
+                            .addGroup(jPanel7Layout.createSequentialGroup()
+                                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(23, 23, 23)
+                                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(cbCidadeEntrada, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGroup(jPanel7Layout.createSequentialGroup()
+                                        .addComponent(txtPlacaEntrada)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(cbAnoEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(jPanel7Layout.createSequentialGroup()
+                                .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(23, 23, 23)
+                                .addComponent(txtRenavamEntrada)))
                         .addGap(18, 18, 18)
-                        .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel7Layout.createSequentialGroup()
+                                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(12, 12, 12)
+                                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtChassiEntrada)
+                                    .addComponent(txtModeloEntrada)))
+                            .addGroup(jPanel7Layout.createSequentialGroup()
+                                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel29, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(cbCorEntrada, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(cbUFEntrada, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addGap(106, 106, 106)
+                        .addComponent(txtProprietarioEntradaF))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
+                        .addComponent(jLabel30, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(209, 209, 209)
+                        .addComponent(jLabel31, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(cbCorEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtWhatsappEntradaF, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE))
+                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel7Layout.createSequentialGroup()
+                                .addGap(106, 106, 106)
+                                .addComponent(txtTelefoneEntradaF, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel16)
-                    .addComponent(txtMarcaEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtMarcaEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel17)
                     .addComponent(txtModeloEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel18)
-                    .addComponent(txtRenavamEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtRenavamEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtChassiEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel19))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtPlacaEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel20))
+                    .addComponent(jLabel20)
+                    .addComponent(jLabel21)
+                    .addComponent(cbAnoEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel23)
+                    .addComponent(cbCorEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel21)
-                    .addComponent(jLabel23)
-                    .addComponent(cbAnoEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cbCorEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(31, 31, 31))
+                    .addComponent(jLabel13)
+                    .addComponent(cbCidadeEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel29)
+                    .addComponent(cbUFEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel22)
+                    .addComponent(txtProprietarioEntradaF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel31)
+                        .addComponent(txtWhatsappEntradaF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel30)
+                        .addComponent(txtTelefoneEntradaF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel5.setBackground(new java.awt.Color(243, 245, 251));
@@ -615,7 +717,7 @@ public class FormEditarFinanciamento extends javax.swing.JInternalFrame {
                                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(19, 19, 19)
                                 .addComponent(txtCEPFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))))
+                                .addGap(0, 83, Short.MAX_VALUE))))
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -697,7 +799,7 @@ public class FormEditarFinanciamento extends javax.swing.JInternalFrame {
                     .addComponent(txtWhatsappFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtTelefoneFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel26))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         jPanel6.setBackground(new java.awt.Color(243, 245, 251));
@@ -776,7 +878,7 @@ public class FormEditarFinanciamento extends javax.swing.JInternalFrame {
                                 .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(cbQtdParcelasFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(18, 18, 18)
                                 .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(cbDiaVencimentoFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -784,40 +886,35 @@ public class FormEditarFinanciamento extends javax.swing.JInternalFrame {
                                 .addComponent(jLabel27, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(txtFicha, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
+                                .addGap(18, 18, 18)
                                 .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGap(18, 18, 18)
                                 .addComponent(dtFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(30, 30, 30)
+                                .addGap(18, 18, 18)
                                 .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(txtValParcelaFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap())))
+                        .addContainerGap(99, Short.MAX_VALUE))))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(dtFinanciamento, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel12)
-                                .addComponent(txtValParcelaFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(15, 15, 15))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel12)
+                        .addComponent(txtValParcelaFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtFicha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel27))
-                        .addGap(18, 18, 18)))
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel11)
-                        .addComponent(cbQtdParcelasFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel15)
-                        .addComponent(cbDiaVencimentoFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(dtFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel11)
+                    .addComponent(cbQtdParcelasFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel15)
+                    .addComponent(cbDiaVencimentoFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtObsFinanciamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -829,23 +926,26 @@ public class FormEditarFinanciamento extends javax.swing.JInternalFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jToolBar1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
             .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jToolBar1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -859,7 +959,7 @@ public class FormEditarFinanciamento extends javax.swing.JInternalFrame {
             this.financiamento.setFicha(!"".equals(this.txtFicha.getText())?Integer.valueOf(this.txtFicha.getText()):null);
             this.financiamento.setObservacao(!"".equals(this.txtObsFinanciamento.getText())?this.txtObsFinanciamento.getText(): null);
             this.financiamento.setValor_parcela(Double.valueOf(this.txtValParcelaFinanciamento.getText().replace(",", ".")));
-            //valores da entrada
+            //atualiza cliente
             this.cliente.setNome(!"".equals(this.txtNomeFinanciamento.getText())?this.txtNomeFinanciamento.getText():null);
             this.cliente.setBairro(!"".equals(this.txtBairroFinanciamento.getText())?this.txtBairroFinanciamento.getText():null);
             this.cliente.setCep(!"".equals(this.txtCEPFinanciamento.getText())?this.txtCEPFinanciamento.getText():null);
@@ -870,17 +970,29 @@ public class FormEditarFinanciamento extends javax.swing.JInternalFrame {
             this.cliente.setTelefone(!"".equals(this.txtTelefoneFinanciamento.getText())?this.txtTelefoneFinanciamento.getText():null);
             this.cliente.setWhatsapp(!"".equals(this.txtWhatsappFinanciamento.getText())?this.txtWhatsappFinanciamento.getText():null);
             this.cliente.setComplemento(!"".equals(this.txtComplementoFinanciamento.getText())?this.txtComplementoFinanciamento.getText():null);
+            // atualiza entrada
+            this.entrada.setMarca(this.txtMarcaEntrada.getText());
+            this.entrada.setModelo(this.txtModeloEntrada.getText());
+            this.entrada.setRenavam(this.txtRenavamEntrada.getText());
+            this.entrada.setChassi(this.txtChassiEntrada.getText());
+            this.entrada.setPlaca(this.txtPlacaEntrada.getText());
+            this.entrada.setAno(this.cbAnoEntrada.getSelectedItem().toString());
+            this.entrada.setCor(this.cbCorEntrada.getSelectedItem().toString());
+            this.entrada.setNome_proprietario(this.txtProprietarioEntradaF.getText());
+            this.entrada.setTelefone(this.txtTelefoneEntradaF.getText());
+            this.entrada.setWhatsapp(this.txtWhatsappEntradaF.getText());
+            String nomeMunicipio = this.cbCidadeEntrada.getSelectedItem().toString();
+            String nome_Uf = this.cbUFEntrada.getSelectedItem().toString();
+            int id_Uf = CrudMongoDB.searchByFieldValue("estados", "nome", nome_Uf).getInteger("id");           
+            int id_Municipio = CrudMongoDB.search("cidades", Filters.and(Filters.eq("name", nomeMunicipio),Filters.eq("state_id", id_Uf))).getInteger("id");
+            this.entrada.setId_municipio(id_Municipio);            
+            
             try{
                 int id_Estado = CrudMongoDB.searchByFieldValue("estados", "nome", this.cbUFFinanciamento.getSelectedItem().toString()).getInteger("id");
-                //int id_Estado = EstadoDB.searchIdStateByName(this.cbUFFinanciamento.getSelectedItem().toString());
-                //this.cliente.setId_municipio(MunicipioDB.searchIdByCidade(this.cbCidadeFinanciamento.getSelectedItem().toString(), id_Estado));
                 this.cliente.setId_municipio(CrudMongoDB.search("cidades", Filters.and(Filters.eq("name", this.cbCidadeFinanciamento.getSelectedItem().toString()), Filters.eq("state_id",id_Estado ))).getInteger("id"));
                 if( !"".equals(this.cbDiaVencimentoFinanciamento.getSelectedItem().toString()) && !Objects.equals(Integer.valueOf(this.cbDiaVencimentoFinanciamento.getSelectedItem().toString()), this.financiamento.getDia_vencimento()) ){
                     //atualiza parcelas
-
                     int intervaloDias = this.financiamento.getDia_vencimento() - Integer.valueOf(this.cbDiaVencimentoFinanciamento.getSelectedItem().toString());
-
-                   //arcelamentoDB.atualizaDiaVencimento(intervaloDias, this.financiamento.getId());                 
                     this.financiamento.setDia_vencimento(Integer.valueOf(this.cbDiaVencimentoFinanciamento.getSelectedItem().toString()));                 
                 }
                 
@@ -888,12 +1000,11 @@ public class FormEditarFinanciamento extends javax.swing.JInternalFrame {
                 final ClientSession clientSession = client.startSession();
                 TransactionOptions txnOptions = TransactionOptions.builder().build();
                 TransactionBody txnBody = new TransactionBody<String>() {
+                    @Override
                     public String execute() {
                         CrudMongoDB.replaceDocument("cliente", cliente.getIdMongo(), cliente.toDocument());
                         CrudMongoDB.replaceDocument("financiamento", financiamento.getIdMongo(), financiamento.toDocument());
-                        /*
-                           Important:: You must pass the session to the operations.
-                         */                        
+                        CrudMongoDB.replaceDocument("entrada_veiculo", entrada.getId(), entrada.toDocument());                     
                         return "Atualizado com sucesso!";
                     }
                 };
@@ -1027,9 +1138,15 @@ public class FormEditarFinanciamento extends javax.swing.JInternalFrame {
                     this.txtModeloEntrada.setText(this.entrada.getModelo());
                     this.txtRenavamEntrada.setText(this.entrada.getRenavam());
                     this.txtChassiEntrada.setText(this.entrada.getChassi());
-                    this.txtPlacaEntrada.setText(this.entrada.getPlaca());
+                    this.txtPlacaEntrada.setText(this.entrada.getPlaca());                    
                     this.cbAnoEntrada.setSelectedItem(this.entrada.getAno());
                     this.cbCorEntrada.setSelectedItem(this.entrada.getCor());
+                    doc = CrudMongoDB.searchByFieldValue("cidades", "id", this.entrada.getId_municipio());
+                    this.cbCidadeEntrada.setSelectedItem(doc.getString("name"));                    
+                    this.cbUFEntrada.setSelectedItem(CrudMongoDB.searchByFieldValue("estados", "id", doc.getInteger("state_id")).getString("nome"));
+                    this.txtProprietarioEntradaF.setText(this.entrada.getNome_proprietario());
+                    this.txtTelefoneEntradaF.setText(this.entrada.getTelefone());
+                    this.txtWhatsappEntradaF.setText(this.entrada.getWhatsapp());                   
                     //fim formulario entrada
                     //preenche formulario cliente
                      doc = CrudMongoDB.searchByFieldValue("cliente", "_id",this.financiamento.getId_clienteMongo());
@@ -1041,8 +1158,7 @@ public class FormEditarFinanciamento extends javax.swing.JInternalFrame {
                     this.txtEnderecoFinanciamento.setText(this.cliente.getEndereco());
                     this.txtBairroFinanciamento.setText(this.cliente.getBairro());
                     this.txtNumeroFinanciamento.setText(String.valueOf(this.cliente.getNumero()));                          
-                        Municipio municipio = new Municipio();                    
-                        //municipio = MunicipioDB.buscaCidadePorId(this.financiamento.getCliente().getId_municipio());
+                        Municipio municipio = new Municipio();
                         doc = CrudMongoDB.searchByFieldValue("cidades", "id", this.cliente.getId_municipio());
                         if( doc != null ){
                             municipio.convertToJavaObj(doc);
@@ -1050,7 +1166,6 @@ public class FormEditarFinanciamento extends javax.swing.JInternalFrame {
                             Estado estado = new Estado();  
                             doc = CrudMongoDB.searchByFieldValue("estados", "id", municipio.getId_uf());
                             estado.convertToJavaObj(doc);
-                            //estado = EstadoDB.searchById(municipio.getId_uf());
                             this.cbUFFinanciamento.setSelectedItem(estado.getNome()); 
                         }
                         else{
@@ -1324,6 +1439,63 @@ public class FormEditarFinanciamento extends javax.swing.JInternalFrame {
         this.txtComplementoFinanciamento.setText(this.txtComplementoFinanciamento.getText().toUpperCase());
     }//GEN-LAST:event_txtComplementoFinanciamentoKeyReleased
 
+    private void txtProprietarioEntradaFKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtProprietarioEntradaFKeyReleased
+        // TODO add your handling code here:
+        this.txtProprietarioEntradaF.setText(this.txtProprietarioEntradaF.getText().toUpperCase());
+    }//GEN-LAST:event_txtProprietarioEntradaFKeyReleased
+
+    private void cbCidadeEntradaAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_cbCidadeEntradaAncestorAdded
+        // TODO add your handling code here:
+        List<Document> municipios;
+        Integer state_id_Sao_Paulo = CrudMongoDB.searchByFieldValue("estados", "nome", "São Paulo").getInteger("id");
+        municipios = CrudMongoDB.searchAll("cidades", Filters.eq("state_id", state_id_Sao_Paulo));
+
+        for(Document municipio: municipios){
+            this.cbCidadeEntrada.addItem(municipio.getString("name"));
+        }
+
+    }//GEN-LAST:event_cbCidadeEntradaAncestorAdded
+
+    private void cbUFEntradaComponentAdded(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_cbUFEntradaComponentAdded
+        // TODO add your handling code here:
+        //List<municipio> municipios;
+
+        List<Document> municipios;
+        String state_name = cbUFEntrada.getSelectedItem().toString();
+        Integer state_id = CrudMongoDB.searchByFieldValue("estados", "nome", state_name).getInteger("id");
+        municipios = CrudMongoDB.searchAll("cidades", Filters.eq("state_id", state_id));
+        //municipios = MunicipioDB.selectAllByState();
+        this.cbCidadeEntrada.removeAllItems();
+        for(Document municipio: municipios){
+            this.cbCidadeEntrada.addItem(municipio.getString("name"));
+        }
+    }//GEN-LAST:event_cbUFEntradaComponentAdded
+
+    private void cbUFEntradaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbUFEntradaItemStateChanged
+        // TODO add your handling code here:
+        //List<municipio> municipios;
+        List<Document> municipios;
+        String state_name = this.cbUFEntrada.getSelectedItem().toString();
+        Integer state_id = CrudMongoDB.searchByFieldValue("estados", "nome", state_name).getInteger("id");
+        municipios = CrudMongoDB.searchAll("cidades", Filters.eq("state_id", state_id));
+        //municipios = MunicipioDB.selectAllByState();
+        this.cbCidadeEntrada.removeAllItems();
+        for(Document municipio: municipios){
+            this.cbCidadeEntrada.addItem(municipio.getString("name"));
+        }
+    }//GEN-LAST:event_cbUFEntradaItemStateChanged
+
+    private void cbUFEntradaAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_cbUFEntradaAncestorAdded
+        // TODO add your handling code here:
+        List<Document> estados;
+        estados = CrudMongoDB.searchAll("estados");
+        //estados = EstadoDB.selectAll();
+
+        for(Document estado: estados){
+            this.cbUFEntrada.addItem(estado.getString("nome"));
+        }
+    }//GEN-LAST:event_cbUFEntradaAncestorAdded
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnExcluirEntrada;
@@ -1332,11 +1504,13 @@ public class FormEditarFinanciamento extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnPesquisarFinanciamento;
     private javax.swing.JButton btnSalvarFinanciamento;
     private javax.swing.JComboBox<String> cbAnoEntrada;
+    private javax.swing.JComboBox<String> cbCidadeEntrada;
     private javax.swing.JComboBox<String> cbCidadeFinanciamento;
     private javax.swing.JComboBox<String> cbCorEntrada;
     private javax.swing.JComboBox<String> cbDiaVencimentoFinanciamento;
     private javax.swing.JComboBox<String> cbOptionPesquisa;
     private javax.swing.JComboBox<String> cbQtdParcelasFinanciamento;
+    private javax.swing.JComboBox<String> cbUFEntrada;
     private javax.swing.JComboBox<String> cbUFFinanciamento;
     private com.toedter.calendar.JDateChooser dtFinanciamento;
     private javax.swing.Box.Filler filler1;
@@ -1347,6 +1521,7 @@ public class FormEditarFinanciamento extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
@@ -1355,13 +1530,17 @@ public class FormEditarFinanciamento extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel28;
+    private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel30;
+    private javax.swing.JLabel jLabel31;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -1387,10 +1566,13 @@ public class FormEditarFinanciamento extends javax.swing.JInternalFrame {
     private javax.swing.JTextField txtObsFinanciamento;
     private javax.swing.JTextField txtPesquisarFinanciamento;
     private javax.swing.JTextField txtPlacaEntrada;
+    private javax.swing.JTextField txtProprietarioEntradaF;
     private javax.swing.JTextField txtRenavamEntrada;
     private javax.swing.JFormattedTextField txtRgFinanciamento;
+    private javax.swing.JFormattedTextField txtTelefoneEntradaF;
     private javax.swing.JFormattedTextField txtTelefoneFinanciamento;
     private javax.swing.JFormattedTextField txtValParcelaFinanciamento;
+    private javax.swing.JFormattedTextField txtWhatsappEntradaF;
     private javax.swing.JFormattedTextField txtWhatsappFinanciamento;
     // End of variables declaration//GEN-END:variables
 }

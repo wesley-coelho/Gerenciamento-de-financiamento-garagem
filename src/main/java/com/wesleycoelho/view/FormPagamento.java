@@ -728,7 +728,9 @@ public class FormPagamento extends javax.swing.JInternalFrame {
            if( "NOME".equals(this.cbFiltroPesquisa.getSelectedItem().toString() )  ){
                //PESQUISAR FINANCIAMENTO POR NOME
                //db.products.find( { sku: { $regex: /789$/ } } )
-               List<Document> docs = CrudMongoDB.searchAll("cliente", Filters.regex("nome", this.txtPesquisarFinanciamento.getText()));
+               List<Document> cl = CrudMongoDB.searchAll("cliente");               
+               List<Document> docs = cl.stream().filter(x -> x.getString("nome").contains(txtPesquisarFinanciamento.getText())).collect(Collectors.toList());
+              // List<Document> docs = CrudMongoDB.searchAll("cliente", Filters.regex("nome", this.txtPesquisarFinanciamento.getText()));
                for( Document d: docs ){
                    Cliente cliente = new Cliente();
                    if( d!= null ) cliente.convertToJavaObj(d);
@@ -1005,21 +1007,33 @@ public class FormPagamento extends javax.swing.JInternalFrame {
     private void preencheTabelaTbClientesFinanciamento(){
         DefaultTableModel tableModel;
                     tableModel = (DefaultTableModel) this.tbClientesFinanciamento.getModel();
-                    tableModel.setNumRows(0);               
+                    tableModel.setNumRows(0);    
+                     List<Document> entradas = CrudMongoDB.searchAll("entrada_veiculo");
+                     List<Document> financiamentos = CrudMongoDB.searchAll("financiamento");
+                     
                     for(Cliente cliente: this.clientes ){
                         //int id_entrada;                        
                         //id_entrada = SaidaVeiculoDB.buscaIdEntradaPorIdCliente(cliente.getId());
-                        ObjectId id_entrada = CrudMongoDB.searchByFieldValue("saida_veiculo", "_id_cliente", cliente.getIdMongo()).getObjectId("_id_entrada");
-                        if(id_entrada != null){
-                            clientesComFinanciamento.add(cliente);
+                       
+                        //ObjectId id_entrada = CrudMongoDB.searchByFieldValue("saida_veiculo", "_id_cliente", cliente.getIdMongo()).getObjectId("_id_entrada");
+                        
+                            
                             Object[] colunas = new Object[9];
-                            colunas[0] = CrudMongoDB.searchByFieldValue("financiamento", "_id_cliente", cliente.getIdMongo()).getInteger("ficha");//FinanciamentoDB.buscaNficha(cliente.getId());//ficha
-                            colunas[1] = cliente.getNome();//nome
-                            colunas[2] = cliente.getCpf();//cpf
-                            colunas[3] = CrudMongoDB.searchById("entrada_veiculo", id_entrada).getString("placa");//EntradaVeiculoDB.buscaEntradaPorId(id_entrada).getPlaca();  //placa                                      
-                            tableModel.addRow(colunas);
-                            this.tbClientesFinanciamento.repaint();
-                        }
+                            List<Document> f = financiamentos.stream().filter(x -> x.getObjectId("_id_cliente").compareTo(cliente.getIdMongo())== 0).collect(Collectors.toList());
+                            if(!f.isEmpty()){
+                                clientesComFinanciamento.add(cliente);
+                                colunas[0] = f.getFirst().getInteger("ficha");
+                                //colunas[0] = CrudMongoDB.searchByFieldValue("financiamento", "_id_cliente", cliente.getIdMongo()).getInteger("ficha");//FinanciamentoDB.buscaNficha(cliente.getId());//ficha
+                                colunas[1] = cliente.getNome();//nome
+                                colunas[2] = cliente.getCpf();//cpf
+                                colunas[3] = entradas.stream().filter(x -> x.getObjectId("_id").compareTo(f.getFirst().getObjectId("_id_entrada"))== 0).collect(Collectors.toList()).getFirst().getString("placa");
+                                //colunas[3] = CrudMongoDB.searchById("entrada_veiculo", id_entrada).getString("placa");//EntradaVeiculoDB.buscaEntradaPorId(id_entrada).getPlaca();  //placa                                      
+                                tableModel.addRow(colunas);
+                                this.tbClientesFinanciamento.repaint();
+                            }
+                            
+                            
+                        
                     }
     }
     
